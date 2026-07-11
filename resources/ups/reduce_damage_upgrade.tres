@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatUpgradeData" format=3 uid="uid://btvin0dlomyj8"]
+
+[ext_resource type="Script" uid="uid://2y4ecmwstrx4" path="res://scripts/resource_classes/ups/stat_upgrade_data.gd" id="1_d5qgd"]
+[ext_resource type="Texture2D" uid="uid://k37r836km5v5" path="res://media/shield-black-icon.svg" id="1_oxejs"]
+
+[resource]
+script = ExtResource("1_d5qgd")
+stat_name = "lost_health_per_second"
+amount = 0.9
+is_multiplicative = true
+upgrade_name = "ЩитистЩит"
+icon = ExtResource("1_oxejs")
+metadata/_custom_type_script = "uid://2y4ecmwstrx4"

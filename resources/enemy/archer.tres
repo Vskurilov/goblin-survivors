@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://cxbkfn77tr5b4"]
+
+[ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="1_d8r1v"]
+[ext_resource type="Resource" uid="uid://b82fg12lvb6lf" path="res://resources/enemy/ranged_behavior.tres" id="1_jpuri"]
+[ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="1_v3v72"]
+[ext_resource type="Texture2D" uid="uid://bj3jdv7p2lcqh" path="res://media/goblin-second.svg" id="3_jpuri"]
+
+[resource]
+script = ExtResource("1_d8r1v")
+gem_scene = ExtResource("1_v3v72")
+texture = ExtResource("3_jpuri")
+behavior = ExtResource("1_jpuri")
+metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

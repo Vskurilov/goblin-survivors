@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://bgkounbcg8gj5"]
+
+[ext_resource type="Texture2D" uid="uid://bpsa4iftgpavr" path="res://media/grass_0001.png" id="1_0bbpv"]
+[ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="1_rarhs"]
+[ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="2_0bbpv"]
+[ext_resource type="Texture2D" uid="uid://bmrwr7xscebds" path="res://media/viking .svg" id="5_vcsgt"]
+[ext_resource type="Texture2D" uid="uid://k4mihaqalisk" path="res://media/goblin-head-svgrepo-com.svg" id="6_nxtc6"]
+[ext_resource type="Texture2D" uid="uid://b3wousrl8g8s5" path="res://media/icon.svg" id="7_jlsqs"]
+
+[node name="Main" type="Node2D" unique_id=1517189486]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
+texture_repeat = 2
+texture = ExtResource("1_0bbpv")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
+script = ExtResource("1_rarhs")
+enemy_scene = ExtResource("1_rvslj")
+
+[node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
+autostart = true
+
+[node name="Scene" type="Node2D" parent="." unique_id=887944876]
+
+[node name="Enemy" parent="Scene" unique_id=603482203 instance=ExtResource("1_rvslj")]
+
+[node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("2_0bbpv")]
+
+[node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
+process_mode = 3
+visible = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUpUI" unique_id=484639532]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="LevelUpUI/VBoxContainer" unique_id=309128174]
+visible = false
+layout_mode = 2
+icon = ExtResource("5_vcsgt")
+
+[node name="Button2" type="Button" parent="LevelUpUI/VBoxContainer" unique_id=1430764441]
+visible = false
+layout_mode = 2
+icon = ExtResource("6_nxtc6")
+
+[node name="Button3" type="Button" parent="LevelUpUI/VBoxContainer" unique_id=35794993]
+layout_mode = 2
+icon = ExtResource("7_jlsqs")
+
+[connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
+[connection signal="pressed" from="LevelUpUI/VBoxContainer/Button" to="Scene/Player" method="_on_button_pressed"]
+[connection signal="pressed" from="LevelUpUI/VBoxContainer/Button2" to="Scene/Player" method="_on_button_2_pressed"]
+[connection signal="pressed" from="LevelUpUI/VBoxContainer/Button3" to="Scene/Player" method="_on_button_3_pressed"]

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatUpgradeData" format=3 uid="uid://cjfhix48x166f"]
+
+[ext_resource type="Texture2D" uid="uid://6a3385ktyj2n" path="res://media/Attribute_criticalstrike.svg" id="1_d8vwl"]
+[ext_resource type="Script" uid="uid://2y4ecmwstrx4" path="res://scripts/resource_classes/ups/stat_upgrade_data.gd" id="1_ucbqt"]
+
+[resource]
+script = ExtResource("1_ucbqt")
+stat_name = "crit_mult"
+amount = 0.5
+upgrade_name = "КритМульт"
+icon = ExtResource("1_d8vwl")
+metadata/_custom_type_script = "uid://2y4ecmwstrx4"

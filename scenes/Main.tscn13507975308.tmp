@@ -1,0 +1,160 @@
+[gd_scene format=3 uid="uid://bgkounbcg8gj5"]
+
+[ext_resource type="Texture2D" uid="uid://bpsa4iftgpavr" path="res://media/grass_0001.png" id="1_0bbpv"]
+[ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="1_rarhs"]
+[ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="2_0bbpv"]
+[ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon_data.gd" id="5_wp0k4"]
+[ext_resource type="Resource" uid="uid://b3cad47rk3qfa" path="res://resources/weapon/axe.tres" id="7_wp0k4"]
+[ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/level_up_ui.gd" id="8_wp0k4"]
+[ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/upgrade_data.gd" id="9_3p2gp"]
+[ext_resource type="Resource" uid="uid://btvin0dlomyj8" path="res://resources/ups/reduce_damage_upgrade.tres" id="10_cvmbd"]
+[ext_resource type="Resource" uid="uid://cpx30yel7omhx" path="res://resources/ups/max_health_upgrade.tres" id="11_ft6cd"]
+[ext_resource type="Resource" uid="uid://cjfhix48x166f" path="res://resources/ups/crit_mult_upgrade.tres" id="13_mwfav"]
+[ext_resource type="Resource" uid="uid://d13gqejl5h6qs" path="res://resources/ups/attack_speed_upgrade.tres" id="13_qmy6f"]
+[ext_resource type="Resource" uid="uid://dm2xevepbqd5w" path="res://resources/ups/crit_chance_upgrade.tres" id="14_3p2gp"]
+[ext_resource type="Resource" uid="uid://cd45enxsmd1k3" path="res://resources/ups/move_speed_upgrade.tres" id="14_mwfav"]
+
+[node name="Main" type="Node2D" unique_id=1517189486]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
+texture_repeat = 2
+position = Vector2(-82, 65)
+rotation = 0.0025917965
+texture = ExtResource("1_0bbpv")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
+script = ExtResource("1_rarhs")
+enemy_scene = ExtResource("1_rvslj")
+
+[node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
+autostart = true
+
+[node name="Scene" type="Node2D" parent="." unique_id=887944876]
+position = Vector2(-34, 83)
+
+[node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("2_0bbpv")]
+position = Vector2(611, 240)
+weapons = Array[ExtResource("5_wp0k4")]([ExtResource("7_wp0k4")])
+
+[node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
+process_mode = 3
+visible = false
+script = ExtResource("8_wp0k4")
+upgrade_pool = Array[ExtResource("9_3p2gp")]([ExtResource("10_cvmbd"), ExtResource("13_mwfav"), ExtResource("14_3p2gp"), ExtResource("13_qmy6f"), ExtResource("14_mwfav"), ExtResource("11_ft6cd")])
+
+[node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -304.0
+offset_top = -192.5
+offset_right = 304.0
+offset_bottom = 192.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="UpButtonOne" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=430492941]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "+40 скр"
+
+[node name="UpButtonTwo" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=804400187]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "0.9 плч урн"
+
+[node name="UpButtonThree" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=112784696]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "здр +10"
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1583140629]
+
+[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=601628181 groups=["health_bar"]]
+custom_minimum_size = Vector2(300, 100)
+custom_maximum_size = Vector2(1000, 100)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+show_percentage = false
+
+[node name="Label" type="Label" parent="HUD/HealthBar" unique_id=851243512 groups=["health_label"]]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 171
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=159875392 groups=["timer_label"]]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="LevelLabel" type="Label" parent="HUD" unique_id=885527235 groups=["level_label"]]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+
+[node name="KillCountLabel" type="Label" parent="HUD" unique_id=285495991 groups=["kill_count_label"]]
+custom_minimum_size = Vector2(50, 50)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="GameOverUI" type="CanvasLayer" parent="." unique_id=335262838 groups=["game_over_ui"]]
+process_mode = 3
+visible = false
+
+[node name="GameOverBox" type="VBoxContainer" parent="GameOverUI" unique_id=515542466]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -42.5
+offset_bottom = 42.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverLabel" type="Label" parent="GameOverUI/GameOverBox" unique_id=2077936659]
+layout_mode = 2
+
+[node name="StatisticLabel" type="Label" parent="GameOverUI/GameOverBox" unique_id=1773892403 groups=["game_over_stat_label"]]
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="GameOverUI/GameOverBox" unique_id=574119270]
+layout_mode = 2
+text = "Again?"
+
+[connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonOne" to="Scene/Player" method="_on_up_button_one_pressed"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonTwo" to="Scene/Player" method="_on_up_button_two_pressed"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonThree" to="Scene/Player" method="_on_up_button_three_pressed"]
+[connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="Scene/Player" method="_on_restart_button_pressed"]

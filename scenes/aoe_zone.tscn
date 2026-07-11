@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://4uaah23fgnp3"]
+
+[ext_resource type="Script" uid="uid://kedbuflh5ope" path="res://scripts/resource_classes/weapon/aoe_zone.gd" id="1_8peyu"]
+[ext_resource type="Texture2D" uid="uid://cc75dih4fjq2d" path="res://media/circle.svg" id="2_81p5d"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_81p5d"]
+
+[node name="AoeZone" type="Area2D" unique_id=203247258]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_8peyu")
+damage_per_tick = 100.0
+tick_interval = 1.0
+radius = 3.0
+texture = ExtResource("2_81p5d")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1858462914]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=914941880]
+shape = SubResource("CircleShape2D_81p5d")

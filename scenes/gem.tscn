@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dleqjl5p5g47s"]
+
+[ext_resource type="Script" uid="uid://dhsck47gxq7v3" path="res://scripts/gem.gd" id="1_5cxma"]
+[ext_resource type="Texture2D" uid="uid://cgbiipbg5oj0g" path="res://media/gem-svgrepo-com.svg" id="2_mpwtx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jq8tk"]
+
+[node name="Gem" type="Area2D" unique_id=1390937570 groups=["gem"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_5cxma")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1683755550]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_mpwtx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=337373513]
+shape = SubResource("CircleShape2D_jq8tk")

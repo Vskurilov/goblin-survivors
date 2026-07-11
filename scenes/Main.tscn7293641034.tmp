@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://bgkounbcg8gj5"]
+
+[ext_resource type="Texture2D" uid="uid://bpsa4iftgpavr" path="res://media/grass_0001.png" id="1_0bbpv"]
+[ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="1_rarhs"]
+[ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="2_0bbpv"]
+[ext_resource type="Texture2D" uid="uid://b4mrvvnfa4l67" path="res://media/fast-speed-icon.svg" id="5_nxtc6"]
+[ext_resource type="Texture2D" uid="uid://k37r836km5v5" path="res://media/shield-black-icon.svg" id="6_jlsqs"]
+[ext_resource type="Texture2D" uid="uid://bi8sycpgspx14" path="res://media/heart-icon.svg" id="7_q8u5g"]
+
+[node name="Main" type="Node2D" unique_id=1517189486]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
+texture_repeat = 2
+position = Vector2(-82, 65)
+rotation = 0.0025917965
+texture = ExtResource("1_0bbpv")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
+script = ExtResource("1_rarhs")
+enemy_scene = ExtResource("1_rvslj")
+
+[node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
+autostart = true
+
+[node name="Scene" type="Node2D" parent="." unique_id=887944876]
+position = Vector2(-34, 83)
+
+[node name="Enemy" parent="Scene" unique_id=603482203 instance=ExtResource("1_rvslj")]
+position = Vector2(605, 155)
+
+[node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("2_0bbpv")]
+position = Vector2(611, 240)
+
+[node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
+process_mode = 3
+visible = false
+
+[node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -304.0
+offset_top = -192.5
+offset_right = 304.0
+offset_bottom = 192.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="UpButtonOne" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=430492941]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "+40 скр"
+icon = ExtResource("5_nxtc6")
+
+[node name="UpButtonTwo" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=804400187]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "0.9 плч урн"
+icon = ExtResource("6_jlsqs")
+
+[node name="UpButtonThree" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=112784696]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "здр +10"
+icon = ExtResource("7_q8u5g")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1583140629]
+
+[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=601628181 groups=["health_bar"]]
+custom_minimum_size = Vector2(300, 100)
+custom_maximum_size = Vector2(1000, 100)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+show_percentage = false
+
+[node name="Label" type="Label" parent="HUD/HealthBar" unique_id=851243512 groups=["health_label"]]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 171
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=159875392 groups=["timer_label"]]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="LevelLabel" type="Label" parent="HUD" unique_id=885527235 groups=["level_label"]]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+
+[connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonOne" to="Scene/Player" method="_on_up_button_one_pressed"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonTwo" to="Scene/Player" method="_on_up_button_two_pressed"]
+[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonThree" to="Scene/Player" method="_on_up_button_three_pressed"]

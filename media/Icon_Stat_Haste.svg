@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Haste" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 88 88">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f0e6d2;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <polygon class="cls-1" points="56.4 24.9 44 39.6 31.6 24.9 56.4 24.9"/>
+  <polygon class="cls-1" points="38.5 44 23.6 61.8 23.6 78.1 16.2 78.1 16.2 59.8 23.5 51 29.4 44 23.5 37 16.2 28.2 16.2 9.9 23.6 9.9 23.6 26.2 38.5 44"/>
+  <rect class="cls-1" x="10.3" y="9.9" width="67.4" height="7.4"/>
+  <polygon class="cls-1" points="49.5 44 64.4 61.8 64.4 78.1 71.8 78.1 71.8 59.8 64.5 51 58.6 44 64.5 37 71.8 28.2 71.8 9.9 64.4 9.9 64.4 26.2 49.5 44"/>
+  <rect class="cls-1" x="10.3" y="70.7" width="67.4" height="7.4"/>
+</svg>

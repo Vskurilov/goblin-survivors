@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AoeWeaponData" format=3 uid="uid://my417rnir1rp"]
+
+[ext_resource type="Script" uid="uid://d3u1nlncoieu1" path="res://scripts/resource_classes/weapon/aoe_weapon_data.gd" id="1_cokop"]
+[ext_resource type="PackedScene" uid="uid://4uaah23fgnp3" path="res://scenes/aoe_zone.tscn" id="1_pp3yj"]
+[ext_resource type="Texture2D" uid="uid://cc75dih4fjq2d" path="res://media/circle.svg" id="3_64byg"]
+
+[resource]
+script = ExtResource("1_cokop")
+aoe_scene = ExtResource("1_pp3yj")
+texture = ExtResource("3_64byg")
+zone_count = 3
+weapon_name = "fire_ring"
+metadata/_custom_type_script = "uid://d3u1nlncoieu1"

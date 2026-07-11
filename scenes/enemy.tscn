@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://b40iy5cvb2pna"]
+
+[ext_resource type="Script" uid="uid://ccvnw5k1mvas8" path="res://scripts/resource_classes/enemy/enemy.gd" id="1_md0e3"]
+[ext_resource type="Texture2D" uid="uid://k4mihaqalisk" path="res://media/goblin-head-svgrepo-com.svg" id="2_4gyqm"]
+[ext_resource type="Shader" uid="uid://bufafplhc2bwp" path="res://resources/shader/black_shader.gdshader" id="3_5uy6h"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qhqgy"]
+resource_local_to_scene = true
+shader = ExtResource("3_5uy6h")
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3xd07"]
+
+[node name="Enemy" type="CharacterBody2D" unique_id=603482203 groups=["enemies"]]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_md0e3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=829748638]
+material = SubResource("ShaderMaterial_qhqgy")
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_4gyqm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1250957882]
+scale = Vector2(3, 3)
+shape = SubResource("CircleShape2D_3xd07")

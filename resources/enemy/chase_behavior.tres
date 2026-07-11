@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ChaseBehaviorData" format=3 uid="uid://2wm5imkrc3qt"]
+
+[ext_resource type="Script" uid="uid://b50qm6ap3nvk8" path="res://scripts/resource_classes/enemy/chase_behavior_data.gd" id="1_nsyq2"]
+
+[resource]
+script = ExtResource("1_nsyq2")
+metadata/_custom_type_script = "uid://b50qm6ap3nvk8"

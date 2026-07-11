@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Duration" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 88 88">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #74e6ff;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M68.3,32.8l11,3.1c-3.1-13.5-13.7-24.2-27.3-27.3l3.1,11c5.8,2.7,10.5,7.3,13.1,13.1ZM44,70.8c-14.8,0-26.8-12-26.8-26.8s6.4-20.1,15.6-24.3l3.1-11C19.8,12.3,7.7,26.8,7.7,44s16.2,36.2,36.3,36.2,31.7-12,35.3-28.2l-11,3.1c-4.2,9.2-13.5,15.6-24.3,15.6Z"/>
+  <polygon class="cls-1" points="53.2 29.5 44 34.8 34.8 29.5 44 0 53.2 29.5"/>
+  <circle class="cls-1" cx="44" cy="44" r="6"/>
+  <polygon class="cls-1" points="58.5 53.2 53.2 44 58.5 34.8 88 44 58.5 53.2"/>
+</svg>

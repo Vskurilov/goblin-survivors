@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cyvcf4hhdms1e"]
+
+[ext_resource type="Script" uid="uid://dd0cwkdxw1v5" path="res://scripts/resource_classes/weapon/projectile.gd" id="1_q3m7n"]
+[ext_resource type="Texture2D" uid="uid://cot1ocehj02a" path="res://media/battered-axe-svgrepo-com.svg" id="2_softn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3xd07"]
+
+[node name="Projectile" type="Area2D" unique_id=1713508641]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_q3m7n")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1646108053]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_softn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855457988]
+shape = SubResource("CircleShape2D_3xd07")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

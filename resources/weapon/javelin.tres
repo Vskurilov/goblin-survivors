@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://qf1g6tsqptfw"]
+
+[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_sqxgk"]
+[ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_vhqel"]
+[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="3_5ufd5"]
+[ext_resource type="Texture2D" uid="uid://cxwxiu4mwmvh2" path="res://media/noun-javelin-974222.svg" id="3_e2qha"]
+
+[sub_resource type="Resource" id="Resource_e2qha"]
+script = ExtResource("1_sqxgk")
+metadata/_custom_type_script = "uid://djp7cru2m7rmx"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vhqel"]
+size = Vector2(12, 0.1)
+
+[resource]
+script = ExtResource("3_5ufd5")
+projectile_scene = ExtResource("1_vhqel")
+damage = 20.0
+projectile_speed = 1000.0
+texture = ExtResource("3_e2qha")
+projectile_scale = 10.0
+collision_shape = SubResource("RectangleShape2D_vhqel")
+sprite_angle_offset = 0.7853981633974483
+hitbox_angle_offset = -0.7853981633974483
+base_trajectory = SubResource("Resource_e2qha")
+spawn_offset_distance = 100.0
+weapon_name = "javelin"
+metadata/_custom_type_script = "uid://cj2chqr7efsb"

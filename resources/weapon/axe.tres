@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://dtie43fw0yrti"]
+
+[ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_424j3"]
+[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
+[ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
+[ext_resource type="Script" uid="uid://c1n4qqjkdi41f" path="res://scripts/resource_classes/weapon/burn_effect_data.gd" id="2_rad8y"]
+[ext_resource type="Texture2D" uid="uid://cot1ocehj02a" path="res://media/battered-axe-svgrepo-com.svg" id="3_jxybs"]
+
+[sub_resource type="Resource" id="Resource_vgvix"]
+script = ExtResource("1_424j3")
+metadata/_custom_type_script = "uid://xl4c4pcg3o2x"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hi8pk"]
+
+[sub_resource type="Resource" id="Resource_4r23m"]
+script = ExtResource("2_rad8y")
+metadata/_custom_type_script = "uid://c1n4qqjkdi41f"
+
+[resource]
+script = ExtResource("1_i5rwr")
+projectile_scene = ExtResource("1_n1wqa")
+texture = ExtResource("3_jxybs")
+collision_shape = SubResource("CircleShape2D_hi8pk")
+base_trajectory = SubResource("Resource_vgvix")
+on_hit_effect = SubResource("Resource_4r23m")
+metadata/_custom_type_script = "uid://cj2chqr7efsb"
