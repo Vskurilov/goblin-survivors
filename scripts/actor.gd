@@ -15,6 +15,9 @@ var crit_mult: float = 2.0
 var attack_speed_mult: float = 1.0
 var _flash_color:Color = Color.WHITE
 
+func get_target_group() -> StringName:
+	return &""
+
 func flash_hit(color: Color = hit_flash_color) -> void:
 	_hit_flash_time_left = hit_flash_duration
 	_flash_color = color
@@ -78,6 +81,10 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, in
 func _process_status_effects(delta: float) -> void:
 	for i in range(active_effects.size() - 1, -1, -1):
 		var effect_data = active_effects[i]
+		var effect_owner = effect_data["owner_actor"]
+		if not is_instance_valid(effect_owner):
+			effect_owner = null
+			effect_data["owner_actor"] = null
 		effect_data["time_since_tick"] += delta
 		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
 			effect_data["effect"].apply_tick(self, effect_data["owner_actor"])

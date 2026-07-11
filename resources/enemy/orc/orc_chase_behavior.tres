@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ChaseBehaviorData" format=3 uid="uid://b03k6r2ohqyls"]
+
+[ext_resource type="Script" uid="uid://b50qm6ap3nvk8" path="res://scripts/resource_classes/enemy/chase_behavior_data.gd" id="1_ecqbx"]
+
+[resource]
+script = ExtResource("1_ecqbx")
+max_sepation_speed = 80.0
+metadata/_custom_type_script = "uid://b50qm6ap3nvk8"

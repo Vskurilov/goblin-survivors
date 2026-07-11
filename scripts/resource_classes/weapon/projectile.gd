@@ -16,6 +16,7 @@ var wave_phase_offset: float = 0.0
 var age: float = 0.0
 var on_hit_effect: StatusEffectData
 var owner_actor: Actor
+var target_group: StringName = &""
 
 func _ready() -> void:
 	if texture:
@@ -41,13 +42,14 @@ func _physics_process(delta):
 func _on_body_entered(body: Node2D) -> void:
 	if body == owner_actor:
 		return
-	if not owner_actor or not owner_actor.is_valid_target(body):
+	if not body.is_in_group(target_group):
 		return
-	
 	var final_damage = damage
-	final_damage = owner_actor.roll_crit(damage)
+	if is_instance_valid(owner_actor):
+		final_damage = owner_actor.roll_crit(damage)
 	body.take_damage(final_damage)
 	if on_hit_effect:
-		var interval_mult = 1.0 / owner_actor.attack_speed_mult if owner_actor else 1.0
-		body.apply_status_effect(on_hit_effect, owner_actor, interval_mult)
+		var interval_mult = owner_actor.attack_speed_mult if is_instance_valid(owner_actor) else 1.0
+		
+		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, 1.0 / interval_mult)
 	queue_free()

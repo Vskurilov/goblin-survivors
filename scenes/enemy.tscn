@@ -14,7 +14,7 @@ shader_parameter/tint_amount = 0.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=603482203 groups=["enemies"]]
 collision_layer = 2
-collision_mask = 2
+collision_mask = 0
 script = ExtResource("1_md0e3")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=829748638]

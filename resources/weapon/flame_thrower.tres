@@ -1,18 +1,19 @@
 [gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://c3nxr1iof4ihd"]
 
-[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_424j3"]
-[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
+[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_8mpxb"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
+[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="3_5jo6y"]
 [ext_resource type="Texture2D" uid="uid://cc6guf1vi5cv8" path="res://media/flame-icon.svg" id="4_cym3m"]
 
 [sub_resource type="Resource" id="Resource_cym3m"]
-script = ExtResource("1_424j3")
+script = ExtResource("1_8mpxb")
 metadata/_custom_type_script = "uid://djp7cru2m7rmx"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_424j3"]
+radius = 0.01
 
 [resource]
-script = ExtResource("1_i5rwr")
+script = ExtResource("3_5jo6y")
 projectile_scene = ExtResource("1_n1wqa")
 damage = 0.01
 lifetime = 0.5

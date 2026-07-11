@@ -24,6 +24,9 @@ var weapon_timers: Array[Timer] = []
 @onready var gameoverui = get_tree().get_first_node_in_group("game_over_ui")
 @onready var gameoverstatlabel = get_tree().get_first_node_in_group("game_over_stat_label")
 
+func get_target_group() -> StringName:
+	return &"enemies"
+
 func  _ready():
 	current_health = max_health
 	healhbar.max_value = max_health

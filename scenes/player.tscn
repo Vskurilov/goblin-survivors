@@ -20,6 +20,7 @@ shader_parameter/tint_amount = 0.0
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_qhqgy")
+max_health = 10000.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=617333978]
 material = SubResource("ShaderMaterial_4ra3w")

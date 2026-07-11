@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="RangedBehaviorData" format=3 uid="uid://b3prwsfng2bqp"]
+
+[ext_resource type="Script" uid="uid://bk4koccmcjm8o" path="res://scripts/resource_classes/enemy/ranged_behavior_data.gd" id="1_dkp8y"]
+[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="1_yiack"]
+
+[resource]
+script = ExtResource("1_dkp8y")
+projectile_data = ExtResource("1_yiack")
+metadata/_custom_type_script = "uid://bk4koccmcjm8o"

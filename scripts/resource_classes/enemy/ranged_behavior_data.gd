@@ -44,4 +44,5 @@ func _spawn_projectile(enemy: CharacterBody2D, player: Node2D) -> void:
 	projectile.lifetime = projectile_data.lifetime
 	projectile.on_hit_effect = projectile_data.on_hit_effect
 	projectile.owner_actor = enemy
+	projectile.target_group = enemy.get_target_group()
 	enemy.get_tree().current_scene.add_child(projectile)
