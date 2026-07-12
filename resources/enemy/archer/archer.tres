@@ -4,13 +4,13 @@
 [ext_resource type="Resource" uid="uid://b82fg12lvb6lf" path="res://resources/enemy/archer/archer_behavior.tres" id="1_jpuri"]
 [ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="1_v3v72"]
 [ext_resource type="Shape2D" uid="uid://ck2jpe25ymq47" path="res://resources/enemy/archer/archer_hitbox.tres" id="2_72ysm"]
-[ext_resource type="Texture2D" uid="uid://bj3jdv7p2lcqh" path="res://media/goblin-second.svg" id="3_jpuri"]
+[ext_resource type="Texture2D" uid="uid://bjv4uoumcsty2" path="res://media/Gemini_Generated_Image_afuqpafuqpafuqpa.svg" id="5_ba7ia"]
 
 [resource]
 script = ExtResource("1_d8r1v")
 gem_scene = ExtResource("1_v3v72")
-texture = ExtResource("3_jpuri")
-visual_scale = 0.1
+texture = ExtResource("5_ba7ia")
+visual_scale = 0.06
 behavior = ExtResource("1_jpuri")
 collision_shape = ExtResource("2_72ysm")
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

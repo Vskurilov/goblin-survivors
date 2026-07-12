@@ -3,8 +3,8 @@ extends Actor
 signal  died
 
 @export var enemy_data: EnemyData
-@export var attack_cooldown: float = 0.0
 
+var attack_cooldown: float = 0.0
 var health: float
 var speed: float
 var player

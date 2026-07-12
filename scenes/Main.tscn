@@ -10,12 +10,8 @@
 [ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="8_y6deb"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
-[ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="10_yc10j"]
-[ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="11_jscy8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://btvin0dlomyj8" path="res://resources/ups/reduce_damage_upgrade.tres" id="12_2f3dj"]
-[ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="12_pm3ni"]
-[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="13_y6deb"]
 [ext_resource type="Resource" uid="uid://cjfhix48x166f" path="res://resources/ups/crit_mult_upgrade.tres" id="13_yq6so"]
 [ext_resource type="Resource" uid="uid://dm2xevepbqd5w" path="res://resources/ups/crit_chance_upgrade.tres" id="14_fv21b"]
 [ext_resource type="Resource" uid="uid://d13gqejl5h6qs" path="res://resources/ups/attack_speed_upgrade.tres" id="15_tel4y"]
@@ -45,7 +41,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("10_yc10j")]([ExtResource("11_jscy8"), ExtResource("12_pm3ni"), ExtResource("13_y6deb")])
+collision_mask = 2
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3
