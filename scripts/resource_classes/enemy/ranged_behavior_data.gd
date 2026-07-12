@@ -3,26 +3,27 @@ class_name RangedBehaviorData
 extends EnemyBehaviorData
 
 @export var projectile_data: ProjectileWeaponData
-@export var preffered_distance: float = 250.0
+@export var preferred_distance: float = 250.0
 @export var distance_tolerance: float = 30.0
 
 func  _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
 	var to_player = player.global_position - enemy.global_position
 	var distance = to_player.length()
 	var direction = to_player.normalized()
-	if distance > preffered_distance + distance_tolerance:
+	if distance > preferred_distance + distance_tolerance:
 		return direction * enemy.speed
-	elif distance < preffered_distance - distance_tolerance:
+	elif distance < preferred_distance - distance_tolerance:
 		return -direction * enemy.speed
 	else:
 		return Vector2.ZERO
 func  _try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 		if projectile_data == null:
 			return
-		enemy.attack_cooldown -= delta
-		if enemy.attack_cooldown > 0.0:
+		var cooldown = enemy.behavior_state.get("attack_cooldown", 0.0) - delta
+		if cooldown > 0.0:
+			enemy.behavior_state["attack_cooldown"] = cooldown
 			return
-		enemy.attack_cooldown = projectile_data.fire_rate / enemy.attack_speed_mult
+		enemy.behavior_state["attack_cooldown"] = projectile_data.fire_rate / enemy.attack_speed_mult
 		_spawn_projectile(enemy, player)
 	
 func _spawn_projectile(enemy: CharacterBody2D, player: Node2D) -> void:

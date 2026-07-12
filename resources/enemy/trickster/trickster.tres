@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b188p0gf78eex"]
+
+[ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="1_rsfmu"]
+[ext_resource type="Resource" uid="uid://gmps7q674vjx" path="res://resources/enemy/trickster/trickster_behavior.tres" id="1_uuns6"]
+[ext_resource type="Shape2D" uid="uid://dpnb0ajnnpysd" path="res://resources/enemy/trickster/trickster_hitbox.tres" id="2_vtyeh"]
+[ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="3_ayye3"]
+[ext_resource type="Texture2D" uid="uid://c6mrewc7ts2wi" path="res://media/Gemini_Generated_Image_wgq7sbwgq7sbwgq7.svg" id="5_1pwad"]
+
+[resource]
+script = ExtResource("1_rsfmu")
+gem_scene = ExtResource("3_ayye3")
+texture = ExtResource("5_1pwad")
+visual_scale = 0.05
+behavior = ExtResource("1_uuns6")
+mass = 2.0
+collision_shape = ExtResource("2_vtyeh")
+metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

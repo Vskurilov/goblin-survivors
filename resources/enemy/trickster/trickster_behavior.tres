@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ErraticBehaviorData" format=3 uid="uid://gmps7q674vjx"]
+
+[ext_resource type="Script" uid="uid://dct8m5fj45f3" path="res://scripts/resource_classes/enemy/erratic_behavior_data.gd" id="1_oqr40"]
+
+[resource]
+script = ExtResource("1_oqr40")
+direction_charge_interval = 0.7
+wander_strength = 1.0
+metadata/_custom_type_script = "uid://dct8m5fj45f3"

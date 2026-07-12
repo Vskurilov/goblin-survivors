@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://d3lu1ygq7r0k"]
+
+[ext_resource type="Resource" uid="uid://ck4gvrnxv0we1" path="res://resources/enemy/orc_brute/orc_brute_behavior.tres" id="1_lfgvm"]
+[ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="1_xxb0i"]
+[ext_resource type="Shape2D" uid="uid://lyx5xm7ke21r" path="res://resources/enemy/orc_brute/orc_brute_hitbox.tres" id="2_ygigc"]
+[ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="3_fuyli"]
+[ext_resource type="Texture2D" uid="uid://dbv7ncmabmrs0" path="res://media/Gemini_Generated_Image_m1zzbnm1zzbnm1zz.svg" id="5_qitdc"]
+
+[resource]
+script = ExtResource("1_xxb0i")
+enemy_name = "Ork Brute"
+health = 20
+speed = 40.0
+gem_scene = ExtResource("3_fuyli")
+texture = ExtResource("5_qitdc")
+visual_scale = 0.075
+behavior = ExtResource("1_lfgvm")
+mass = 10.0
+collision_shape = ExtResource("2_ygigc")
+metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

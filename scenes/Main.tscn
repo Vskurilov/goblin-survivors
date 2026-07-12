@@ -8,7 +8,9 @@
 [ext_resource type="Resource" uid="uid://dbdbks14exkom" path="res://resources/enemy/orc/orc.tres" id="6_jscy8"]
 [ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="7_pm3ni"]
 [ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="8_y6deb"]
+[ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="9_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
+[ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="10_0ld40"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://btvin0dlomyj8" path="res://resources/ups/reduce_damage_upgrade.tres" id="12_2f3dj"]
@@ -31,7 +33,7 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("5_yc10j"), ExtResource("6_jscy8"), ExtResource("7_pm3ni"), ExtResource("8_y6deb")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("9_dp3eg"), ExtResource("8_y6deb"), ExtResource("7_pm3ni"), ExtResource("6_jscy8"), ExtResource("5_yc10j"), ExtResource("10_0ld40")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true

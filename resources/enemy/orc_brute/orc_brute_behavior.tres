@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DashBehaviorData" format=3 uid="uid://ck4gvrnxv0we1"]
+
+[ext_resource type="Script" uid="uid://be0uomx4q80v4" path="res://scripts/resource_classes/enemy/dash_behavior_data.gd" id="1_4xtgm"]
+
+[resource]
+script = ExtResource("1_4xtgm")
+metadata/_custom_type_script = "uid://be0uomx4q80v4"

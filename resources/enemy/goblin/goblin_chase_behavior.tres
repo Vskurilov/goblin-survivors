@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_56y00")
-max_sepation_speed = 60.0
+max_separation_speed = 60.0
 metadata/_custom_type_script = "uid://b50qm6ap3nvk8"

@@ -12,6 +12,8 @@ shader_parameter/tint_amount = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3xd07"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ra3w"]
+
 [node name="Enemy" type="CharacterBody2D" unique_id=603482203 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 0
@@ -25,3 +27,10 @@ texture = ExtResource("2_4gyqm")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1250957882]
 scale = Vector2(3, 3)
 shape = SubResource("CircleShape2D_3xd07")
+
+[node name="SeparationArea" type="Area2D" parent="." unique_id=1777673172]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea" unique_id=1192949752]
+shape = SubResource("CircleShape2D_4ra3w")
