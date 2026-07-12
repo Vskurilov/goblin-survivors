@@ -8,6 +8,7 @@ export_presets.cfg
 .import/
 export.cfg
 export_presets.cfg
+*.tmp
 
 # Imported translations (automatically generated from CSV files)
 *.translations.gen.h
