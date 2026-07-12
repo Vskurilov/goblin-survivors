@@ -9,6 +9,7 @@ var health: float
 var speed: float
 var player
 var nearby_enemies:Array = []
+var nearby_player = null
 
 func get_target_group() -> StringName:
 	return &"player"
@@ -41,13 +42,16 @@ func _ready():
 func _on_separation_area_body_entered(body:Node2D) -> void:
 	if body == self:
 		return
-	if not body.is_in_group("enemies"):
-		return
-	nearby_enemies.append(body)
+	if  body.is_in_group("enemies"):
+		nearby_enemies.append(body)
+	elif body.is_in_group("player"):
+		nearby_player = body
 	
 func _on_separation_area_body_exited(body:Node2D) -> void:
 	if body in nearby_enemies:
 		nearby_enemies.erase(body)
+	if body == nearby_player:
+		nearby_player = null
 
 func _physics_process(delta: float) -> void:
 	_process_status_effects(delta)

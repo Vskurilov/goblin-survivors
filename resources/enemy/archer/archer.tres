@@ -8,6 +8,7 @@
 
 [resource]
 script = ExtResource("1_d8r1v")
+speed = 100.0
 gem_scene = ExtResource("1_v3v72")
 texture = ExtResource("5_ba7ia")
 visual_scale = 0.06

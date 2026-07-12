@@ -14,8 +14,7 @@ func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 	var push = Vector2.ZERO
 	var own_mass = enemy.enemy_data.mass
 	var own_radius = enemy.enemy_data.body_radius
-	for i in range(enemy.nearby_enemies.size() - 1, -1, -1):
-		
+	for i in range(enemy.nearby_enemies.size() - 1, -1, -1):		
 		var other = enemy.nearby_enemies[i]
 		if not is_instance_valid(other):
 			enemy.nearby_enemies.remove_at(i)
@@ -27,6 +26,17 @@ func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 		if distance > 0.0 and overlap > 0.0:
 			var push_ratio = other.enemy_data.mass / (own_mass + other.enemy_data.mass)
 			push += offset.normalized() * overlap * push_ratio
+	
+	if is_instance_valid(enemy.nearby_player):
+		var player = enemy.nearby_player
+		var offset =enemy.global_position - player.global_position
+		var distance = offset.length()
+		var combined_radius = own_radius + player.body_radius
+		var overlap = combined_radius - distance
+		if distance > 0.0 and overlap > 0.0:
+			var push_ratio = player.mass / (own_mass + player.mass)
+			push += offset.normalized() * overlap * push_ratio
+	
 	var separation_velocity = push * separation_response
 	return separation_velocity.limit_length(max_separation_speed)
 		

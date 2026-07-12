@@ -3,7 +3,9 @@ extends  Actor
 @export var speed: float = 200.0
 @export var max_health: float = 100
 @export var lost_health_per_second:float = 20.0
-@export var weapons:Array[WeaponData] = [] 
+@export var weapons:Array[WeaponData] = []
+@export var mass: float = 8.0
+@export var body_radius: float = 30.0
 
 var current_health: float 
 var is_dead:bool = false
