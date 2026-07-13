@@ -34,9 +34,11 @@ func _upgrade_visual_feedback(delta: float) -> void:
 	else:
 		sprite.material.set_shader_parameter("tint_amount", 0.0)
 
-func  roll_crit(base_damage:float) -> float:
-	if randf() < crit_chance:
-		return base_damage * crit_mult
+func  roll_crit(base_damage:float, weapon_bonuses : Dictionary = {}) -> float:
+	var effective_chance = crit_chance + weapon_bonuses .get("crit_chance", 0.0)
+	var effective_mult = crit_mult + weapon_bonuses.get("crit_mult", 0.0)
+	if randf() < effective_chance:
+		return base_damage * effective_mult
 	return base_damage
  
 func _get_stack_key(effect: StatusEffectData):
@@ -50,7 +52,7 @@ func _key_match(key_a, key_b) -> bool:
 		return false
 	return key_a == key_b
 
-func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, interval_mult: float = 1.0) -> void:
+func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, interval_mult: float = 1.0, weapon_bonuses : Dictionary = {}) -> void:
 	var new_key = _get_stack_key(effect)
 	var existing_count := 0
 	var oldest_index := -1
@@ -74,7 +76,8 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, in
 		"time_left": effect.duration,
 		"time_since_tick": 0.0,
 		"owner_actor": owner_actor,
-		"tick_interval": effect.tick_interval * interval_mult
+		"tick_interval": effect.tick_interval * interval_mult,
+		"weapon_bonuses ": weapon_bonuses 
 		})
 	elif oldest_index != -1:
 		active_effects[oldest_index]["time_left"] = active_effects[oldest_index]["effect"].duration
@@ -88,7 +91,7 @@ func _process_status_effects(delta: float) -> void:
 			effect_data["owner_actor"] = null
 		effect_data["time_since_tick"] += delta
 		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
-			effect_data["effect"].apply_tick(self, effect_data["owner_actor"])
+			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses "])
 			effect_data["time_since_tick"] = 0.0
 		effect_data["time_left"] -= delta
 		if effect_data["time_left"] <= 0:

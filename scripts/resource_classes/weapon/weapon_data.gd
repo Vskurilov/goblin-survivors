@@ -2,10 +2,11 @@ class_name WeaponData
 extends TaggedResource
 
 enum TargetMode{NEAREST, FARTHEST, RANDOM}
-enum  Tag {PHYSICAL, FIRE, ICE, POISON, LIGHTNING}
+
 
 @export var weapon_name:String = ''
 @export var fire_rate:float = 1.0
+@export var weapon_bonuses : Dictionary = {}
 
 func  fire(player:Node):
 	push_warning("fire не реализован для: " + weapon_name)

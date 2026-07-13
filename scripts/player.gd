@@ -98,7 +98,7 @@ func gain_xp(amount):
 	if leveled_up:
 		current_health = max_health
 		update_health(current_health)
-		if levelupui.has_upgrades():
+		if levelupui.has_upgrades(self):
 			get_tree().paused = true
 			levelupui.show_choices(self)
 	update_level_xp()
@@ -121,6 +121,12 @@ func _setup_weapons():
 		var effect = weapons[i].get("on_hit_effect")
 		if effect != null:
 			weapons[i].set("on_hit_effect", effect.duplicate())
+		var bonuses = weapons[i].get("weapon_bonuses")
+		if bonuses != null:
+			weapons[i].set("weapon_bonuses", bonuses.duplicate())
+		var trajectory = weapons[i].get("base_trajectory")
+		if trajectory != null:
+			weapons[i].set("base_trajectory", trajectory.duplicate())
 	for weapon in weapons:
 		var timer = Timer.new()
 		timer.wait_time = weapon.fire_rate / attack_speed_mult

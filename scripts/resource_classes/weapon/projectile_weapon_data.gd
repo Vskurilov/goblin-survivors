@@ -65,4 +65,5 @@ func _spawn_projectile(player: Node, direction: Vector2) -> void:
 	projectile.on_hit_effect = on_hit_effect
 	projectile.owner_actor = player
 	projectile.target_group = player.get_target_group()
+	projectile.weapon_bonuses  = weapon_bonuses 
 	player.get_tree().current_scene.add_child(projectile)

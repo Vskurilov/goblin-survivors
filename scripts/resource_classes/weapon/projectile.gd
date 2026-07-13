@@ -9,6 +9,7 @@ extends Area2D
 @export var lifetime: float = 5.0
 @export_range(-180, 180, 0.1, "radians_as_degrees") var sprite_angle_offset: float = 0.0
 @export_range(-180, 180, 0.1, "radians_as_degrees") var hitbox_angle_offset: float = 0.0
+
 var direction: Vector2 = Vector2.RIGHT
 var trajectory: TrajectoryData
 var travel_time: float = 0.0
@@ -17,6 +18,7 @@ var age: float = 0.0
 var on_hit_effect: StatusEffectData
 var owner_actor: Actor
 var target_group: StringName = &""
+var weapon_bonuses : Dictionary = {}
 
 func _ready() -> void:
 	if texture:
@@ -46,10 +48,9 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	var final_damage = damage
 	if is_instance_valid(owner_actor):
-		final_damage = owner_actor.roll_crit(damage)
+		final_damage = owner_actor.roll_crit(damage, weapon_bonuses )
 	body.take_damage(final_damage)
 	if on_hit_effect:
 		var interval_mult = owner_actor.attack_speed_mult if is_instance_valid(owner_actor) else 1.0
-		
-		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, 1.0 / interval_mult)
+		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, 1.0 / interval_mult, weapon_bonuses )
 	queue_free()

@@ -10,7 +10,7 @@ extends UpgradeData
 
 func apply(player:Node) -> void:
 	for weapon in player.weapons:
-		if weapon.tags & required_tags == 0:
+		if required_tags != 0 and weapon.tags & required_tags == 0:
 			continue
 		var target_resource = weapon
 		if apply_to_effect:

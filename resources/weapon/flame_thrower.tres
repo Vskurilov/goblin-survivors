@@ -26,6 +26,6 @@ projectile_per_target = 50
 spread_angle_degrees = 15.0
 sync_spawn_delay = false
 spawn_offset_distance = 50.0
-weapon_name = "AXEEFFECT"
+weapon_name = "flame thrower"
 fire_rate = 0.5
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

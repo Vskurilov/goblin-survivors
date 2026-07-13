@@ -8,5 +8,5 @@ damage_per_tick = 0.1
 duration = 30.0
 tick_interval = 3.0
 max_stacks = 30
-stack_group = &"\"burn\""
+tags = 8
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

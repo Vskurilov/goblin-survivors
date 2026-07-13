@@ -4,13 +4,18 @@
 [ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="2_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="3_0ld40"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
+[ext_resource type="Resource" uid="uid://xh5uae15vyo2" path="res://resources/enemy/goblin/goblin.tres" id="5_yc10j"]
+[ext_resource type="Resource" uid="uid://dbdbks14exkom" path="res://resources/enemy/orc/orc.tres" id="6_jscy8"]
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
+[ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="7_pm3ni"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="8_muem4"]
+[ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="8_y6deb"]
+[ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="9_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="10_0ld40"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
-[ext_resource type="Resource" uid="uid://d13gqejl5h6qs" path="res://resources/ups/attack_speed_upgrade.tres" id="15_tel4y"]
+[ext_resource type="Resource" uid="uid://dyn1oeevrp3hi" path="res://resources/ups/poison_test.tres" id="22_jscy8"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -25,7 +30,7 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("10_0ld40")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("10_0ld40"), ExtResource("7_pm3ni"), ExtResource("5_yc10j"), ExtResource("6_jscy8"), ExtResource("9_dp3eg"), ExtResource("8_y6deb")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
@@ -41,7 +46,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4")])
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("15_tel4y"), ExtResource("15_tel4y"), ExtResource("15_tel4y")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("22_jscy8")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
@@ -154,7 +159,4 @@ layout_mode = 2
 text = "Again?"
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
-[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonOne" to="Scene/Player" method="_on_up_button_one_pressed"]
-[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonTwo" to="Scene/Player" method="_on_up_button_two_pressed"]
-[connection signal="pressed" from="LevelUpUI/UpdateButtons/UpButtonThree" to="Scene/Player" method="_on_up_button_three_pressed"]
 [connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="Scene/Player" method="_on_restart_button_pressed"]
