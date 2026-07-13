@@ -2,7 +2,6 @@ extends  Actor
 
 @export var speed: float = 200.0
 @export var max_health: float = 100
-@export var lost_health_per_second:float = 20.0
 @export var weapons:Array[WeaponData] = []
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
@@ -46,7 +45,17 @@ func _physics_process(delta):
 		survival_time = survival_time + delta		
 		timerlabel.text = "мочишь гоблинов уже " + format_time(survival_time)
 	if not touching_enemies.is_empty():
-		take_damage(lost_health_per_second * delta * touching_enemies.size())
+		var total_damage = 0.0
+		for i in range(touching_enemies.size() - 1, -1, -1):
+			var enemy = touching_enemies[i]
+			if not is_instance_valid(enemy):
+				touching_enemies.remove_at(i)
+				continue
+			if enemy.enemy_data == null:
+				continue
+			total_damage += enemy.enemy_data.contact_damage
+		if total_damage > 0.0:
+			take_damage(total_damage * delta)		
 	for i in weapon_timers.size():
 		weapon_timers[i].wait_time = weapons[i].fire_rate / attack_speed_mult
 
@@ -71,7 +80,7 @@ func take_damage(amount:float, is_dot_tick:bool = false):
 	if is_dead:
 		return
 	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
-	current_health -= amount
+	current_health -= amount * damage_taken_mult
 	update_health(current_health)
 	if current_health <= 0:
 		die()
@@ -87,10 +96,11 @@ func gain_xp(amount):
 		leveled_up = true
 		
 	if leveled_up:
-		get_tree().paused = true
-		levelupui.show_choices(self)
 		current_health = max_health
 		update_health(current_health)
+		if levelupui.has_upgrades():
+			get_tree().paused = true
+			levelupui.show_choices(self)
 	update_level_xp()
 
 func add_kill():
@@ -108,6 +118,9 @@ func die():
 func _setup_weapons():
 	for i in weapons.size():
 		weapons[i] = weapons[i].duplicate()
+		var effect = weapons[i].get("on_hit_effect")
+		if effect != null:
+			weapons[i].set("on_hit_effect", effect.duplicate())
 	for weapon in weapons:
 		var timer = Timer.new()
 		timer.wait_time = weapon.fire_rate / attack_speed_mult

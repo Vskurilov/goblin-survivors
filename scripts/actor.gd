@@ -7,8 +7,9 @@ extends CharacterBody2D
 @export var hit_flash_color: Color = Color(1, 0.3, 0.3)
 @export var dot_tint_color: Color = Color(0.3, 1.0, 0.3)
 
-var _hit_flash_time_left:float = 0.0
 
+var _hit_flash_time_left:float = 0.0
+var damage_taken_mult: float = 1.0
 var active_effects: Array = []
 var crit_chance: float = 0.05
 var crit_mult: float = 2.0

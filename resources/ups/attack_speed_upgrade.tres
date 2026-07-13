@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="AttackSpeedUpgradeData" format=3 uid="uid://d13gqejl5h6qs"]
+[gd_resource type="Resource" script_class="StatUpgradeData" format=3 uid="uid://d13gqejl5h6qs"]
 
-[ext_resource type="Script" uid="uid://criju4a17wc1x" path="res://scripts/resource_classes/ups/attack_speed_upgrade_data.gd" id="1_6dmur"]
 [ext_resource type="Texture2D" uid="uid://dprqgpvheusae" path="res://media/Icon_Stat_Projectiles.svg" id="1_ao4l1"]
+[ext_resource type="Script" uid="uid://2y4ecmwstrx4" path="res://scripts/resource_classes/ups/stat_upgrade_data.gd" id="2_ao4l1"]
 
 [resource]
-script = ExtResource("1_6dmur")
+script = ExtResource("2_ao4l1")
+stat_name = "attack_speed_mult"
+amount = 0.15
 upgrade_name = "attack speed up"
 description = "+0.15"
 icon = ExtResource("1_ao4l1")
-metadata/_custom_type_script = "uid://criju4a17wc1x"

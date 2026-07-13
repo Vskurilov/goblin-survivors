@@ -6,9 +6,8 @@ extends UpgradeData
 @export var is_multiplicative: bool = false
 
 func apply(player:Node) -> void:
-	var current = player.get(stat_name)
+	var current = player.get(stat_name)	
 	if is_multiplicative:
 		player.set(stat_name, current * amount)
 	else:
 		player.set(stat_name, current + amount)
-	

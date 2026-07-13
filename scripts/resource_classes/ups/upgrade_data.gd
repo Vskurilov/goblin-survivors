@@ -8,3 +8,6 @@ extends Resource
 
 func apply(player:Node) -> void:
 	push_error("UpgradeData.apply () не переопределен в " + str(get_script().resource_path))
+
+func is_available(_player:Node) -> bool:
+	return true

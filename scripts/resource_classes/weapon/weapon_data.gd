@@ -1,18 +1,14 @@
 class_name WeaponData
-extends Resource
+extends TaggedResource
 
 enum TargetMode{NEAREST, FARTHEST, RANDOM}
 enum  Tag {PHYSICAL, FIRE, ICE, POISON, LIGHTNING}
 
 @export var weapon_name:String = ''
 @export var fire_rate:float = 1.0
-@export_flags("Physical", "Fire", "Ice", "Poison", "Lightning") var tags:int = 0
 
 func  fire(player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
-
-func has_tag(tag:Tag) -> bool:
-	return tags & (1 << tag) != 0
 
 func pick_target(player:Node, mode:TargetMode) -> Node2D:
 	var targets = pick_targets(player, mode, 1)

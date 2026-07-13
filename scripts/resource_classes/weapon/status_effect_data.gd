@@ -1,5 +1,5 @@
 class_name StatusEffectData
-extends Resource
+extends TaggedResource
 
 @export var duration:float= 3.0
 @export var tick_interval = 0.5

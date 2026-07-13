@@ -12,6 +12,6 @@ gem_scene = ExtResource("3_ayye3")
 texture = ExtResource("5_1pwad")
 visual_scale = 0.05
 behavior = ExtResource("1_uuns6")
-mass = 2.0
+mass = 4.0
 collision_shape = ExtResource("2_vtyeh")
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

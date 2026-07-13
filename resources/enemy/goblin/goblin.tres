@@ -8,11 +8,12 @@
 
 [resource]
 script = ExtResource("3_45ncr")
+contact_damage = 10.0
 gem_scene = ExtResource("1_tymsc")
 texture = ExtResource("3_rd5jj")
 visual_scale = 0.1
 behavior = ExtResource("1_rd5jj")
-mass = 2.0
+mass = 3.0
 body_radius = 25.0
 collision_shape = ExtResource("2_45ncr")
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

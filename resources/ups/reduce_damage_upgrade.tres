@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_d5qgd")
-stat_name = "lost_health_per_second"
+stat_name = "damage_taken_mult"
 amount = 0.9
 is_multiplicative = true
 upgrade_name = "ЩитистЩит"
