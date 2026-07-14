@@ -81,6 +81,18 @@ func _apply_to_carrier(carrier: Resource) -> void:
 			upgrade_name, stat_name, current_type
 		])
 		return
+	var new_value = current * amount if is_multiplicative else current + amount
+	
+	# Инвариант: стат оружия/эффекта, бывший положительным, не имеет права
+	# стать нулём или отрицательным. Все такие статы (fire_rate, damage, duration,
+	# radius, max_stacks, target_count...) бессмысленны при <= 0, а fire_rate —
+	# это ПЕРИОД, и нулевой период роняет Timer.set_wait_time().
+	# Аддитивные апгрейды на период небезопасны в принципе: используй is_multiplicative.
+	if current > 0 and new_value <= 0:
+		push_error("TaggedStatUpgradeData '%s': стат '%s' ушёл бы в %s (было %s). Апгрейд не применён. Для уменьшающих апгрейдов используй is_multiplicative." % [
+			upgrade_name, stat_name, str(new_value), str(current)
+		])
+		return
 	carrier.set(stat_name, current * amount if is_multiplicative else current + amount)
 
 
