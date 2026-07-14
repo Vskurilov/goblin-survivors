@@ -10,6 +10,9 @@ extends Area2D
 var on_hit_effect: StatusEffectData
 var owner_actor: Actor
 var weapon_bonuses : Dictionary = {}
+var crit_chance: float = 0.05
+var crit_mult:float = 2.0
+var attack_speed_mult:float = 1.0
 
 func _ready() -> void:
 	if texture:
@@ -42,10 +45,8 @@ func _activate() -> void:
 func _deal_tick_damage() -> void:
 	for body in get_overlapping_bodies():
 		if body.is_in_group("enemies"):
-			var final_damage = damage_per_tick
-			if is_instance_valid(owner_actor):
-				final_damage = owner_actor.roll_crit(damage_per_tick, weapon_bonuses )
+			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 			body.take_damage(final_damage)
 			if on_hit_effect:
 				var interval_mult = 1.0 / owner_actor.attack_speed_mult if is_instance_valid(owner_actor) else 1.0
-				body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, interval_mult, weapon_bonuses )
+				body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, self)

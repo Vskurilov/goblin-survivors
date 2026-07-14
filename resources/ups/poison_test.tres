@@ -6,9 +6,8 @@
 [resource]
 script = ExtResource("2_e5fau")
 required_tags = 8
-stat_name = "fire_rate"
-amount = 0.9
-is_multiplicative = true
+stat_name = "attack_speed_mult"
+amount = 0.5
 upgrade_name = "tag poisontest"
 description = "test"
 icon = ExtResource("1_e5fau")

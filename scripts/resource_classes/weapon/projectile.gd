@@ -19,6 +19,9 @@ var on_hit_effect: StatusEffectData
 var owner_actor: Actor
 var target_group: StringName = &""
 var weapon_bonuses : Dictionary = {}
+var crit_chance: float = 0.05
+var crit_mult: float = 2.0
+var attack_speed_mult:float = 1.0
 
 func _ready() -> void:
 	if texture:
@@ -46,11 +49,9 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	if not body.is_in_group(target_group):
 		return
-	var final_damage = damage
-	if is_instance_valid(owner_actor):
-		final_damage = owner_actor.roll_crit(damage, weapon_bonuses )
+	var final_damage = WeaponData.roll_crit(damage, crit_chance, crit_mult)
 	body.take_damage(final_damage)
 	if on_hit_effect:
 		var interval_mult = owner_actor.attack_speed_mult if is_instance_valid(owner_actor) else 1.0
-		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, 1.0 / interval_mult, weapon_bonuses )
+		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, self)
 	queue_free()

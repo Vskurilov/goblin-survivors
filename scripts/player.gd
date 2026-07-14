@@ -59,7 +59,7 @@ func _physics_process(delta):
 		if total_damage > 0.0:
 			take_damage(total_damage * delta)		
 	for i in weapon_timers.size():
-		weapon_timers[i].wait_time = maxf(weapons[i].fire_rate / attack_speed_mult, MIN_FIRE_PERIOD)
+		weapon_timers[i].wait_time = maxf(weapons[i].fire_rate / weapons[i].attack_speed_mult, MIN_FIRE_PERIOD)
 
 func  update_health(current_health):
 	healhbar.max_value = max_health
@@ -131,7 +131,7 @@ func _setup_weapons():
 			weapons[i].set("base_trajectory", trajectory.duplicate())
 	for weapon in weapons:
 		var timer = Timer.new()
-		timer.wait_time = maxf(weapon.fire_rate / attack_speed_mult, MIN_FIRE_PERIOD)
+		timer.wait_time = maxf(weapon.fire_rate / weapon.attack_speed_mult, MIN_FIRE_PERIOD)
 		timer.timeout.connect(weapon.fire.bind(self))
 		add_child(timer)
 		weapon_timers.append(timer)

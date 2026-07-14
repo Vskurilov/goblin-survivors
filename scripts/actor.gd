@@ -3,9 +3,7 @@ extends CharacterBody2D
 
 
 ## Статы тела, которые оружие может усилить через weapon_bonuses.
-## ВНИМАНИЕ: ключ попадает сюда ТОЛЬКО если у него есть читатель.
-## Сейчас единственный читатель — roll_crit(). Добавляешь ключ —
-## сначала пиши того, кто его читает, иначе апгрейд будет молча пустым.
+## ВНИМАНИЕ: ключ попадает сюда ТОЛЬКО если у него есть читатель.#
 const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = ["crit_chance", "crit_mult"]
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -59,7 +57,7 @@ func _key_match(key_a, key_b) -> bool:
 		return false
 	return key_a == key_b
 
-func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, interval_mult: float = 1.0, weapon_bonuses: Dictionary = {}) -> void:
+func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, carrier: Node = null) -> void:
 	var new_key = _get_stack_key(effect)
 	var existing_count := 0
 	var oldest_index := -1
@@ -83,8 +81,10 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, in
 		"time_left": effect.duration,
 		"time_since_tick": 0.0,
 		"owner_actor": owner_actor,
-		"tick_interval": effect.tick_interval * interval_mult,
-		"weapon_bonuses": weapon_bonuses
+		"tick_interval": effect.tick_interval / (carrier.attack_speed_mult if carrier else 1.0),
+		"crit_chance": carrier.crit_chance if carrier else 0.05,
+		"crit_mult": carrier.crit_mult if carrier else 2.0,
+		"weapon_bonuses": carrier.weapon_bonuses if carrier else {},
 		})
 	elif oldest_index != -1:
 		active_effects[oldest_index]["time_left"] = active_effects[oldest_index]["effect"].duration
@@ -98,7 +98,7 @@ func _process_status_effects(delta: float) -> void:
 			effect_data["owner_actor"] = null
 		effect_data["time_since_tick"] += delta
 		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
-			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses"])
+			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses"], effect_data["crit_chance"], effect_data["crit_mult"])
 			effect_data["time_since_tick"] = 0.0
 		effect_data["time_left"] -= delta
 		if effect_data["time_left"] <= 0:
