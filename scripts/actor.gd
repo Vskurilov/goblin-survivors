@@ -77,7 +77,7 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, in
 		"time_since_tick": 0.0,
 		"owner_actor": owner_actor,
 		"tick_interval": effect.tick_interval * interval_mult,
-		"weapon_bonuses ": weapon_bonuses 
+		"weapon_bonuses": weapon_bonuses 
 		})
 	elif oldest_index != -1:
 		active_effects[oldest_index]["time_left"] = active_effects[oldest_index]["effect"].duration
@@ -91,7 +91,7 @@ func _process_status_effects(delta: float) -> void:
 			effect_data["owner_actor"] = null
 		effect_data["time_since_tick"] += delta
 		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
-			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses "])
+			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses"])
 			effect_data["time_since_tick"] = 0.0
 		effect_data["time_left"] -= delta
 		if effect_data["time_left"] <= 0:

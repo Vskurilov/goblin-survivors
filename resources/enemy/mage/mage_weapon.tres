@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://u0s1i3lfrmne"]
+
+[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_ftqcm"]
+[ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_sno0w"]
+[ext_resource type="Resource" uid="uid://ys42capurx47" path="res://resources/enemy/mage/mage_fire.tres" id="2_8ji82"]
+[ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="3_5t847"]
+[ext_resource type="Texture2D" uid="uid://cc6guf1vi5cv8" path="res://media/flame-icon.svg" id="5_n4von"]
+
+[sub_resource type="Resource" id="Resource_357jk"]
+script = ExtResource("1_sno0w")
+metadata/_custom_type_script = "uid://xl4c4pcg3o2x"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vxquv"]
+radius = 7.0
+
+[resource]
+script = ExtResource("1_ftqcm")
+projectile_scene = ExtResource("3_5t847")
+texture = ExtResource("5_n4von")
+projectile_scale = 2.0
+collision_shape = SubResource("CircleShape2D_vxquv")
+base_trajectory = SubResource("Resource_357jk")
+on_hit_effect = ExtResource("2_8ji82")
+metadata/_custom_type_script = "uid://cj2chqr7efsb"

@@ -7,5 +7,5 @@ extends TaggedResource
 @export var stack_group: StringName = &"" 
 
 
-func apply_tick(_enemy:Node2D, _owner_actor: Actor = null, weapon_bonuses : Dictionary = {}) -> void:
+func apply_tick(_enemy:Node2D, _owner_actor: Actor = null, _weapon_bonuses : Dictionary = {}) -> void:
 	push_error("StatusEffectData.apply_tick() не переопределен в " + str(get_script().resource_path))

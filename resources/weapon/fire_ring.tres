@@ -8,6 +8,6 @@
 script = ExtResource("1_cokop")
 aoe_scene = ExtResource("1_pp3yj")
 texture = ExtResource("3_64byg")
-zone_count = 3
-weapon_name = "fire_ring"
+weapon_name = "fire ring"
+tags = 2
 metadata/_custom_type_script = "uid://d3u1nlncoieu1"

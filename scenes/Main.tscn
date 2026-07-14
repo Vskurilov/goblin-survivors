@@ -30,7 +30,7 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("10_0ld40"), ExtResource("7_pm3ni"), ExtResource("5_yc10j"), ExtResource("6_jscy8"), ExtResource("9_dp3eg"), ExtResource("8_y6deb")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("8_y6deb"), ExtResource("7_pm3ni"), ExtResource("9_dp3eg"), ExtResource("6_jscy8"), ExtResource("10_0ld40"), ExtResource("5_yc10j")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true

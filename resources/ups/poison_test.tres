@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("2_e5fau")
 required_tags = 8
-stat_name = "crit_chance"
-amount = 0.3
+stat_name = "fire_rate"
+amount = -5.0
 upgrade_name = "test"
 description = "test"
 icon = ExtResource("1_e5fau")

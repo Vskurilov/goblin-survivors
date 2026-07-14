@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://cspu85drfavm2"]
+
+[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_0hxuo"]
+[ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_2npfc"]
+[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_50dqq"]
+[ext_resource type="Resource" uid="uid://cddrbiynjtd00" path="res://resources/enemy/archer/archer_poison.tres" id="2_56dny"]
+[ext_resource type="Texture2D" uid="uid://drnjq0oirbdnf" path="res://media/Gemini_Generated_Image_a9rytda9rytda9ry.svg" id="3_50dqq"]
+
+[sub_resource type="Resource" id="Resource_56dny"]
+script = ExtResource("1_50dqq")
+metadata/_custom_type_script = "uid://djp7cru2m7rmx"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_56dny"]
+size = Vector2(120, 5)
+
+[resource]
+script = ExtResource("1_0hxuo")
+projectile_scene = ExtResource("1_2npfc")
+texture = ExtResource("3_50dqq")
+projectile_scale = 0.5
+collision_shape = SubResource("RectangleShape2D_56dny")
+base_trajectory = SubResource("Resource_56dny")
+on_hit_effect = ExtResource("2_56dny")
+tags = 8
+metadata/_custom_type_script = "uid://cj2chqr7efsb"

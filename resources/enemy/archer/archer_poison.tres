@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BurnEffectData" format=3 uid="uid://cddrbiynjtd00"]
+
+[ext_resource type="Script" uid="uid://c1n4qqjkdi41f" path="res://scripts/resource_classes/weapon/burn_effect_data.gd" id="1_uwwsn"]
+
+[resource]
+script = ExtResource("1_uwwsn")
+damage_per_tick = 0.2
+max_stacks = 10
+tags = 8
+metadata/_custom_type_script = "uid://c1n4qqjkdi41f"
