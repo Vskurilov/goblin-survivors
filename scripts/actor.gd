@@ -1,6 +1,13 @@
 class_name Actor
 extends CharacterBody2D
 
+
+## Статы тела, которые оружие может усилить через weapon_bonuses.
+## ВНИМАНИЕ: ключ попадает сюда ТОЛЬКО если у него есть читатель.
+## Сейчас единственный читатель — roll_crit(). Добавляешь ключ —
+## сначала пиши того, кто его читает, иначе апгрейд будет молча пустым.
+const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = ["crit_chance", "crit_mult"]
+
 @onready var sprite: Sprite2D = $Sprite2D
 
 @export var hit_flash_duration:float = 0.12
@@ -34,8 +41,8 @@ func _upgrade_visual_feedback(delta: float) -> void:
 	else:
 		sprite.material.set_shader_parameter("tint_amount", 0.0)
 
-func  roll_crit(base_damage:float, weapon_bonuses : Dictionary = {}) -> float:
-	var effective_chance = crit_chance + weapon_bonuses .get("crit_chance", 0.0)
+func  roll_crit(base_damage:float, weapon_bonuses: Dictionary = {}) -> float:
+	var effective_chance = crit_chance + weapon_bonuses.get("crit_chance", 0.0)
 	var effective_mult = crit_mult + weapon_bonuses.get("crit_mult", 0.0)
 	if randf() < effective_chance:
 		return base_damage * effective_mult
@@ -52,7 +59,7 @@ func _key_match(key_a, key_b) -> bool:
 		return false
 	return key_a == key_b
 
-func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, interval_mult: float = 1.0, weapon_bonuses : Dictionary = {}) -> void:
+func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, interval_mult: float = 1.0, weapon_bonuses: Dictionary = {}) -> void:
 	var new_key = _get_stack_key(effect)
 	var existing_count := 0
 	var oldest_index := -1
@@ -77,7 +84,7 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, in
 		"time_since_tick": 0.0,
 		"owner_actor": owner_actor,
 		"tick_interval": effect.tick_interval * interval_mult,
-		"weapon_bonuses": weapon_bonuses 
+		"weapon_bonuses": weapon_bonuses
 		})
 	elif oldest_index != -1:
 		active_effects[oldest_index]["time_left"] = active_effects[oldest_index]["effect"].duration
@@ -98,7 +105,7 @@ func _process_status_effects(delta: float) -> void:
 			active_effects.remove_at(i)
 	_upgrade_visual_feedback(delta)
 
-func take_damage(amount: float, is_don_tick:bool = false):
+func take_damage(amount: float, is_dot_tick:bool = false):
 	push_error("Actor.take_damage() не переопределен в " + str(get_script().resource_path))
 
 func is_valid_target(body:Node) -> bool:

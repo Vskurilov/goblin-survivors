@@ -3,10 +3,10 @@ class_name AoeWeaponData
 extends  WeaponData
 
 @export var aoe_scene: PackedScene
-@export var damage_per_tick:float = 1.0
-@export var tick_interval:float = 2.0
+@export var zone_damage_per_tick:float = 1.0
+@export var zone_tick_interval:float = 2.0
 @export var telegraph_time:float = 0.8
-@export var duration:float = 5.0
+@export var zone_duration:float = 5.0
 @export var radius:float = 40.0
 @export var target_mode:TargetMode = TargetMode.RANDOM
 @export var texture:Texture2D
@@ -23,10 +23,10 @@ func  fire(player:Node) -> void:
 		var aoe:Node2D = aoe_scene.instantiate()
 		aoe.global_position = target.global_position
 		aoe.owner_actor = player
-		aoe.damage_per_tick = damage_per_tick
-		aoe.tick_interval = tick_interval
+		aoe.damage_per_tick = zone_damage_per_tick
+		aoe.tick_interval = zone_tick_interval
 		aoe.telegraph_time = telegraph_time
-		aoe.duration = duration
+		aoe.duration = zone_duration
 		aoe.radius = radius
 		aoe.texture = texture
 		aoe.on_hit_effect = on_hit_effect
