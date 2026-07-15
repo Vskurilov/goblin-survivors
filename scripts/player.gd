@@ -57,9 +57,7 @@ func _physics_process(delta):
 				continue
 			total_damage += enemy.enemy_data.contact_damage
 		if total_damage > 0.0:
-			take_damage(total_damage * delta)		
-	for i in weapon_timers.size():
-		weapon_timers[i].wait_time = maxf(weapons[i].fire_rate / weapons[i].attack_speed_mult, MIN_FIRE_PERIOD)
+			take_damage(total_damage * delta)
 
 func  update_health(current_health):
 	healhbar.max_value = max_health
@@ -116,6 +114,10 @@ func die():
 	get_tree().paused = true
 	gameoverui.visible = true
 	gameoverstatlabel.text = "Ты завалил " + str(kills) + " гоблинов. Время их мучений " + format_time(survival_time) + ". Левел: " + str(level)
+
+func refresh_weapon_timers() -> void:
+	for i in weapon_timers.size():
+		weapon_timers[i].wait_time = maxf(weapons[i].fire_rate / weapons[i].attack_speed_mult, MIN_FIRE_PERIOD)
 
 func _setup_weapons():
 	for i in weapons.size():

@@ -29,7 +29,7 @@ func show_choices(player:Node) -> void:
 		else:
 			buttons[i].visible = false
 	visible = true
-	
+
 func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 	var shuffled = pool.duplicate()
 	shuffled.shuffle()
@@ -37,6 +37,7 @@ func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 
 func  _on_button_pressed(index:int) -> void:
 	current_choices[index].apply(_current_player)
+	_current_player.refresh_weapon_timers()
 	_current_player.current_health = _current_player.max_health
 	_current_player.update_health(_current_player.current_health)
 	get_tree().paused = false

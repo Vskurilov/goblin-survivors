@@ -23,7 +23,7 @@ func  _try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 		if cooldown > 0.0:
 			enemy.behavior_state["attack_cooldown"] = cooldown
 			return
-		enemy.behavior_state["attack_cooldown"] = projectile_data.fire_rate / enemy.attack_speed_mult
+		enemy.behavior_state["attack_cooldown"] = projectile_data.fire_rate / projectile_data.attack_speed_mult
 		_spawn_projectile(enemy, player)
 	
 func _spawn_projectile(enemy: CharacterBody2D, player: Node2D) -> void:

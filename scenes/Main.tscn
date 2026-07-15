@@ -15,6 +15,7 @@
 [ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="10_0ld40"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
+[ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="14_muem4"]
 [ext_resource type="Resource" uid="uid://dyn1oeevrp3hi" path="res://resources/ups/poison_test.tres" id="22_jscy8"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
@@ -40,7 +41,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4"), ExtResource("14_muem4")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3

@@ -3,8 +3,9 @@ extends CharacterBody2D
 
 
 ## Статы тела, которые оружие может усилить через weapon_bonuses.
-## ВНИМАНИЕ: ключ попадает сюда ТОЛЬКО если у него есть читатель.#
-const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = ["crit_chance", "crit_mult"]
+## Пуст до появления улучшений тела(кинжал -> скорость бега)
+## ВНИМАНИЕ: ключ попадает сюда ТОЛЬКО парой с читателем этого ключа.
+const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = []
 
 @onready var sprite: Sprite2D = $Sprite2D
 

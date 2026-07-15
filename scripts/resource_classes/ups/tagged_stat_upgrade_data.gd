@@ -129,7 +129,6 @@ func apply(player: Node) -> void:
 
 		if carriers.size() == 1:
 			_apply_to_carrier(carriers[0])
-			print(weapon.weapon_name, " attack_speed_mult = ", weapon.attack_speed_mult)
 			continue
 
 		# Носителя с таким полем нет. Оружие вообще не про этот тег — молча мимо, это норма.
