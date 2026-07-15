@@ -17,9 +17,6 @@ const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = []
 var _hit_flash_time_left:float = 0.0
 var damage_taken_mult: float = 1.0
 var active_effects: Array = []
-var crit_chance: float = 0.05
-var crit_mult: float = 2.0
-var attack_speed_mult: float = 1.0
 var _flash_color:Color = Color.WHITE
 
 func get_target_group() -> StringName:
@@ -39,13 +36,6 @@ func _upgrade_visual_feedback(delta: float) -> void:
 		sprite.material.set_shader_parameter("tint_amount", 0.6)
 	else:
 		sprite.material.set_shader_parameter("tint_amount", 0.0)
-
-func  roll_crit(base_damage:float, weapon_bonuses: Dictionary = {}) -> float:
-	var effective_chance = crit_chance + weapon_bonuses.get("crit_chance", 0.0)
-	var effective_mult = crit_mult + weapon_bonuses.get("crit_mult", 0.0)
-	if randf() < effective_chance:
-		return base_damage * effective_mult
-	return base_damage
  
 func _get_stack_key(effect: StatusEffectData):
 	if effect.stack_group != '':

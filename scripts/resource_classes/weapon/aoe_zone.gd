@@ -48,5 +48,4 @@ func _deal_tick_damage() -> void:
 			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 			body.take_damage(final_damage)
 			if on_hit_effect:
-				var interval_mult = 1.0 / owner_actor.attack_speed_mult if is_instance_valid(owner_actor) else 1.0
 				body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, self)
