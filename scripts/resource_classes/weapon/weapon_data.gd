@@ -29,17 +29,17 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## (кинжал → +скорость бега). Ключ добавляется только парой
 ## с читателем в BODY_STATS_UPGRADABLE_BY_WEAPON (actor.gd).
 @export var weapon_bonuses : Dictionary = {}
-## ЕДИНАЯ точка снаряжения носителя (Projectile / AoeZone) атакующими
-## статами оружия. Закон §4.10 («все спавн-ветки синхронно») соблюдается
-## конструктивно: новая ветка спавна обязана звать этот метод, а новый
-## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
-## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
+
 
 static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) -> float:
 	if randf() < crit_chance:
 		return base_damage * crit_mult
 	return base_damage
-
+## ЕДИНАЯ точка снаряжения носителя (Projectile / AoeZone) атакующими
+## статами оружия. Закон §4.10 («все спавн-ветки синхронно») соблюдается
+## конструктивно: новая ветка спавна обязана звать этот метод, а новый
+## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
+## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
 func arm_carrier(carrier:Node) -> void:
 	carrier.crit_chance = crit_chance
 	carrier.crit_mult = crit_mult

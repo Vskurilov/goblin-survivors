@@ -30,5 +30,5 @@ func  fire(player:Node) -> void:
 		aoe.radius = radius
 		aoe.texture = texture
 		aoe.on_hit_effect = on_hit_effect
-		aoe.weapon_bonuses  = weapon_bonuses 
+		arm_carrier(aoe) 
 		player.get_tree().current_scene.add_child(aoe)
