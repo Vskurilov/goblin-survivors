@@ -40,7 +40,7 @@ static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) ->
 ## конструктивно: новая ветка спавна обязана звать этот метод, а новый
 ## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
 ## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
-func arm_carrier(carrier:Node) -> void:
+func arm_carrier(carrier:Node) -> void:	
 	carrier.crit_chance = crit_chance
 	carrier.crit_mult = crit_mult
 	carrier.attack_speed_mult = attack_speed_mult

@@ -5,12 +5,19 @@
 [ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="3_0ld40"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
 [ext_resource type="Resource" uid="uid://xh5uae15vyo2" path="res://resources/enemy/goblin/goblin.tres" id="5_yc10j"]
+[ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="6_dp3eg"]
+[ext_resource type="Resource" uid="uid://dbdbks14exkom" path="res://resources/enemy/orc/orc.tres" id="7_0ld40"]
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
+[ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="8_gqmmt"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="8_muem4"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
+[ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="9_yc10j"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
+[ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="10_jscy8"]
+[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="11_trceg"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
-[ext_resource type="Resource" uid="uid://dyn1oeevrp3hi" path="res://resources/ups/poison_test.tres" id="22_jscy8"]
+[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
+[ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -25,7 +32,7 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("5_yc10j")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("5_yc10j"), ExtResource("6_dp3eg"), ExtResource("7_0ld40"), ExtResource("8_gqmmt"), ExtResource("9_yc10j"), ExtResource("10_jscy8")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
@@ -41,7 +48,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4")])
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("22_jscy8")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("11_trceg"), ExtResource("12_a8y0u"), ExtResource("13_jkv2x")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://bpme615y8wh3g"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_uqqn2"]
+[ext_resource type="Texture2D" uid="uid://b4mrvvnfa4l67" path="res://media/fast-speed-icon.svg" id="1_utxsu"]
+
+[resource]
+script = ExtResource("1_uqqn2")
+stat_name = "attack_speed_mult"
+amount = 2.0
+upgrade_name = "attack speed up"
+icon = ExtResource("1_utxsu")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

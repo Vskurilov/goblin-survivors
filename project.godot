@@ -12,7 +12,7 @@ config_version=5
 
 config/name="VampireGame (Copy)"
 run/main_scene="uid://bgkounbcg8gj5"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://media/icon.svg"
 
 [display]
