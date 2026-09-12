@@ -1,5 +1,5 @@
 extends  Actor
-
+class_name Player
 const MIN_FIRE_PERIOD: float = 0.01
 
 @export var speed: float = 200.0

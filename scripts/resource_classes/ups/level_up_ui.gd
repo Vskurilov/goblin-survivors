@@ -15,6 +15,8 @@ func _ready() -> void:
 	for i in buttons.size():
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
 		pass
+	_validate_upgrade_pool()
+	
 
 func show_choices(player:Node) -> void:
 	_current_player = player
@@ -46,6 +48,57 @@ func  _on_button_pressed(index:int) -> void:
 func  has_upgrades(player:Node) -> bool:
 	return upgrade_pool.any(func(upgrade: UpgradeData): return upgrade.is_available(player))
 	
+## Имена всех скриптовых полей оружия, эффектов и тела — пространство,
+## в котором stat_name апгрейда обязан существовать.
+func  _collect_known_stats() -> Dictionary:
+	var registry:= {}
+	for  entry  in ProjectSettings.get_global_class_list():
+		registry[String(entry["class"])] = entry
+	var known:= {}
+	for class_name_string in registry:
+	# base хранит только прямого родителя — идём по цепочке вверх.
+		var cursor: String = class_name_string
+		var is_content:= false
+		while registry.has(cursor):
+			cursor = String(registry[cursor]["base"])
+			if cursor == "WeaponData" or cursor == "StatusEffectData":
+				is_content = true
+				break
+		if not is_content: 
+			continue
+		var instance = load(registry[class_name_string]["path"]).new()
+		for stat in _script_stats(instance):
+			known[stat] = true
 	
+	var player_probe = Player.new()
+	for stat in _script_stats(player_probe):
+		known[stat] = true 
+	player_probe.free()
+	return known
+		
+func _script_stats(object) -> Array:
+	var names: Array = []
+	for property in  object.get_property_list():
+		if property["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			names.append(property["name"])
+	return names
 	
+## Дефекты контента в пуле. Object.set() на отсутствующее поле МОЛЧИТ —
+## без этой проверки апгрейд в опечатку "применяется" в никуда.
+func _validate_upgrade_pool() -> void:
+	var known:= _collect_known_stats()
+	for upgrade in upgrade_pool:
+		# Апгрейды без стата (будущая выдача тегов) — не наше дело.
+		if not "stat_name" in upgrade:
+			continue
+		if upgrade.stat_name.is_empty():
+			push_error("upgrade_pool: у апгрейда '%s' не заполнен stat_name." % upgrade.upgrade_name)
+			continue
+		if upgrade.stat_name in TaggedStatUpgradeData.FORBIDDEN_STATS:
+			push_error("upgrade_pool: апгрейд '%s' целится в запрещенный стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
+			continue
+		if not known.has(upgrade.stat_name):
+			push_error("upgrade_pool: апгрейд '%s' целится в несущствующий стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
+			
+			
 	
