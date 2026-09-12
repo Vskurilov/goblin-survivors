@@ -9,7 +9,6 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var body_radius: float = 30.0
 
 var current_health: float 
-var is_dead:bool = false
 var touching_enemies:Array = []
 var current_xp:int = 0
 var level:int = 1

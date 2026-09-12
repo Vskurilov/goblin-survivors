@@ -13,7 +13,7 @@ const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = []
 @export var hit_flash_color: Color = Color(1, 0.3, 0.3)
 @export var dot_tint_color: Color = Color(0.3, 1.0, 0.3)
 
-
+var is_dead:bool = false
 var _hit_flash_time_left:float = 0.0
 var damage_taken_mult: float = 1.0
 var active_effects: Array = []
