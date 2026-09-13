@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://de75q5x6cpoop"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_ewlta"]
+[ext_resource type="Texture2D" uid="uid://bi8sycpgspx14" path="res://media/heart-icon.svg" id="1_v8fii"]
+
+[resource]
+script = ExtResource("1_ewlta")
+stat_name = "max_health"
+amount = 20.0
+upgrade_name = "max_health"
+icon = ExtResource("1_v8fii")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

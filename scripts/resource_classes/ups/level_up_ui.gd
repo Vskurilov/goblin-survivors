@@ -98,7 +98,7 @@ func _validate_upgrade_pool() -> void:
 			push_error("upgrade_pool: апгрейд '%s' целится в запрещенный стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
 			continue
 		if not known.has(upgrade.stat_name):
-			push_error("upgrade_pool: апгрейд '%s' целится в несущствующий стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
+			push_error("upgrade_pool: апгрейд '%s' целится в несуществующий стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
 			
 			
 	

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://7ghxj63ng4pb"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_6fnph"]
+[ext_resource type="Texture2D" uid="uid://k37r836km5v5" path="res://media/shield-black-icon.svg" id="1_eu0of"]
+
+[resource]
+script = ExtResource("1_6fnph")
+stat_name = "damage_taken_mult"
+amount = 0.9
+is_multiplicative = true
+upgrade_name = "Absorb Damage"
+icon = ExtResource("1_eu0of")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

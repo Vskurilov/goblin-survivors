@@ -63,6 +63,9 @@ func _applies_to_weapon(weapon: WeaponData) -> bool:
 ## Проверять один лишь тег недостаточно: тег может совпасть, а поля не быть —
 ## тогда игрок сжигает выбор впустую ("мёртвый выбор").
 func is_available(player: Node) -> bool:
+	# Стат тела: тег на теле бессмыслен, поэтому только универсальные апгрейды.
+	if required_tags == 0 and stat_name in player:
+		return true
 	for weapon in player.weapons:
 		if _applies_to_weapon(weapon):
 			return true
@@ -73,7 +76,7 @@ func is_available(player: Node) -> bool:
 ## ВНИМАНИЕ: int-поля (max_stacks, target_count, zone_count) движок усекает молча:
 ## 5 + 1.7 запишется как 6, а amount = 0.5 не даст вообще ничего (проверено на 4.6).
 ## Для int-статов задавай целый amount.
-func _apply_to_carrier(carrier: Resource) -> void:
+func _apply_to_carrier(carrier: Object) -> void:
 	var current = carrier.get(stat_name)
 	var current_type := typeof(current)
 	if current_type != TYPE_FLOAT and current_type != TYPE_INT:
@@ -93,7 +96,7 @@ func _apply_to_carrier(carrier: Resource) -> void:
 			upgrade_name, stat_name, str(new_value), str(current)
 		])
 		return
-	carrier.set(stat_name, current * amount if is_multiplicative else current + amount)
+	carrier.set(stat_name, new_value)
 
 
 ## Бонус к стату тела, действующий только для атак этим оружием.
@@ -114,6 +117,12 @@ func apply(player: Node) -> void:
 		push_error("TaggedStatUpgradeData '%s': стат '%s' запрещён к изменению апгрейдом статов." % [
 			upgrade_name, stat_name
 		])
+		return
+	if stat_name in player:
+		if required_tags != 0:
+			push_error("TaggedStatUpgradeData '%s': стат тела '%s' не может требовать тегов - тело их не несет." % [upgrade_name, stat_name])
+			return
+		_apply_to_carrier(player)
 		return
 
 	for weapon in player.weapons:
