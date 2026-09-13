@@ -68,6 +68,7 @@ func  update_level_xp():
 
 func format_time(seconds_value: float) -> String:
 	var total_seconds = int(seconds_value)
+	@warning_ignore("integer_division")
 	var minutes = total_seconds / 60
 	var seconds = total_seconds % 60
 	if total_seconds >= 60:

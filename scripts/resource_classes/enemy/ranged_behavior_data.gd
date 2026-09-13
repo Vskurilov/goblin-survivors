@@ -6,7 +6,7 @@ extends EnemyBehaviorData
 @export var preferred_distance: float = 250.0
 @export var distance_tolerance: float = 30.0
 
-func  _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func  _get_velocity(enemy: CharacterBody2D, player: Node2D, _delta: float) -> Vector2:
 	var to_player = player.global_position - enemy.global_position
 	var distance = to_player.length()
 	var direction = to_player.normalized()

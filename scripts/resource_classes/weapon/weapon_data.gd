@@ -30,7 +30,7 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## с читателем в BODY_STATS_UPGRADABLE_BY_WEAPON (actor.gd).
 @export var weapon_bonuses : Dictionary = {}
 
-
+@warning_ignore("shadowed_variable")
 static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) -> float:
 	if randf() < crit_chance:
 		return base_damage * crit_mult
