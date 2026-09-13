@@ -7,5 +7,5 @@ extends Resource
 @export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var tags:Array[String] = []
 
 func  has_tag(tag: String) -> bool:
-	return tags in tags
+	return tag in tags
  
