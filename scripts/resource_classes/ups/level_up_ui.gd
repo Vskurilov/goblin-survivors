@@ -39,8 +39,8 @@ func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 func _on_button_pressed(index:int) -> void:
 	current_choices[index].apply(_current_player)
 	_current_player.refresh_weapon_timers()
-	_current_player.current_health = _current_player.max_health
 	_current_player.heal_to_full()
+	get_tree().paused = false
 	visible = false
 
 func  has_upgrades(player:Node) -> bool:

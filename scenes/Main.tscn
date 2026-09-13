@@ -47,13 +47,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-speed = null
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4"), ExtResource("14_ebg2g"), ExtResource("15_2ofn6")])
-mass = null
-body_radius = null
-hit_flash_duration = null
-hit_flash_color = null
-dot_tint_color = null
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3

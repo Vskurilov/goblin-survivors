@@ -55,7 +55,7 @@ func _physics_process(delta):
 		if total_damage > 0.0:
 			take_damage(total_damage * delta)
 
-func _on_healt_changed() -> void:
+func _on_health_changed() -> void:
 	if healhbar == null:
 		return
 	healhbar.max_value = max_health
@@ -76,32 +76,32 @@ func format_time(seconds_value: float) -> String:
 	else:
 		return str(seconds) + " сек"
 
-
-
 func gain_xp(amount):
-	heal_to_full()
+	current_xp += amount
+	var leveled_up = false
 	
-	while current_xp >= xp_to_next_lv:  
+	while current_xp >= xp_to_next_lv:
 		level += 1
-		xp_to_next_lv =  xp_to_next_lv + int(xp_to_next_lv * ((1.1**2)/2))
+		xp_to_next_lv = xp_to_next_lv + int(xp_to_next_lv * ((1.1**2)/2))
 		leveled_up = true
 		
 	if leveled_up:
-		current_health = max_health
-		update_health(current_health)
+		heal_to_full()
 		if levelupui.has_upgrades(self):
 			get_tree().paused = true
 			levelupui.show_choices(self)
-	update_level_xp()
+		update_level_xp()
 
 func add_kill():
 	kills = kills + 1
 	killcountlabel.text = "убито: " + str(kills)
 
 func _die() -> void:
-	died.emit()
-	drop_gem()
-	queue_free()
+	print("Game Over")
+	set_physics_process(false)
+	get_tree().paused = true
+	gameoverui.visible = true
+	gameoverstatlabel.text = "Ты завалил " + str(kills) + " гоблинов. Время их мучений " + format_time(survival_time) + ". Левел: " + str(level)
 
 ## Единственный путь лечения. Присваивает ровно максимум, поэтому верхняя
 ## граница здоровья держится ПО ПОСТРОЕНИЮ, а не клампом. Появится ЧАСТИЧНОЕ
@@ -111,7 +111,7 @@ func _die() -> void:
 ## понадобится лекарь-враг — виртуальный get_max_health() (у врага → enemy_data.health).
 func  heal_to_full() -> void:
 	current_health = max_health
-	_on_healt_changed()
+	_on_health_changed()
 	
 
 func refresh_weapon_timers() -> void:

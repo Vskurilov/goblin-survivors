@@ -106,14 +106,14 @@ func take_damage(amount:float, is_dot_tick: bool = false) -> void:
 		return
 	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
 	current_health = maxf(current_health - amount * damage_taken_mult, 0.0)
-	_on_healt_changed()
+	_on_health_changed()
 	if current_health <= 0.0:
 		is_dead = true
 		_die()
 
 
 ## Реакция вида на изменение здоровья. У врага вида нет — заглушка пуста.
-func  _on_healt_changed() -> void:
+func  _on_health_changed() -> void:
 	pass
 
 ## Смерть — событие, а не состояние здоровья. Флаг поднимается в take_damage
