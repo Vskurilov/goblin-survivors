@@ -60,7 +60,7 @@ func _on_health_changed() -> void:
 		return
 	healhbar.max_value = max_health
 	healhbar.value = current_health
-	healhbar.text = str(int(current_health)) + "/" + str(int(max_health))
+	healthlabel.text = str(int(current_health)) + "/" + str(int(max_health))
 
 func  update_level_xp():
 	levellabel.text = "уровень: " + str(level) + " | XP: " + str(current_xp) + " | нужно до уровня: " + str(xp_to_next_lv)
@@ -90,7 +90,7 @@ func gain_xp(amount):
 		if levelupui.has_upgrades(self):
 			get_tree().paused = true
 			levelupui.show_choices(self)
-		update_level_xp()
+	update_level_xp()
 
 func add_kill():
 	kills = kills + 1
