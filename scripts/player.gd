@@ -28,10 +28,8 @@ var weapon_timers: Array[Timer] = []
 func get_target_group() -> StringName:
 	return &"enemies"
 
-func  _ready():
-	current_health = max_health
-	healhbar.max_value = max_health
-	update_health(current_health)
+func _ready():
+	heal_to_full()
 	update_level_xp()
 	killcountlabel.text = "убито: " + str(kills)
 	_setup_weapons()
@@ -57,10 +55,12 @@ func _physics_process(delta):
 		if total_damage > 0.0:
 			take_damage(total_damage * delta)
 
-func update_health(current_health):
+func _on_healt_changed() -> void:
+	if healhbar == null:
+		return
 	healhbar.max_value = max_health
 	healhbar.value = current_health
-	healthlabel.text = str(int(current_health)) + "/" + str(int(max_health))
+	healhbar.text = str(int(current_health)) + "/" + str(int(max_health))
 
 func  update_level_xp():
 	levellabel.text = "уровень: " + str(level) + " | XP: " + str(current_xp) + " | нужно до уровня: " + str(xp_to_next_lv)
@@ -76,19 +76,10 @@ func format_time(seconds_value: float) -> String:
 	else:
 		return str(seconds) + " сек"
 
-func take_damage(amount:float, is_dot_tick:bool = false):
-	if is_dead:
-		return
-	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
-	current_health -= amount * damage_taken_mult
-	update_health(current_health)
-	if current_health <= 0:
-		die()
-		update_health(0)
+
 
 func gain_xp(amount):
-	current_xp += amount
-	var leveled_up = false
+	heal_to_full()
 	
 	while current_xp >= xp_to_next_lv:  
 		level += 1
@@ -107,13 +98,21 @@ func add_kill():
 	kills = kills + 1
 	killcountlabel.text = "убито: " + str(kills)
 
-func die():
-	is_dead = true
-	print("Game Over")
-	set_physics_process(false)
-	get_tree().paused = true
-	gameoverui.visible = true
-	gameoverstatlabel.text = "Ты завалил " + str(kills) + " гоблинов. Время их мучений " + format_time(survival_time) + ". Левел: " + str(level)
+func _die() -> void:
+	died.emit()
+	drop_gem()
+	queue_free()
+
+## Единственный путь лечения. Присваивает ровно максимум, поэтому верхняя
+## граница здоровья держится ПО ПОСТРОЕНИЮ, а не клампом. Появится ЧАСТИЧНОЕ
+## лечение — делать его методом с clampf(…, 0.0, max_health) здесь же, поле
+## напрямую не увеличивать: бар молча обрежет значение, а лейбл покажет
+## "130/100". Для врагов границы нет вовсе — max_health живёт только у игрока;
+## понадобится лекарь-враг — виртуальный get_max_health() (у врага → enemy_data.health).
+func  heal_to_full() -> void:
+	current_health = max_health
+	_on_healt_changed()
+	
 
 func refresh_weapon_timers() -> void:
 	for i in weapon_timers.size():

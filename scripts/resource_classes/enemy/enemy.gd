@@ -67,17 +67,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	enemy_data.behavior.try_attack(self, player, delta)
 	
-func take_damage(amount,is_dot_tick:bool = false):
-	# queue_free() удаляет узел в конце кадра — до этого залп добивает труп.
-	if is_dead:
-		return
-	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
-	current_health -= amount
-	if current_health <= 0:
-		is_dead = true
-		died.emit()
-		drop_gem()
-		queue_free()
+func _die() -> void:
+	died.emit()
+	drop_gem()
+	queue_free()
 	
 	
 func drop_gem():

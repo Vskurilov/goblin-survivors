@@ -97,8 +97,31 @@ func _process_status_effects(delta: float) -> void:
 			active_effects.remove_at(i)
 	_upgrade_visual_feedback(delta)
 
-func take_damage(_amount: float, _is_dot_tick:bool = false):
-	push_error("Actor.take_damage() не переопределен в " + str(get_script().resource_path))
+## ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
+## и тик статус-эффекта приходят сюда. Поэтому сторож is_dead стоит один раз
+## на всех: queue_free() отложен до конца кадра, и узел продолжает принимать
+## удары, поставленные в очередь в этом же кадре.
+func take_damage(amount:float, is_dot_tick: bool = false) -> void:
+	if is_dead:
+		return
+	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
+	current_health = maxf(current_health - amount * damage_taken_mult, 0.0)
+	_on_healt_changed()
+	if current_health <= 0.0:
+		is_dead = true
+		_die()
+
+
+## Реакция вида на изменение здоровья. У врага вида нет — заглушка пуста.
+func  _on_healt_changed() -> void:
+	pass
+
+## Смерть — событие, а не состояние здоровья. Флаг поднимается в take_damage
+## ДО вызова: сигналы синхронны, и подписчик увидит уже мёртвого актора.
+func _die() -> void:
+	pass
+
+
 
 func is_valid_target(_body:Node) -> bool:
 	return false
