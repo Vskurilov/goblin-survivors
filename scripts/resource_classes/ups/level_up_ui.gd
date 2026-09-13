@@ -37,7 +37,7 @@ func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 	shuffled.shuffle()
 	return shuffled.slice(0, min(count, pool.size()))
 
-func  _on_button_pressed(index:int) -> void:
+func _on_button_pressed(index:int) -> void:
 	current_choices[index].apply(_current_player)
 	_current_player.refresh_weapon_timers()
 	_current_player.current_health = _current_player.max_health

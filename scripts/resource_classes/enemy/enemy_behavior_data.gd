@@ -44,5 +44,5 @@ func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 func try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 	_try_attack(enemy, player, delta)
 	
-func  _try_attack(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> void:
+func _try_attack(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> void:
 	pass

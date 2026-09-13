@@ -58,7 +58,7 @@ func _physics_process(delta):
 		if total_damage > 0.0:
 			take_damage(total_damage * delta)
 
-func  update_health(current_health):
+func update_health(current_health):
 	healhbar.max_value = max_health
 	healhbar.value = current_health
 	healthlabel.text = str(int(current_health)) + "/" + str(int(max_health))
