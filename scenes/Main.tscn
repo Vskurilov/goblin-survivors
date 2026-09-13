@@ -18,6 +18,9 @@
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
+[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="19_1iba3"]
+[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="20_yxlcp"]
+[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="21_ebg2g"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -48,7 +51,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4")])
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("11_trceg"), ExtResource("12_a8y0u"), ExtResource("13_jkv2x")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("11_trceg"), ExtResource("12_a8y0u"), ExtResource("13_jkv2x"), ExtResource("19_1iba3"), ExtResource("20_yxlcp"), ExtResource("21_ebg2g")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
