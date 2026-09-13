@@ -52,6 +52,8 @@ func _activate() -> void:
 
 func _deal_tick_damage() -> void:
 	for body in get_overlapping_bodies():
+		if body == owner_actor:
+			continue
 		if body.is_in_group(target_group):
 			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 			body.take_damage(final_damage)
