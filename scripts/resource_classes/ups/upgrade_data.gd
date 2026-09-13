@@ -6,7 +6,7 @@ extends Resource
 @export var description: String = ""
 @export var icon: Texture2D
 
-func apply(player:Node) -> void:
+func apply(_player:Node) -> void:
 	push_error("UpgradeData.apply () не переопределен в " + str(get_script().resource_path))
 
 func is_available(_player:Node) -> bool:

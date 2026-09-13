@@ -46,7 +46,7 @@ func arm_carrier(carrier:Node) -> void:
 	carrier.attack_speed_mult = attack_speed_mult
 	carrier.weapon_bonuses = weapon_bonuses
 
-func  fire(player:Node):
+func  fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
 
 func pick_target(player:Node, mode:TargetMode) -> Node2D:

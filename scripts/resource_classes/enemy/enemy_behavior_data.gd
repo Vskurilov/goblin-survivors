@@ -7,7 +7,7 @@ extends Resource
 func get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
 		return _get_velocity(enemy, player, delta) + _get_separation(enemy)
 
-func _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func _get_velocity(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> Vector2:
 	return Vector2.ZERO
 
 func  _get_separation(enemy: CharacterBody2D) -> Vector2:
@@ -44,5 +44,5 @@ func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 func try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 	_try_attack(enemy, player, delta)
 	
-func  _try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
+func  _try_attack(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> void:
 	pass

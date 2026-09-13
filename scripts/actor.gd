@@ -96,8 +96,8 @@ func _process_status_effects(delta: float) -> void:
 			active_effects.remove_at(i)
 	_upgrade_visual_feedback(delta)
 
-func take_damage(amount: float, is_dot_tick:bool = false):
+func take_damage(_amount: float, _is_dot_tick:bool = false):
 	push_error("Actor.take_damage() не переопределен в " + str(get_script().resource_path))
 
-func is_valid_target(body:Node) -> bool:
+func is_valid_target(_body:Node) -> bool:
 	return false

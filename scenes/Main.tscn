@@ -18,6 +18,8 @@
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
+[ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="14_ebg2g"]
+[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="15_2ofn6"]
 [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="19_1iba3"]
 [ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="20_yxlcp"]
 [ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="21_ebg2g"]
@@ -45,7 +47,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("8_muem4"), ExtResource("14_ebg2g"), ExtResource("15_2ofn6")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3
