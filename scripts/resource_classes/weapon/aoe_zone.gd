@@ -13,6 +13,14 @@ var weapon_bonuses : Dictionary = {}
 var crit_chance: float = 0.05
 var crit_mult:float = 2.0
 var attack_speed_mult:float = 1.0
+## Группа цели — снимок с носителя при спавне, как у близнеца projectile.gd.
+## Пустая по умолчанию: забытое присваивание даёт зону, которая никого не бьёт,
+## а не зону, бьющую своих.
+var target_group: StringName = &""
+
+## Нижняя граница периода тика: Timer.wait_time = 0 роняет таймер.
+## Близнец того же предохранителя у оружия — Player.MIN_FIRE_PERIOD.
+const MIN_TICK_INTERVAL: float = 0.01
 
 func _ready() -> void:
 	if texture:
@@ -34,7 +42,7 @@ func _activate() -> void:
 	monitoring = true
 	
 	var tick_timer = Timer.new()
-	tick_timer.wait_time = tick_interval
+	tick_timer.wait_time = maxf(tick_interval / attack_speed_mult, MIN_TICK_INTERVAL)
 	tick_timer.timeout.connect(_deal_tick_damage)
 	add_child(tick_timer)
 	tick_timer.start()
@@ -44,7 +52,7 @@ func _activate() -> void:
 
 func _deal_tick_damage() -> void:
 	for body in get_overlapping_bodies():
-		if body.is_in_group("enemies"):
+		if body.is_in_group(target_group):
 			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 			body.take_damage(final_damage)
 			if on_hit_effect:

@@ -44,7 +44,7 @@ func arm_carrier(carrier:Node) -> void:
 	carrier.crit_chance = crit_chance
 	carrier.crit_mult = crit_mult
 	carrier.attack_speed_mult = attack_speed_mult
-	carrier.weapon_bonuses = weapon_bonuses
+	carrier.weapon_bonuses = weapon_bonuses.duplicate()
 
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)

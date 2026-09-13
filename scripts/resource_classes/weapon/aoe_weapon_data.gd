@@ -30,5 +30,6 @@ func  fire(player:Node) -> void:
 		aoe.radius = radius
 		aoe.texture = texture
 		aoe.on_hit_effect = on_hit_effect
+		aoe.target_group = player.get_target_group()
 		arm_carrier(aoe) 
 		player.get_tree().current_scene.add_child(aoe)

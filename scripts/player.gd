@@ -109,7 +109,7 @@ func _die() -> void:
 ## напрямую не увеличивать: бар молча обрежет значение, а лейбл покажет
 ## "130/100". Для врагов границы нет вовсе — max_health живёт только у игрока;
 ## понадобится лекарь-враг — виртуальный get_max_health() (у врага → enemy_data.health).
-func  heal_to_full() -> void:
+func heal_to_full() -> void:
 	current_health = max_health
 	_on_health_changed()
 	
