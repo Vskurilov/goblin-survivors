@@ -18,22 +18,21 @@ extends UpgradeData
 ##
 ## Создание ресурса: проставить теги, вписать имя стата и значение. Больше ничего.
 
-## Поля, которые апгрейд статов не имеет права трогать никогда.
-## tags — битовая маска: сложение на ней не идемпотентно (8 + 8 = 16, это ДРУГОЙ тег,
-## а не "Poison дважды"). Выдача тегов — задача отдельного класса апгрейда
-## с побитовым ИЛИ (Этап 1.5), не этого. Рефлексия иначе пустила бы к маске
-## через чёрный ход: stat_name = "tags" — валидное имя поля.
 const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 
-@export_flags("Physical", "Fire", "Ice", "Poison", "Lightning") var required_tags: int = 0
+@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var required_tags:Array[String] = []
 @export var stat_name: String
 @export var amount: float
 @export var is_multiplicative: bool = false
 
 ## Несёт ли ресурс (оружие или эффект) требуемый тег.
-## required_tags == 0 — универсальный апгрейд, подходит всем носителям.
 func _carries_tag(tagged_resource: TaggedResource) -> bool:
-	return required_tags == 0 or tagged_resource.tags & required_tags != 0
+	if required_tags.is_empty():
+		return true
+	for tag in required_tags:
+		if tag in tagged_resource.tags:
+			return true
+	return false
 
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
 ## Возвращает 0, 1 или 2 элемента. Два — это коллизия имён полей, её ловит apply().
@@ -60,7 +59,7 @@ func _applies_to_weapon(weapon: WeaponData) -> bool:
 ## тогда игрок сжигает выбор впустую ("мёртвый выбор").
 func is_available(player: Node) -> bool:
 	# Стат тела: тег на теле бессмыслен, поэтому только универсальные апгрейды.
-	if required_tags == 0 and stat_name in player:
+	if required_tags.is_empty() and stat_name in player:
 		return true
 	for weapon in player.weapons:
 		if _applies_to_weapon(weapon):
@@ -114,7 +113,7 @@ func apply(player: Node) -> void:
 		])
 		return
 	if stat_name in player:
-		if required_tags != 0:
+		if not required_tags.is_empty():
 			push_error("TaggedStatUpgradeData '%s': стат тела '%s' не может требовать тегов - тело их не несет." % [upgrade_name, stat_name])
 			return
 		_apply_to_carrier(player)

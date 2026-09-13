@@ -21,4 +21,5 @@ projectile_scale = 2.0
 collision_shape = SubResource("CircleShape2D_vxquv")
 base_trajectory = SubResource("Resource_357jk")
 on_hit_effect = ExtResource("2_8ji82")
+tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

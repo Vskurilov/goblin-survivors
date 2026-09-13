@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_424j3"]
 [ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
-[ext_resource type="Script" uid="uid://c1n4qqjkdi41f" path="res://scripts/resource_classes/weapon/burn_effect_data.gd" id="2_rad8y"]
+[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/AxeBurnEffect.tres" id="2_424j3"]
 [ext_resource type="Texture2D" uid="uid://cot1ocehj02a" path="res://media/battered-axe-svgrepo-com.svg" id="3_jxybs"]
 
 [sub_resource type="Resource" id="Resource_rad8y"]
@@ -13,11 +13,6 @@ metadata/_custom_type_script = "uid://djp7cru2m7rmx"
 [sub_resource type="CircleShape2D" id="CircleShape2D_hi8pk"]
 radius = 40.0
 
-[sub_resource type="Resource" id="Resource_4r23m"]
-script = ExtResource("2_rad8y")
-tags = 8
-metadata/_custom_type_script = "uid://c1n4qqjkdi41f"
-
 [resource]
 script = ExtResource("1_i5rwr")
 projectile_scene = ExtResource("1_n1wqa")
@@ -25,6 +20,6 @@ damage = 10.0
 texture = ExtResource("3_jxybs")
 collision_shape = SubResource("CircleShape2D_hi8pk")
 base_trajectory = SubResource("Resource_rad8y")
-on_hit_effect = SubResource("Resource_4r23m")
-tags = 8
+on_hit_effect = ExtResource("2_424j3")
+tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

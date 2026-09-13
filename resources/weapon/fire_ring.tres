@@ -14,5 +14,5 @@ on_hit_effect = ExtResource("2_64byg")
 zone_count = 2
 weapon_name = "fire ring"
 fire_rate = 5.0
-tags = 2
+tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://d3u1nlncoieu1"

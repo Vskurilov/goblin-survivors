@@ -6,5 +6,5 @@
 script = ExtResource("1_uwwsn")
 damage_per_tick = 0.2
 max_stacks = 10
-tags = 8
+tags = Array[String](["Poison"])
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

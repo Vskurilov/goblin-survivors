@@ -8,5 +8,5 @@ damage_per_tick = 1.0
 duration = 30.0
 tick_interval = 1.0
 max_stacks = 10
-tags = 8
+tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

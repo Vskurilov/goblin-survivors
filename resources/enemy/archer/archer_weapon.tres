@@ -21,5 +21,5 @@ projectile_scale = 0.5
 collision_shape = SubResource("RectangleShape2D_56dny")
 base_trajectory = SubResource("Resource_56dny")
 on_hit_effect = ExtResource("2_56dny")
-tags = 8
+tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

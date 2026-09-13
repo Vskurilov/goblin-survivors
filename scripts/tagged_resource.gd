@@ -1,8 +1,11 @@
 class_name TaggedResource
 extends Resource
 
-@export_flags("Physical", "Fire", "Ice", "Poison", "Lightning") var 	tags: int = 0
+## Чем сущность БЬЁТ. В отличие от identity, может быть выдано по ходу забега
+## (grant-апгрейды, Этап 1.5b).
 
-func  has_tag(tag: Tags.Type) -> bool:
-	return tags & (1 << tag) != 0
+@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var tags:Array[String] = []
+
+func  has_tag(tag: String) -> bool:
+	return tags in tags
  
