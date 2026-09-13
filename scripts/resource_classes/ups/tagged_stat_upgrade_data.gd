@@ -30,12 +30,10 @@ const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 @export var amount: float
 @export var is_multiplicative: bool = false
 
-
 ## Несёт ли ресурс (оружие или эффект) требуемый тег.
 ## required_tags == 0 — универсальный апгрейд, подходит всем носителям.
 func _carries_tag(tagged_resource: TaggedResource) -> bool:
 	return required_tags == 0 or tagged_resource.tags & required_tags != 0
-
 
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
 ## Возвращает 0, 1 или 2 элемента. Два — это коллизия имён полей, её ловит apply().
@@ -50,14 +48,12 @@ func _find_stat_carriers(weapon: WeaponData) -> Array:
 		carriers.append(effect)
 	return carriers
 
-
 ## Приложится ли апгрейд к этому оружию хоть как-нибудь.
 ## Либо есть носитель тега с таким полем, либо это бонус к стату тела.
 func _applies_to_weapon(weapon: WeaponData) -> bool:
 	if not _find_stat_carriers(weapon).is_empty():
 		return true
 	return _carries_tag(weapon) and stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON
-
 
 ## Апгрейд показывается на левелапе, только если ему есть куда лечь.
 ## Проверять один лишь тег недостаточно: тег может совпасть, а поля не быть —
@@ -70,7 +66,6 @@ func is_available(player: Node) -> bool:
 		if _applies_to_weapon(weapon):
 			return true
 	return false
-
 
 ## Записать стат в найденного носителя (оружие или эффект — код один и тот же).
 ## ВНИМАНИЕ: int-поля (max_stacks, target_count, zone_count) движок усекает молча:

@@ -6,7 +6,6 @@ signal  died
 @export var enemy_data: EnemyData
 @export var behavior_state: Dictionary = {}
 
-var health: float
 var speed: float
 var player
 var nearby_enemies:Array = []
@@ -22,7 +21,7 @@ func _ready():
 	if enemy_data.behavior == null:
 		push_warning("EnemyDataBehavior не задан для: " + enemy_data.enemy_name)
 		return
-	health = enemy_data.health
+	current_health = enemy_data.health
 	speed = enemy_data.speed
 	$Sprite2D.scale = Vector2(enemy_data.visual_scale, enemy_data.visual_scale)
 	if enemy_data.texture:
@@ -73,8 +72,8 @@ func take_damage(amount,is_dot_tick:bool = false):
 	if is_dead:
 		return
 	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
-	health -= amount
-	if health <= 0:
+	current_health -= amount
+	if current_health <= 0:
 		is_dead = true
 		died.emit()
 		drop_gem()

@@ -16,7 +16,6 @@ func _ready() -> void:
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
 		pass
 	_validate_upgrade_pool()
-	
 
 func show_choices(player:Node) -> void:
 	_current_player = player

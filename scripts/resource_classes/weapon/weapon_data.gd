@@ -3,7 +3,6 @@ extends TaggedResource
 
 enum TargetMode{NEAREST, FARTHEST, RANDOM}
 
-
 @export var weapon_name:String = ''
 
 ## fire_rate — ПЕРИОД в секундах, не частота. Идентичность оружия
@@ -29,7 +28,8 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## (кинжал → +скорость бега). Ключ добавляется только парой
 ## с читателем в BODY_STATS_UPGRADABLE_BY_WEAPON (actor.gd).
 @export var weapon_bonuses : Dictionary = {}
-
+# Параметры намеренно повторяют имена полей: функция static, доступа к полям
+# экземпляра нет, а зовут её носители (Projectile/AoeZone) со своего снапшота.
 @warning_ignore("shadowed_variable")
 static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) -> float:
 	if randf() < crit_chance:
@@ -55,7 +55,6 @@ func pick_target(player:Node, mode:TargetMode) -> Node2D:
 		return targets[0]
 	else:
 		return null
-
 
 func pick_targets(player:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 	var candidates: Array = []

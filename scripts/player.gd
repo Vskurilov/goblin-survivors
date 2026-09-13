@@ -8,7 +8,6 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
 
-var current_health: float 
 var touching_enemies:Array = []
 var current_xp:int = 0
 var level:int = 1
@@ -68,6 +67,7 @@ func  update_level_xp():
 
 func format_time(seconds_value: float) -> String:
 	var total_seconds = int(seconds_value)
+	# Целочисленное деление намеренно: нужны полные минуты, остаток берётся ниже через %.
 	@warning_ignore("integer_division")
 	var minutes = total_seconds / 60
 	var seconds = total_seconds % 60
@@ -168,7 +168,6 @@ func  get_random_enemy() -> Node2D:
 	
 func  is_valid_target(body:Node) -> bool:
 	return body.is_in_group("enemies")
-	
 	
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):

@@ -39,7 +39,6 @@ func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 	
 	var separation_velocity = push * separation_response
 	return separation_velocity.limit_length(max_separation_speed)
-		
 
 func try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 	_try_attack(enemy, player, delta)
