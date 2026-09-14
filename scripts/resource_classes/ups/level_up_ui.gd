@@ -101,12 +101,12 @@ func _validate_upgrade_pool() -> void:
 		if not known.has(upgrade.stat_name):
 			push_error("upgrade_pool: апгрейд '%s' целится в несуществующий стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
 
-func _validate_filter_names(uprade: UpgradeData) -> void:
-	if "required_tags" in uprade:
-		for tag in uprade.required_tags:
+func _validate_filter_names(upgrade: UpgradeData) -> void:
+	if "required_tags" in upgrade:
+		for tag in upgrade.required_tags:
 			if not tag in Tags.ELEMENTS:
-				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутсвует в Tags,ELEMENTS." % [uprade.upgrade_name, tag])
-	if "required_identity" in uprade:
-		for identity_name in uprade.required_upgrade:
-			if not identity_name in Tags.ELEMENTS:
-				push_error("upgrade_pool: у апгрейда '%s' identity '%s' отсутсвует в Tags.IDENTITIES." % [uprade.upgrade_name, identity_name])
+				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутсвует в Tags,ELEMENTS." % [upgrade.upgrade_name, tag])
+	if "required_identity" in upgrade:
+		for identity_name in upgrade.required_identity:
+			if not identity_name in Tags.IDENTITIES:
+				push_error("upgrade_pool: у апгрейда '%s' identity '%s' отсутсвует в Tags.IDENTITIES." % [upgrade.upgrade_name, identity_name])
