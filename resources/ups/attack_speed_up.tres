@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_uqqn2")
+required_identity = Array[String](["Axe"])
 stat_name = "attack_speed_mult"
 amount = 2.0
 upgrade_name = "attack speed up"

@@ -18,6 +18,9 @@
 [ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
 [ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="14_ebg2g"]
+[ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="14_ft6cd"]
+[ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="15_bb450"]
+[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="16_nfivy"]
 [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="19_1iba3"]
 [ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="20_yxlcp"]
 [ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="21_ebg2g"]
@@ -45,13 +48,13 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("14_ebg2g")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("14_ebg2g"), ExtResource("14_ft6cd"), ExtResource("15_bb450"), ExtResource("16_nfivy")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("11_trceg"), ExtResource("12_a8y0u"), ExtResource("13_jkv2x"), ExtResource("19_1iba3"), ExtResource("20_yxlcp"), ExtResource("21_ebg2g")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("21_ebg2g"), ExtResource("20_yxlcp"), ExtResource("19_1iba3"), ExtResource("12_a8y0u"), ExtResource("11_trceg"), ExtResource("13_jkv2x")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

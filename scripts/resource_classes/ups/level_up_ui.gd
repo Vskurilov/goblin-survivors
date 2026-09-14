@@ -105,8 +105,8 @@ func _validate_filter_names(upgrade: UpgradeData) -> void:
 	if "required_tags" in upgrade:
 		for tag in upgrade.required_tags:
 			if not tag in Tags.ELEMENTS:
-				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутсвует в Tags,ELEMENTS." % [upgrade.upgrade_name, tag])
+				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутствует в Tags,ELEMENTS." % [upgrade.upgrade_name, tag])
 	if "required_identity" in upgrade:
 		for identity_name in upgrade.required_identity:
 			if not identity_name in Tags.IDENTITIES:
-				push_error("upgrade_pool: у апгрейда '%s' identity '%s' отсутсвует в Tags.IDENTITIES." % [upgrade.upgrade_name, identity_name])
+				push_error("upgrade_pool: у апгрейда '%s' identity '%s' отсутствует в Tags.IDENTITIES." % [upgrade.upgrade_name, identity_name])
