@@ -34,7 +34,7 @@ func _ready() -> void:
 	modulate.a = 0.3
 	monitoring = false
 	
-	await get_tree().create_timer(telegraph_time,false).timeout.connect(_activate)
+	get_tree().create_timer(telegraph_time,false).timeout.connect(_activate)
 
 func _activate() -> void:
 	modulate.a = 1.0
@@ -46,9 +46,8 @@ func _activate() -> void:
 	add_child(tick_timer)
 	tick_timer.start()
 	
-	await get_tree().create_timer(duration,false).timeout
-	queue_free()
-
+	get_tree().create_timer(duration,false).timeout.connect(queue_free)
+	
 func _deal_tick_damage() -> void:
 	for body in get_overlapping_bodies():
 		if body == owner_actor:
