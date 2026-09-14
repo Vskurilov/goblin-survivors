@@ -21,6 +21,12 @@ extends UpgradeData
 const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 
 @export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var required_tags:Array[String] = []
+## Чем оружие ЯВЛЯЕТСЯ. Фильтр УРОВНЯ ОРУЖИЯ: эффект своего identity не несёт
+## и отсекается вместе со своим оружием.
+## Пустой — фильтра нет. Между required_tags и required_identity действует И,
+## внутри каждого из них — ИЛИ. "Огненное метательное" = оба поля заполнены;
+## "метательное ИЛИ магия" — одно поле с двумя именами.
+@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.IDENTITY_HINT) var required_identity:Array[String] = []
 @export var stat_name: String
 @export var amount: float
 @export var is_multiplicative: bool = false
@@ -33,13 +39,23 @@ func _carries_tag(tagged_resource: TaggedResource) -> bool:
 		if tag in tagged_resource.tags:
 			return true
 	return false
-
+## Подходит ли оружие под фильтр identity. Пустой фильтр подходит любому.
+func _matches_identity(weapon: WeaponData) -> bool:
+	if required_identity.is_empty():
+		return true
+	for identity_name in weapon.identity:
+		if identity_name in required_identity:
+			return true
+	return false
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
 ## Возвращает 0, 1 или 2 элемента. Два — это коллизия имён полей, её ловит apply().
 ## "stat_name in resource" (а не get() != null) — потому что get() не различает
 ## "поля нет" и "поле есть, но равно null" (проверено на 4.6).
 func _find_stat_carriers(weapon: WeaponData) -> Array:
 	var carriers: Array = []
+	# Оружие не прошло фильтр — не прошёл и его эффект: своего identity у эффекта нет.
+	if not _matches_identity(weapon):
+		return carriers
 	if _carries_tag(weapon) and stat_name in weapon:
 		carriers.append(weapon)
 	var effect: StatusEffectData = weapon.get("on_hit_effect")
@@ -52,14 +68,14 @@ func _find_stat_carriers(weapon: WeaponData) -> Array:
 func _applies_to_weapon(weapon: WeaponData) -> bool:
 	if not _find_stat_carriers(weapon).is_empty():
 		return true
-	return _carries_tag(weapon) and stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON
+	return _matches_identity(weapon) and _carries_tag(weapon) and stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON
 
 ## Апгрейд показывается на левелапе, только если ему есть куда лечь.
 ## Проверять один лишь тег недостаточно: тег может совпасть, а поля не быть —
 ## тогда игрок сжигает выбор впустую ("мёртвый выбор").
 func is_available(player: Node) -> bool:
 	# Стат тела: тег на теле бессмыслен, поэтому только универсальные апгрейды.
-	if required_tags.is_empty() and stat_name in player:
+	if required_tags.is_empty() and required_identity.is_empty() and stat_name in player:
 		return true
 	for weapon in player.weapons:
 		if _applies_to_weapon(weapon):
@@ -113,7 +129,7 @@ func apply(player: Node) -> void:
 		])
 		return
 	if stat_name in player:
-		if not required_tags.is_empty():
+		if not required_tags.is_empty() or not required_identity.is_empty():
 			push_error("TaggedStatUpgradeData '%s': стат тела '%s' не может требовать тегов - тело их не несет." % [upgrade_name, stat_name])
 			return
 		_apply_to_carrier(player)
@@ -134,10 +150,10 @@ func apply(player: Node) -> void:
 			_apply_to_carrier(carriers[0])
 			continue
 
-		# Носителя с таким полем нет. Оружие вообще не про этот тег — молча мимо, это норма.
-		if not _carries_tag(weapon):
+		# Оружие не про этот фильтр — молча мимо, это норма.
+		if not _matches_identity(weapon) or not _carries_tag(weapon):
 			continue
-
+		
 		# Тег совпал, поля нет — либо это бонус к телу, либо опечатка в stat_name.
 		if stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON:
 			_apply_body_bonus(weapon)

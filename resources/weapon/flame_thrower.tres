@@ -29,6 +29,7 @@ spread_angle_degrees = 15.0
 sync_spawn_delay = false
 spawn_offset_distance = 50.0
 weapon_name = "flame thrower"
+identity = Array[String](["Beam", "FlameThrower", "Magic"])
 fire_rate = 0.5
 tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

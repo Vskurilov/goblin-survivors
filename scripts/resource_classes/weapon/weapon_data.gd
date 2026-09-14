@@ -5,6 +5,11 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 
 @export var weapon_name:String = ''
 
+## Чем оружие ЯВЛЯЕТСЯ: семейство и конкретный предмет сразу.
+## Выдаётся при создании и НЕ МЕНЯЕТСЯ НИКОГДА — по нему апгрейды отбирают мишень.
+## Противоположность tags: те могут быть выданы по ходу забега (Этап 1.5b).
+@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.IDENTITY_HINT) var identity:Array[String] = []
+
 ## fire_rate — ПЕРИОД в секундах, не частота. Идентичность оружия
 ## (топор тяжёлый, копьё быстрое). Апгрейды его НЕ трогают — их
 ## мишень attack_speed_mult ниже. (диздок §2.1, решение 07-15)

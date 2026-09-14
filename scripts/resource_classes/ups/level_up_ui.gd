@@ -84,8 +84,11 @@ func _script_stats(object) -> Array:
 ## Дефекты контента в пуле. Object.set() на отсутствующее поле МОЛЧИТ —
 ## без этой проверки апгрейд в опечатку "применяется" в никуда.
 func _validate_upgrade_pool() -> void:
+	if not Tags.hints_match():
+		push_error("Tags: массив имён и строка-подсказка разошлись - инспектор предлагает не тот набор")
 	var known:= _collect_known_stats()
 	for upgrade in upgrade_pool:
+		_validate_filter_names(upgrade)
 		# Апгрейды без стата (будущая выдача тегов) — не наше дело.
 		if not "stat_name" in upgrade:
 			continue
@@ -97,6 +100,13 @@ func _validate_upgrade_pool() -> void:
 			continue
 		if not known.has(upgrade.stat_name):
 			push_error("upgrade_pool: апгрейд '%s' целится в несуществующий стат '%s'." % [upgrade.upgrade_name, upgrade.stat_name])
-			
-			
-	
+
+func _validate_filter_names(uprade: UpgradeData) -> void:
+	if "required_tags" in uprade:
+		for tag in uprade.required_tags:
+			if not tag in Tags.ELEMENTS:
+				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутсвует в Tags,ELEMENTS." % [uprade.upgrade_name, tag])
+	if "required_identity" in uprade:
+		for identity_name in uprade.required_upgrade:
+			if not identity_name in Tags.ELEMENTS:
+				push_error("upgrade_pool: у апгрейда '%s' identity '%s' отсутсвует в Tags.IDENTITIES." % [uprade.upgrade_name, identity_name])

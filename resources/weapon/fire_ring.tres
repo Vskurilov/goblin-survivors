@@ -13,6 +13,7 @@ texture = ExtResource("3_64byg")
 on_hit_effect = ExtResource("2_64byg")
 zone_count = 2
 weapon_name = "fire ring"
+identity = Array[String](["FireRing", "Magic", "Zone"])
 fire_rate = 5.0
 tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://d3u1nlncoieu1"

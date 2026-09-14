@@ -27,5 +27,6 @@ on_hit_effect = ExtResource("2_5ufd5")
 projectile_per_target = 10
 spawn_offset_distance = 100.0
 weapon_name = "javelin"
+identity = Array[String](["Javelin", "Thrown", "Martial"])
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

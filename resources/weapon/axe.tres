@@ -22,5 +22,6 @@ collision_shape = SubResource("CircleShape2D_hi8pk")
 base_trajectory = SubResource("Resource_rad8y")
 on_hit_effect = ExtResource("2_424j3")
 weapon_name = "Axe"
+identity = Array[String](["Thrown", "Axe", "Martial"])
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"
