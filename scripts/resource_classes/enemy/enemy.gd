@@ -32,12 +32,8 @@ func _ready():
 	$SeparationArea/CollisionShape2D.shape.radius = enemy_data.body_radius + 60.0
 	$SeparationArea.body_entered.connect(_on_separation_area_body_entered)
 	$SeparationArea.body_exited.connect(_on_separation_area_body_exited)
-		
 	player = get_tree().get_first_node_in_group("player")
-	if not is_instance_valid(player):
-		return
-	if player.is_dead:
-		return
+	
 
 func _on_separation_area_body_entered(body:Node2D) -> void:
 	if body == self:

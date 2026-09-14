@@ -24,7 +24,8 @@ func fire(player: Node) -> void:
 	if player.is_dead:
 		return
 	if projectile_scene == null:
-		push_warning("Projectile scene не зада для оружия: " + weapon_name)
+		push_warning("Projectile scene не задана для оружия: " + weapon_name)
+		return
 	var targets = pick_targets(player, target_mode, target_count)
 	if targets.is_empty():
 		return

@@ -34,8 +34,7 @@ func _ready() -> void:
 	modulate.a = 0.3
 	monitoring = false
 	
-	await get_tree().create_timer(telegraph_time,false).timeout
-	_activate()
+	await get_tree().create_timer(telegraph_time,false).timeout.connect(_activate)
 
 func _activate() -> void:
 	modulate.a = 1.0
