@@ -17,9 +17,11 @@ func get_target_group() -> StringName:
 func _ready():
 	if enemy_data == null:
 		push_warning("EnemyData не задан для: " + name)
+		queue_free()
 		return
 	if enemy_data.behavior == null:
 		push_warning("EnemyDataBehavior не задан для: " + enemy_data.enemy_name)
+		queue_free()
 		return
 	current_health = enemy_data.health
 	speed = enemy_data.speed
@@ -70,6 +72,8 @@ func _die() -> void:
 	
 	
 func drop_gem():
+	if enemy_data == null or enemy_data.gem_scene == null:
+		return
 	var gem = enemy_data.gem_scene.instantiate()
 	gem.global_position = global_position
 	get_tree().current_scene.add_child.call_deferred(gem)

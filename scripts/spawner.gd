@@ -14,10 +14,14 @@ func _on_timer_timeout() -> void:
 	if enemy_pool.is_empty():
 		push_warning("Enemy Pool пуст в спавнере: " + name)
 		return
+	var data: EnemyData = enemy_pool.pick_random()
+	if data == null:
+		push_warning("Пустой элемент в Enemy Pool спавнера: " + name)
+		return
 	var angle = randf() * TAU
 	var offset = Vector2.RIGHT.rotated(angle) * spawn_radius
 	var enemy = enemy_scene.instantiate()
-	enemy.enemy_data = enemy_pool.pick_random()
+	enemy.enemy_data = data
 	enemy.global_position = player.global_position + offset
 	add_child(enemy)
 	enemy.died.connect(player.add_kill)
