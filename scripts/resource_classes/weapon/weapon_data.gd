@@ -54,13 +54,6 @@ func arm_carrier(carrier:Node) -> void:
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
 
-func pick_target(player:Node, mode:TargetMode) -> Node2D:
-	var targets = pick_targets(player, mode, 1)
-	if targets.size() > 0:
-		return targets[0]
-	else:
-		return null
-
 func pick_targets(player:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 	var candidates: Array = []
 	match  mode:

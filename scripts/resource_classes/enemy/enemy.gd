@@ -4,10 +4,10 @@ class_name Enemy
 signal  died
 
 @export var enemy_data: EnemyData
-@export var behavior_state: Dictionary = {}
 
+var behavior_state: Dictionary = {}
 var speed: float
-var player
+var player: Actor
 var nearby_enemies:Array = []
 var nearby_player = null
 
@@ -77,6 +77,3 @@ func drop_gem():
 	var gem = enemy_data.gem_scene.instantiate()
 	gem.global_position = global_position
 	get_tree().current_scene.add_child.call_deferred(gem)
-
-func  is_valid_target(body:Node) -> bool:
-	return body.is_in_group("player")

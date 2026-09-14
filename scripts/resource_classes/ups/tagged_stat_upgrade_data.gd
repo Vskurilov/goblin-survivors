@@ -36,7 +36,7 @@ func _carries_tag(tagged_resource: TaggedResource) -> bool:
 	if required_tags.is_empty():
 		return true
 	for tag in required_tags:
-		if tag in tagged_resource.tags:
+		if tagged_resource.has_tag(tag):
 			return true
 	return false
 ## Подходит ли оружие под фильтр identity. Пустой фильтр подходит любому.

@@ -142,31 +142,12 @@ func get_enemies_sorted(criteria:Callable) -> Array:
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	enemies.sort_custom(criteria)
 	return enemies
-
-func get_enemy(criteria: Callable):
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	if enemies.is_empty():
-		return null
-	var best = enemies[0]
-	for enemy in enemies:
-		if criteria.call(enemy, best):
-			best = enemy
-	return best
 	
 func nearest_criteria(candidate:Node2D, current_best:Node2D) -> bool:
 	return global_position.distance_to(candidate.global_position) < global_position.distance_to(current_best.global_position)
 
 func  fartest_criteria(candidate:Node2D, current_best:Node2D) -> bool:
 	return global_position.distance_to(candidate.global_position) > global_position.distance_to(current_best.global_position)
-	
-func  get_random_enemy() -> Node2D:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	if enemies.is_empty():
-		return null
-	return enemies[randi() % enemies.size()]
-	
-func  is_valid_target(body:Node) -> bool:
-	return body.is_in_group("enemies")
 	
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):

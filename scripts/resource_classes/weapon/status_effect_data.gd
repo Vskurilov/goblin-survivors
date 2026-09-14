@@ -2,7 +2,7 @@ class_name StatusEffectData
 extends TaggedResource
 
 @export var duration:float= 3.0
-@export var tick_interval = 0.5
+@export var tick_interval:float = 0.5
 @export var max_stacks:int = 1
 @export var stack_group: StringName = &"" 
 
