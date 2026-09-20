@@ -18,6 +18,7 @@ func _ready() -> void:
 		if enemy_pool[i] == null:
 			push_error("Spawner '%s': пустой слот %d в enemy_pool." % [name, i])
 func _on_timer_timeout() -> void:
+	# На старте об этом уже кричали — здесь молча не спавним.
 	if enemy_scene == null:
 		return
 	if player == null:
