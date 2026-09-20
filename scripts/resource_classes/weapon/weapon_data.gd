@@ -57,7 +57,6 @@ func fire(_player:Node):
 ## Выбор целей без полной сортировки: один проход по списку на каждую цель,
 ## сравнение в КВАДРАТАХ расстояний (sqrt не нужен). FARTHEST — та же
 ## минимизация со знаком минус. O(n * count) вместо n*log(n) с двумя sqrt на сравнение.
-
 func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 	var candidates: Array = shooter.get_tree().get_nodes_in_group(shooter.get_target_group())
 	var result: Array[Node2D] = []

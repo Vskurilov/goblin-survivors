@@ -6,7 +6,20 @@ extends Node2D
 
 @onready var player = get_tree().get_first_node_in_group("player")
 
+## Один громкий отчёт на старте: дыры в контенте видно сразу,
+## а не на первом спавне через минуту забега.
+func _ready() -> void:
+	if enemy_scene == null:
+		push_error("Spawner '%s': не задана enemy_scene." % name)
+	if enemy_pool.is_empty():
+		push_error("Spawner '%s': enemy_pool пуст." % name)
+		return
+	for i in enemy_pool.size():
+		if enemy_pool[i] == null:
+			push_error("Spawner '%s': пустой слот %d в enemy_pool." % [name, i])
 func _on_timer_timeout() -> void:
+	if enemy_scene == null:
+		return
 	if player == null:
 		return
 	if player.is_dead:
