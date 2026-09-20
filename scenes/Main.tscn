@@ -13,30 +13,10 @@
 [ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="9_yc10j"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="10_jscy8"]
-[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="11_trceg"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
-[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
-[ext_resource type="PackedScene" uid="uid://4uaah23fgnp3" path="res://scenes/aoe_zone.tscn" id="13_2ofn6"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
-[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/AxeBurnEffect.tres" id="14_xa025"]
-[ext_resource type="Script" uid="uid://d3u1nlncoieu1" path="res://scripts/resource_classes/weapon/aoe_weapon_data.gd" id="15_36rkl"]
-[ext_resource type="Texture2D" uid="uid://cc75dih4fjq2d" path="res://media/circle.svg" id="16_fs0b5"]
-[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="19_1iba3"]
-[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="20_yxlcp"]
-[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="21_ebg2g"]
-
-[sub_resource type="Resource" id="Resource_ma7h6"]
-script = ExtResource("15_36rkl")
-aoe_scene = ExtResource("13_2ofn6")
-zone_tick_interval = 1.0
-texture = ExtResource("16_fs0b5")
-on_hit_effect = ExtResource("14_xa025")
-zone_count = 2
-weapon_name = "fire ring"
-identity = Array[String](["FireRing", "Magic", "Zone"])
-fire_rate = 0.01
-tags = Array[String](["Fire"])
-metadata/_custom_type_script = "uid://d3u1nlncoieu1"
+[ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="13_yxlcp"]
+[ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="14_ebg2g"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -62,13 +42,13 @@ position = Vector2(-34, 83)
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
 max_health = 10.0
-weapons = Array[ExtResource("7_jbj1t")]([SubResource("Resource_ma7h6")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_yxlcp"), ExtResource("14_ebg2g")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755 groups=["levelup_ui"]]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("21_ebg2g"), ExtResource("20_yxlcp"), ExtResource("19_1iba3"), ExtResource("12_a8y0u"), ExtResource("11_trceg"), ExtResource("13_jkv2x")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

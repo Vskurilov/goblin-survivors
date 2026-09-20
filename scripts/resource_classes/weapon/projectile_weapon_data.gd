@@ -47,12 +47,15 @@ func fire(player: Node) -> void:
 			_spawn_projectile(player, final_direction)
 		else:
 			player.get_tree().create_timer(delay, false).timeout.connect(_spawn_projectile.bind(player, final_direction))
-
-func _spawn_projectile(player: Node, direction: Vector2) -> void:
-	if not is_instance_valid(player) or player.is_dead:
+## Единственное место сборки снаряда — и для игрока, и для врагов.
+## Новое поле снаряда добавляется только сюда.
+func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
+	if projectile_scene == null:
+		push_warning("projectile_scene не задана: " + (weapon_name if not weapon_name.is_empty() else  resource_path))
 		return
-	var projectile = projectile_scene.instantiate()
-	projectile.global_position = player.global_position + direction * spawn_offset_distance
+	
+	var projectile:Projectile = projectile_scene.instantiate()
+	projectile.global_position = shooter.global_position + direction * spawn_offset_distance
 	projectile.direction = direction
 	projectile.damage = damage
 	projectile.speed = projectile_speed
@@ -64,7 +67,14 @@ func _spawn_projectile(player: Node, direction: Vector2) -> void:
 	projectile.trajectory = base_trajectory
 	projectile.lifetime = lifetime
 	projectile.on_hit_effect = on_hit_effect
-	projectile.owner_actor = player
-	projectile.target_group = player.get_target_group()
+	projectile.owner_actor = shooter
+	projectile.target_group = shooter.get_target_group()
 	arm_carrier(projectile) 
-	player.get_tree().current_scene.add_child(projectile)
+	shooter.get_tree().current_scene.add_child(projectile)
+	
+## Обёртка для отложенного выстрела: за время задержки игрок мог умереть или исчезнуть.
+func  _spawn_projectile(player: Node, direction: Vector2) -> void:
+	if not is_instance_valid(player) or player.is_dead:
+		return
+	spawn_projectile(player, direction)
+		

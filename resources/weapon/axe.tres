@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ProjectileWeaponData" format=3 uid="uid://dtie43fw0yrti"]
 
-[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_424j3"]
+[ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_424j3"]
 [ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
 [ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/AxeBurnEffect.tres" id="2_424j3"]
@@ -8,7 +8,10 @@
 
 [sub_resource type="Resource" id="Resource_rad8y"]
 script = ExtResource("1_424j3")
-metadata/_custom_type_script = "uid://djp7cru2m7rmx"
+amplitude = 10.0
+frequency = 3.0
+phase_jitter = 0.607
+metadata/_custom_type_script = "uid://xl4c4pcg3o2x"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hi8pk"]
 radius = 40.0
@@ -17,11 +20,15 @@ radius = 40.0
 script = ExtResource("1_i5rwr")
 projectile_scene = ExtResource("1_n1wqa")
 damage = 10.0
+lifetime = 5.0
+projectile_speed = 300.0
 texture = ExtResource("3_jxybs")
 collision_shape = SubResource("CircleShape2D_hi8pk")
 base_trajectory = SubResource("Resource_rad8y")
 on_hit_effect = ExtResource("2_424j3")
 weapon_name = "Axe"
 identity = Array[String](["Thrown", "Axe", "Martial"])
+fire_rate = 4.0
+crit_chance = 0.1
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"
