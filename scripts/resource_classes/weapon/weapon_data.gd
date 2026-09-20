@@ -84,5 +84,5 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 			if best == null or score < best_score: 
 				best = candidate
 				best_score = score
-			result.append(best)
+		result.append(best)
 	return result
