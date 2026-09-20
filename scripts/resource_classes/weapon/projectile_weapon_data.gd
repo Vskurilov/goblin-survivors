@@ -51,7 +51,7 @@ func fire(player: Node) -> void:
 ## Новое поле снаряда добавляется только сюда.
 func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	if projectile_scene == null:
-		push_warning("projectile_scene не задана: " + (weapon_name if not weapon_name.is_empty() else  resource_path))
+		push_warning("projectile_scene не задана: " + (weapon_name if not weapon_name.is_empty() else resource_path))
 		return
 	
 	var projectile:Projectile = projectile_scene.instantiate()
@@ -73,7 +73,7 @@ func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	shooter.get_tree().current_scene.add_child(projectile)
 	
 ## Обёртка для отложенного выстрела: за время задержки игрок мог умереть или исчезнуть.
-func  _spawn_projectile(player: Node, direction: Vector2) -> void:
+func _spawn_projectile(player: Node, direction: Vector2) -> void:
 	if not is_instance_valid(player) or player.is_dead:
 		return
 	spawn_projectile(player, direction)

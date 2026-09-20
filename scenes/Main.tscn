@@ -13,10 +13,15 @@
 [ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="9_yc10j"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="10_jscy8"]
+[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="11_trceg"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
+[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="12_a8y0u"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="13_yxlcp"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="14_ebg2g"]
+[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="19_1iba3"]
+[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="20_yxlcp"]
+[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="21_ebg2g"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -48,7 +53,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_yxlcp"), ExtResource("1
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("21_ebg2g"), ExtResource("20_yxlcp"), ExtResource("19_1iba3"), ExtResource("12_a8y0u"), ExtResource("11_trceg"), ExtResource("13_jkv2x")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

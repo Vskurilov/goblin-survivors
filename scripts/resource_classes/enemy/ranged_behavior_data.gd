@@ -25,4 +25,4 @@ func  _try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
 			return
 		enemy.behavior_state["attack_cooldown"] = projectile_data.fire_rate / projectile_data.attack_speed_mult
 		var direction:= enemy.global_position.direction_to(player.global_position)
-		projectile_data._spawn_projectile(enemy, direction)
+		projectile_data.spawn_projectile(enemy, direction)
