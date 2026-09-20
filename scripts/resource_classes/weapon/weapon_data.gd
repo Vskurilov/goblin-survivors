@@ -67,6 +67,7 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 	if mode == TargetMode.RANDOM:
 		if actual_count == 1:
 			result.append(candidates.pick_random())
+			return result
 		candidates.shuffle()
 		for i in actual_count:
 			result.append(candidates[i])
