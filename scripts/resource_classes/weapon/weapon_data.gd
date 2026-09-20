@@ -53,19 +53,36 @@ func arm_carrier(carrier:Node) -> void:
 
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
+	
+## Выбор целей без полной сортировки: один проход по списку на каждую цель,
+## сравнение в КВАДРАТАХ расстояний (sqrt не нужен). FARTHEST — та же
+## минимизация со знаком минус. O(n * count) вместо n*log(n) с двумя sqrt на сравнение.
 
-func pick_targets(player:Node, mode: TargetMode, count: int) -> Array[Node2D]:
-	var candidates: Array = []
-	match  mode:
-		TargetMode.NEAREST:
-			candidates =  player.get_enemies_sorted(player.nearest_criteria)
-		TargetMode.FARTHEST:
-			candidates =  player.get_enemies_sorted(player.fartest_criteria)
-		TargetMode.RANDOM:
-			candidates =  player.get_tree().get_nodes_in_group("enemies")
-			candidates.shuffle()
-	var actual_count = min(count, candidates.size())
+func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
+	var candidates: Array = shooter.get_tree().get_nodes_in_group(shooter.get_target_group())
 	var result: Array[Node2D] = []
-	for i in range(actual_count):
-		result.append(candidates[i])
+	var actual_count: int = mini(count, candidates.size())
+	if actual_count <= 0:
+		return result
+	if mode == TargetMode.RANDOM:
+		if actual_count == 1:
+			result.append(candidates.pick_random())
+		candidates.shuffle()
+		for i in actual_count:
+			result.append(candidates[i])
+		return result
+	# Знак переворачивает сравнение: «дальше» — это «меньше» со знаком минус.
+	var sign_mult: float = -1.0 if mode == TargetMode.FARTHEST else 1.0
+	var origin: Vector2 = shooter.global_position
+	for _i in actual_count:
+		var best: Node2D = null
+		var best_score: float = 0.0
+		for candidate in candidates:
+			if result.has(candidate):
+				continue
+			var score: float = origin.distance_squared_to(candidate.global_position) * sign_mult
+			if best == null or score < best_score: 
+				best = candidate
+				best_score = score
+			result.append(best)
 	return result

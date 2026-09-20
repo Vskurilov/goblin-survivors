@@ -9,6 +9,7 @@
 script = ExtResource("1_cokop")
 aoe_scene = ExtResource("1_pp3yj")
 zone_tick_interval = 1.0
+target_mode = 1
 texture = ExtResource("3_64byg")
 on_hit_effect = ExtResource("2_64byg")
 zone_count = 2

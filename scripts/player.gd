@@ -138,17 +138,6 @@ func _setup_weapons():
 		weapon_timers.append(timer)
 		timer.start()
 
-func get_enemies_sorted(criteria:Callable) -> Array:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	enemies.sort_custom(criteria)
-	return enemies
-	
-func nearest_criteria(candidate:Node2D, current_best:Node2D) -> bool:
-	return global_position.distance_to(candidate.global_position) < global_position.distance_to(current_best.global_position)
-
-func  fartest_criteria(candidate:Node2D, current_best:Node2D) -> bool:
-	return global_position.distance_to(candidate.global_position) > global_position.distance_to(current_best.global_position)
-	
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):
 		touching_enemies.append(body)
