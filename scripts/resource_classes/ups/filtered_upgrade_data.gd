@@ -8,7 +8,7 @@ extends UpgradeData
 @export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var required_tags: Array[String] = []
 ##Чем оружие ЯВЛЯЕТСЯ. Фильтр УРОВНЯ ОРУЖИЯ: эффект своего identity не несёт
 ## и отсекается вместе со своим оружие
-@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var required_identity: Array[String] = []
+@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.IDENTITY_HINT) var required_identity: Array[String] = []
 
 ##Несет ли ресурс(оружие или эффект) требуемый тег.
 func _carries_tag(tagged_resource: TaggedResource) -> bool:
