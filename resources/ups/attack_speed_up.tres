@@ -5,9 +5,9 @@
 
 [resource]
 script = ExtResource("1_uqqn2")
-required_identity = Array[String](["Melee"])
 stat_name = "attack_speed_mult"
 amount = 2.0
+required_identity = Array[String]([""])
 upgrade_name = "attack speed up"
 icon = ExtResource("1_utxsu")
 metadata/_custom_type_script = "uid://cvu3bercwdyqm"
