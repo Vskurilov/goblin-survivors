@@ -1,5 +1,5 @@
 class_name TaggedStatUpgradeData
-extends UpgradeData
+extends FilteredUpgradeData
 
 ## Апгрейд статов, который САМ находит свою мишень по тегу.
 ##
@@ -20,33 +20,10 @@ extends UpgradeData
 
 const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 
-@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.ELEMENT_HINT) var required_tags:Array[String] = []
-## Чем оружие ЯВЛЯЕТСЯ. Фильтр УРОВНЯ ОРУЖИЯ: эффект своего identity не несёт
-## и отсекается вместе со своим оружием.
-## Пустой — фильтра нет. Между required_tags и required_identity действует И,
-## внутри каждого из них — ИЛИ. "Огненное метательное" = оба поля заполнены;
-## "метательное ИЛИ магия" — одно поле с двумя именами.
-@export_custom(PROPERTY_HINT_TYPE_STRING, Tags.IDENTITY_HINT) var required_identity:Array[String] = []
 @export var stat_name: String
 @export var amount: float
 @export var is_multiplicative: bool = false
 
-## Несёт ли ресурс (оружие или эффект) требуемый тег.
-func _carries_tag(tagged_resource: TaggedResource) -> bool:
-	if required_tags.is_empty():
-		return true
-	for tag in required_tags:
-		if tagged_resource.has_tag(tag):
-			return true
-	return false
-## Подходит ли оружие под фильтр identity. Пустой фильтр подходит любому.
-func _matches_identity(weapon: WeaponData) -> bool:
-	if required_identity.is_empty():
-		return true
-	for identity_name in weapon.identity:
-		if identity_name in required_identity:
-			return true
-	return false
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
 ## Возвращает 0, 1 или 2 элемента. Два — это коллизия имён полей, её ловит apply().
 ## "stat_name in resource" (а не get() != null) — потому что get() не различает
