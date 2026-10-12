@@ -19,4 +19,5 @@ behavior = ExtResource("1_qdhp4")
 mass = 500.0
 body_radius = 50.0
 collision_shape = ExtResource("2_exidb")
+xp_reward = 10
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
