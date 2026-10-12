@@ -1,9 +1,9 @@
-extends  Actor
+extends Actor
 class_name Player
 ## Сигнал сообщающий о здоровье игрока
 signal health_changed(current: float, maximum: float)
-## Уровень и опыт меняются вместе - один сигнал на двоих
-signal  xp_changed(level: int, current_xp: int, xp_to_next: int)
+## Уровень и опыт меняются вместе - один сигнал на три значения
+signal xp_changed(level: int, current_xp: int, xp_to_next: int)
 signal kills_changed(kills: int)
 ## Раз в секунду обновляем таймер времени жизни
 signal survival_time_changed(seconds: float)

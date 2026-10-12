@@ -1,4 +1,4 @@
-class_name  FilteredUpgradeData
+class_name FilteredUpgradeData
 extends UpgradeData
 
 ##Общий фильтр апгрейда: по чему отбирается мишень

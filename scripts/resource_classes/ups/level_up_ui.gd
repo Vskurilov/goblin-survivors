@@ -44,14 +44,14 @@ func _on_button_pressed(index:int) -> void:
 	get_tree().paused = false
 	visible = false
 
-func  has_upgrades(player:Node) -> bool:
+func has_upgrades(player:Node) -> bool:
 	return upgrade_pool.any(func(upgrade: UpgradeData): return upgrade.is_available(player))
 	
 ## Имена всех скриптовых полей оружия, эффектов и тела — пространство,
 ## в котором stat_name апгрейда обязан существовать.
-func  _collect_known_stats() -> Dictionary:
+func _collect_known_stats() -> Dictionary:
 	var registry:= {}
-	for  entry  in ProjectSettings.get_global_class_list():
+	for entry in ProjectSettings.get_global_class_list():
 		registry[String(entry["class"])] = entry
 	var known:= {}
 	for class_name_string in registry:
@@ -77,7 +77,7 @@ func  _collect_known_stats() -> Dictionary:
 		
 func _script_stats(object) -> Array:
 	var names: Array = []
-	for property in  object.get_property_list():
+	for property in object.get_property_list():
 		if property["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE:
 			names.append(property["name"])
 	return names
