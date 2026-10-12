@@ -14,7 +14,7 @@ var _current_player: Node
 func _ready() -> void:
 	for i in buttons.size():
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
-	# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 64 px.
+		# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 64 px.
 		buttons[i].add_theme_constant_override("icon_max_width", 64)
 	_validate_upgrade_pool()
 
@@ -92,7 +92,7 @@ func _validate_upgrade_pool() -> void:
 		_validate_filter_names(upgrade)
 		if "granted_tags" in upgrade and upgrade.granted_tags.is_empty():
 			push_error("upgrade_pool: у апгрейда '%s' пуст granted_tags - выдавать нечего." % upgrade.upgrade_name)
-		# Апгрейды без стата (будущая выдача тегов) — не наше дело.
+		# Апгрейды без стата (выдача тегов) — не наше дело.
 		if not "stat_name" in upgrade:
 			continue
 		if upgrade.stat_name.is_empty():
@@ -108,11 +108,11 @@ func _validate_filter_names(upgrade: UpgradeData) -> void:
 	if "required_tags" in upgrade:
 		for tag in upgrade.required_tags:
 			if not tag in Tags.ELEMENTS:
-				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутствует в Tags,ELEMENTS." % [upgrade.upgrade_name, tag])
+				push_error("upgrade_pool: у апгрейда '%s' тег '%s' отсутствует в Tags.ELEMENTS." % [upgrade.upgrade_name, tag])
 	if "granted_tags" in upgrade:
 		for tag in upgrade.granted_tags:
 			if not tag in Tags.ELEMENTS:
-				push_error("upgrade_pool: у апгрейда '%s' выдаваемый тег '%s' отсутсвует в Tags.ELEMENTS." % [upgrade.upgrade_name, tag])
+				push_error("upgrade_pool: у апгрейда '%s' выдаваемый тег '%s' отсутствует в Tags.ELEMENTS." % [upgrade.upgrade_name, tag])
 	if "required_identity" in upgrade:
 		for identity_name in upgrade.required_identity:
 			if not identity_name in Tags.IDENTITIES:

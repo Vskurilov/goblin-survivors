@@ -1,5 +1,5 @@
-class_name  GrantTagUpgradeData
-extends  FilteredUpgradeData
+class_name GrantTagUpgradeData
+extends FilteredUpgradeData
 
 ## Выдаёт оружию стихийные теги. Только самому оружию: эффект держит свой тег.
 ## identity не трогает никогда. Повторная выдача ничего не дублирует.
@@ -22,7 +22,7 @@ func is_available(player: Node) -> bool:
 			return true
 	return false
 
-func  apply(player: Node) -> void:
+func apply(player: Node) -> void:
 	if granted_tags.is_empty():
 		push_error("GrantTagUpgradeData '%s': granted_tags пуст. Апгрейд не применён." % upgrade_name)
 		return
