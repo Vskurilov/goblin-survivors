@@ -6,7 +6,6 @@ const ATTRACT_ACCELERATION: float = 1500.0
 const ATTRACT_MAX_SPEED: float = 900.0
 ##Сверх этого числа новые гемы не появляются, их опыт складируется в один мегагем
 const MAX_ON_MAP: int = 300
-const OVERFLOW_TINT: Color = Color(1.0, 0.35, 0.35)
 const OVERFLOW_SCALE: float = 1.5
 
 ##Живые гемы, общий счётчик на класс, 
@@ -16,6 +15,9 @@ static var _overflow_gem: Gem = null
 
 ##Опыт за подбор. Ставит враг при выпадении из своего EnemyData.xp_reward.
 var xp_value: int = 5
+
+## Вид копилки. Ставится в gem.tscn; пусто - выглядит как обычный гем
+@export var overflow_texture: Texture2D
 
 var _target: Node2D = null
 var _speed: float = 0.0
@@ -46,7 +48,9 @@ static func _overflow_alive() -> bool:
 	
 func _become_overflow() -> void:
 	_overflow_gem = self
-	modulate = OVERFLOW_TINT
+	# $Sprite2D доспупен до добавления в дерево: дети есть сразу после intantiate
+	if overflow_texture != null:
+		$Sprite2D.texture = overflow_texture
 	scale = Vector2.ONE * OVERFLOW_SCALE
 
 ##Физика гема до взаимодействия не считается
