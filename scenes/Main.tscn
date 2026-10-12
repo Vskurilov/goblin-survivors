@@ -164,5 +164,5 @@ layout_mode = 2
 text = "Again?"
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
-[connection signal="health_changed" from="Scene/Player" to="Spawner" method="_on_player_health_changed"]
+[connection signal="health_changed" from="Scene/Player" to="HUD/HealthBar" method="_on_player_health_changed"]
 [connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="Scene/Player" method="_on_restart_button_pressed"]
