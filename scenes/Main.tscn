@@ -16,6 +16,8 @@
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="13_cvmbd"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
+[ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
+[ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -47,7 +49,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_cvmbd")])
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("17_bb450"), ExtResource("18_nfivy")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
