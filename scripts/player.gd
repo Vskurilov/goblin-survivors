@@ -1,5 +1,6 @@
 extends Actor
 class_name Player
+
 ## Сигнал сообщающий о здоровье игрока
 signal health_changed(current: float, maximum: float)
 ## Уровень и опыт меняются вместе - один сигнал на три значения
@@ -7,6 +8,10 @@ signal xp_changed(level: int, current_xp: int, xp_to_next: int)
 signal kills_changed(kills: int)
 ## Раз в секунду обновляем таймер времени жизни
 signal survival_time_changed(seconds: float)
+##Получен уровень. Передаёт себя: окно выбора нужно, к кому применять апгрейд
+signal leveled_up(player: Player)
+##Забег окончен. Итоги в аргументах, чтобы экрану не лезть в игрока.
+signal run_ended(kills: int, survival_time: float, level: int)
 
 const MIN_FIRE_PERIOD: float = 0.01
 
@@ -23,10 +28,6 @@ var xp_to_next_lv:int = 10
 var survival_time:float = 0.0
 var kills:int = 0
 var weapon_timers: Array[Timer] = []
- 
-@onready var levelupui = get_tree().get_first_node_in_group("levelup_ui")
-@onready var gameoverui = get_tree().get_first_node_in_group("game_over_ui")
-@onready var gameoverstatlabel = get_tree().get_first_node_in_group("game_over_stat_label")
 
 func get_target_group() -> StringName:
 	return &"enemies"
@@ -79,16 +80,14 @@ static func format_time(seconds_value: float) -> String:
 
 func gain_xp(amount):
 	current_xp += amount
-	var leveled_up = false
+	var did_level_up = false
 	while current_xp >= xp_to_next_lv:
 		level += 1
 		xp_to_next_lv = xp_to_next_lv + int(xp_to_next_lv * ((1.1**2)/2))
-		leveled_up = true
-	if leveled_up:
+		did_level_up = true
+	if did_level_up:
 		heal_to_full()
-		if levelupui.has_upgrades(self):
-			get_tree().paused = true
-			levelupui.show_choices(self)
+		leveled_up.emit(self)
 	xp_changed.emit(level, current_xp,xp_to_next_lv)
 
 func add_kill():
@@ -98,9 +97,7 @@ func add_kill():
 func _die() -> void:
 	print("Game Over")
 	set_physics_process(false)
-	get_tree().paused = true
-	gameoverui.visible = true
-	gameoverstatlabel.text = "Ты завалил " + str(kills) + " гоблинов. Время их мучений " + format_time(survival_time) + ". Левел: " + str(level)
+	run_ended.emit(kills, survival_time, level)
 
 ## Единственный путь лечения. Присваивает ровно максимум, поэтому верхняя
 ## граница здоровья держится ПО ПОСТРОЕНИЮ, а не клампом. Появится ЧАСТИЧНОЕ
@@ -111,7 +108,13 @@ func _die() -> void:
 func heal_to_full() -> void:
 	current_health = max_health
 	_on_health_changed()
-	
+
+## Единственная точка применения апгрейда. Последствия (таймеры, лечение под новым максимум) - 
+## - забота игрока, а не окна выбора
+func apply_upgrade(upgrade: UpgradeData) -> void:
+	upgrade.apply(self)
+	refresh_weapon_timers()
+	heal_to_full()
 
 func refresh_weapon_timers() -> void:
 	for i in weapon_timers.size():

@@ -18,6 +18,13 @@ func _ready() -> void:
 		buttons[i].add_theme_constant_override("icon_max_width", 64)
 	_validate_upgrade_pool()
 
+## Окно стави паузу само и само её снимает в _on_button_pressed.
+func _on_player_leveled_up(player: Player) -> void:
+	if not has_upgrades(player):
+		return
+	get_tree().paused = true
+	show_choices(player)
+
 func show_choices(player:Node) -> void:
 	_current_player = player
 	var available_pool: Array[UpgradeData] = [] 
@@ -38,9 +45,7 @@ func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 	return shuffled.slice(0, min(count, pool.size()))
 
 func _on_button_pressed(index:int) -> void:
-	current_choices[index].apply(_current_player)
-	_current_player.refresh_weapon_timers()
-	_current_player.heal_to_full()
+	_current_player.apply_upgrade(current_choices[index])
 	get_tree().paused = false
 	visible = false
 
