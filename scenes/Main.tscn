@@ -18,6 +18,7 @@
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
 [ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
+[ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -95,6 +96,7 @@ offset_right = 50.0
 grow_horizontal = 2
 grow_vertical = 0
 show_percentage = false
+script = ExtResource("19_nfivy")
 
 [node name="Label" type="Label" parent="HUD/HealthBar" unique_id=851243512 groups=["health_label"]]
 layout_mode = 1

@@ -1,5 +1,7 @@
 extends  Actor
 class_name Player
+## Сигнал сообщающий о здоровье игрока
+signal health_changed(current: float, maximum: float)
 const MIN_FIRE_PERIOD: float = 0.01
 
 @export var speed: float = 200.0
@@ -17,8 +19,6 @@ var kills:int = 0
 var weapon_timers: Array[Timer] = []
  
 @onready var levelupui = get_tree().get_first_node_in_group("levelup_ui")
-@onready var healhbar = get_tree().get_first_node_in_group("health_bar")
-@onready var healthlabel = get_tree().get_first_node_in_group("health_label")
 @onready var timerlabel = get_tree().get_first_node_in_group("timer_label")
 @onready var levellabel = get_tree().get_first_node_in_group("level_label")
 @onready var killcountlabel = get_tree().get_first_node_in_group("kill_count_label")
@@ -56,11 +56,7 @@ func _physics_process(delta):
 			take_damage(total_damage * delta)
 
 func _on_health_changed() -> void:
-	if healhbar == null:
-		return
-	healhbar.max_value = max_health
-	healhbar.value = current_health
-	healthlabel.text = str(int(current_health)) + "/" + str(int(max_health))
+	health_changed.emit(current_health, max_health)
 
 func  update_level_xp():
 	levellabel.text = "уровень: " + str(level) + " | XP: " + str(current_xp) + " | нужно до уровня: " + str(xp_to_next_lv)

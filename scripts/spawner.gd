@@ -39,3 +39,7 @@ func _on_timer_timeout() -> void:
 	enemy.global_position = player.global_position + offset
 	add_child(enemy)
 	enemy.died.connect(player.add_kill)
+
+
+func _on_player_health_changed(current: float, maximum: float) -> void:
+	pass # Replace with function body.
