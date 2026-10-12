@@ -51,7 +51,7 @@ func _ready():
 func _physics_process(delta):
 	_process_status_effects(delta)
 	var direction = Input.get_vector("move_left", "move_right", "move_up","move_down")
-	velocity = direction * speed
+	velocity = direction * speed * get_status_speed_mult()
 	move_and_slide()
 	if not is_dead:
 		var whole_seconds := int(survival_time)

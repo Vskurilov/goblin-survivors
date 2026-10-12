@@ -7,8 +7,8 @@ extends Resource
 func get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
 		return _get_velocity(enemy, player, delta) + _get_separation(enemy)
 
-func _get_velocity(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> Vector2:
-	return Vector2.ZERO
+func _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+	return _get_velocity(enemy, player, delta) * enemy.get_status_speed_mult() + _get_separation(enemy)
 
 func  _get_separation(enemy: CharacterBody2D) -> Vector2:
 	var push = Vector2.ZERO

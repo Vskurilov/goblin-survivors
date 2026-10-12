@@ -97,6 +97,15 @@ func _process_status_effects(delta: float) -> void:
 			active_effects.remove_at(i)
 	_upgrade_visual_feedback(delta)
 
+## Итоговый множитель скорости от активных эффектов. Не хранится, а считается
+## каждый раз: истечение, обновление стака и апгрейд скорости не требуют "вернуть
+## как было". Из нескольких замедлений действует сильнейшее, они не перемножаются.
+func get_status_speed_mult() -> float:
+	var mult := 1.0
+	for entry in active_effects:
+		mult = minf(mult, entry["effect"].get_move_speed_mult())
+	return mult
+
 ## ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
 ## и тик статус-эффекта приходят сюда. Поэтому сторож is_dead стоит один раз
 ## на всех: queue_free() отложен до конца кадра, и узел продолжает принимать

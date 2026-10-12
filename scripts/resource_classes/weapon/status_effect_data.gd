@@ -6,6 +6,10 @@ extends TaggedResource
 @export var max_stacks:int = 1
 @export var stack_group: StringName = &"" 
 
+##Во сколько раз эффект меняет скорость движения носителя, при 1.0 - не меняет
+## Переопределяет эффекты - модификаторы(замедление); урон по тикам его не трогает
+func get_move_speed_mult() -> float:
+	return 1.0
 
 func apply_tick(_enemy:Node2D, _owner_actor: Actor = null, _weapon_bonuses : Dictionary = {}, _crit_chance:float = 0.05, _crit_mult:float = 2.0) -> void:
 	push_error("StatusEffectData.apply_tick() не переопределен в " + str(get_script().resource_path))
