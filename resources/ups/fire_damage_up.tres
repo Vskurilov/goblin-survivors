@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://bkxtktkd6ncsx"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_pjd01"]
+[ext_resource type="Texture2D" uid="uid://ckubssp7fel4q" path="res://media/fire-breath-svgrepo-com.svg" id="1_tmi2u"]
+
+[resource]
+script = ExtResource("1_pjd01")
+stat_name = "damage"
+amount = 5.0
+required_tags = Array[String](["Fire"])
+upgrade_name = "fire damage up"
+icon = ExtResource("1_tmi2u")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

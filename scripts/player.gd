@@ -121,6 +121,9 @@ func refresh_weapon_timers() -> void:
 func _setup_weapons():
 	for i in weapons.size():
 		weapons[i] = weapons[i].duplicate()
+		# duplicate() не копирует массивы: без этого грант-тег запишется в сам .tres
+		# и переживёт рестарт забега (проверено на 4.6).
+		weapons[i].tags = weapons[i].tags.duplicate()
 		var effect = weapons[i].get("on_hit_effect")
 		if effect != null:
 			weapons[i].set("on_hit_effect", effect.duplicate())
