@@ -19,7 +19,7 @@ radius = 40.0
 [resource]
 script = ExtResource("1_i5rwr")
 projectile_scene = ExtResource("1_n1wqa")
-damage = 1000.0
+damage = 10.0
 lifetime = 5.0
 projectile_speed = 300.0
 texture = ExtResource("3_jxybs")
