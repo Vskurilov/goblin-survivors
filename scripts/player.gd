@@ -2,6 +2,12 @@ extends  Actor
 class_name Player
 ## Сигнал сообщающий о здоровье игрока
 signal health_changed(current: float, maximum: float)
+## Уровень и опыт меняются вместе - один сигнал на двоих
+signal  xp_changed(level: int, current_xp: int, xp_to_next: int)
+signal kills_changed(kills: int)
+## Раз в секунду обновляем таймер времени жизни
+signal survival_time_changed(seconds: float)
+
 const MIN_FIRE_PERIOD: float = 0.01
 
 @export var speed: float = 200.0
@@ -19,9 +25,6 @@ var kills:int = 0
 var weapon_timers: Array[Timer] = []
  
 @onready var levelupui = get_tree().get_first_node_in_group("levelup_ui")
-@onready var timerlabel = get_tree().get_first_node_in_group("timer_label")
-@onready var levellabel = get_tree().get_first_node_in_group("level_label")
-@onready var killcountlabel = get_tree().get_first_node_in_group("kill_count_label")
 @onready var gameoverui = get_tree().get_first_node_in_group("game_over_ui")
 @onready var gameoverstatlabel = get_tree().get_first_node_in_group("game_over_stat_label")
 
@@ -29,9 +32,11 @@ func get_target_group() -> StringName:
 	return &"enemies"
 
 func _ready():
+	# Начальное состояние объявляется так же, как любое изменение.
 	heal_to_full()
-	update_level_xp()
-	killcountlabel.text = "убито: " + str(kills)
+	xp_changed.emit(level, current_xp, xp_to_next_lv)
+	kills_changed.emit(kills)
+	survival_time_changed.emit(survival_time)
 	_setup_weapons()
 
 func _physics_process(delta):
@@ -40,8 +45,10 @@ func _physics_process(delta):
 	velocity = direction * speed
 	move_and_slide()
 	if not is_dead:
-		survival_time = survival_time + delta		
-		timerlabel.text = "мочишь гоблинов уже " + format_time(survival_time)
+		var whole_seconds := int(survival_time)
+		survival_time = survival_time + delta
+		if int(survival_time) != whole_seconds:
+			survival_time_changed.emit(survival_time)
 	if not touching_enemies.is_empty():
 		var total_damage = 0.0
 		for i in range(touching_enemies.size() - 1, -1, -1):
@@ -57,11 +64,9 @@ func _physics_process(delta):
 
 func _on_health_changed() -> void:
 	health_changed.emit(current_health, max_health)
-
-func  update_level_xp():
-	levellabel.text = "уровень: " + str(level) + " | XP: " + str(current_xp) + " | нужно до уровня: " + str(xp_to_next_lv)
-
-func format_time(seconds_value: float) -> String:
+	
+## static: состояния игрока не трогает, поэтому ей пользуется и UI.
+static func format_time(seconds_value: float) -> String:
 	var total_seconds = int(seconds_value)
 	# Целочисленное деление намеренно: нужны полные минуты, остаток берётся ниже через %.
 	@warning_ignore("integer_division")
@@ -75,22 +80,20 @@ func format_time(seconds_value: float) -> String:
 func gain_xp(amount):
 	current_xp += amount
 	var leveled_up = false
-	
 	while current_xp >= xp_to_next_lv:
 		level += 1
 		xp_to_next_lv = xp_to_next_lv + int(xp_to_next_lv * ((1.1**2)/2))
 		leveled_up = true
-		
 	if leveled_up:
 		heal_to_full()
 		if levelupui.has_upgrades(self):
 			get_tree().paused = true
 			levelupui.show_choices(self)
-	update_level_xp()
+	xp_changed.emit(level, current_xp,xp_to_next_lv)
 
 func add_kill():
 	kills = kills + 1
-	killcountlabel.text = "убито: " + str(kills)
+	kills_changed.emit(kills)
 
 func _die() -> void:
 	print("Game Over")

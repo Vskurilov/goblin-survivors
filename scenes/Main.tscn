@@ -19,6 +19,9 @@
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
 [ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
+[ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
+[ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
+[ext_resource type="Script" uid="uid://dgjorla8gq32b" path="res://scripts/ui/kill_count_label.gd" id="21_1iba3"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -115,19 +118,21 @@ horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 171
 
-[node name="TimerLabel" type="Label" parent="HUD" unique_id=159875392 groups=["timer_label"]]
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=159875392]
 offset_right = 40.0
 offset_bottom = 23.0
+script = ExtResource("20_yxlcp")
 
-[node name="LevelLabel" type="Label" parent="HUD" unique_id=885527235 groups=["level_label"]]
+[node name="LevelLabel" type="Label" parent="HUD" unique_id=885527235]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
+script = ExtResource("20_1nqs0")
 
-[node name="KillCountLabel" type="Label" parent="HUD" unique_id=285495991 groups=["kill_count_label"]]
+[node name="KillCountLabel" type="Label" parent="HUD" unique_id=285495991]
 custom_minimum_size = Vector2(50, 50)
 anchors_preset = 3
 anchor_left = 1.0
@@ -138,6 +143,7 @@ offset_left = -50.0
 offset_top = -50.0
 grow_horizontal = 0
 grow_vertical = 0
+script = ExtResource("21_1iba3")
 
 [node name="GameOverUI" type="CanvasLayer" parent="." unique_id=335262838 groups=["game_over_ui"]]
 process_mode = 3
@@ -165,4 +171,7 @@ text = "Again?"
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
 [connection signal="health_changed" from="Scene/Player" to="HUD/HealthBar" method="_on_player_health_changed"]
+[connection signal="kills_changed" from="Scene/Player" to="HUD/KillCountLabel" method="_on_player_kills_changed"]
+[connection signal="survival_time_changed" from="Scene/Player" to="HUD/TimerLabel" method="_on_player_survival_time_changed"]
+[connection signal="xp_changed" from="Scene/Player" to="HUD/LevelLabel" method="_on_player_xp_changed"]
 [connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="Scene/Player" method="_on_restart_button_pressed"]
