@@ -14,7 +14,6 @@ var _current_player: Node
 func _ready() -> void:
 	for i in buttons.size():
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
-		pass
 	# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 64 px.
 		buttons[i].add_theme_constant_override("icon_max_width", 64)
 	_validate_upgrade_pool()
