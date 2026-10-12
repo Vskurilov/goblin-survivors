@@ -83,7 +83,7 @@ text = "здр +10"
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1583140629]
 
-[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=601628181 groups=["health_bar"]]
+[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=601628181]
 custom_minimum_size = Vector2(800, 100)
 anchors_preset = 7
 anchor_left = 0.5
@@ -98,7 +98,7 @@ grow_vertical = 0
 show_percentage = false
 script = ExtResource("19_nfivy")
 
-[node name="Label" type="Label" parent="HUD/HealthBar" unique_id=851243512 groups=["health_label"]]
+[node name="Label" type="Label" parent="HUD/HealthBar" unique_id=851243512]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -164,4 +164,5 @@ layout_mode = 2
 text = "Again?"
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
+[connection signal="health_changed" from="Scene/Player" to="Spawner" method="_on_player_health_changed"]
 [connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="Scene/Player" method="_on_restart_button_pressed"]
