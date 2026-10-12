@@ -18,6 +18,7 @@
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
 [ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
+[ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="19_2ofn6"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 [ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
 [ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
@@ -47,14 +48,14 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-max_health = 10.0
+max_health = 1000.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_cvmbd")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("17_bb450"), ExtResource("18_nfivy")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("17_bb450"), ExtResource("18_nfivy"), ExtResource("19_2ofn6")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

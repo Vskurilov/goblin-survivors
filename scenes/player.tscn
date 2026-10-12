@@ -16,6 +16,9 @@ shader_parameter/tint_amount = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_dqkch"]
+radius = 100.0
+
 [node name="Player" type="CharacterBody2D" unique_id=691450919 groups=["player"]]
 collision_layer = 2
 collision_mask = 0
@@ -48,6 +51,14 @@ collision_mask = 4
 scale = Vector2(4, 4)
 shape = SubResource("CircleShape2D_qhqgy")
 
+[node name="MagnetArea" type="Area2D" parent="." unique_id=1765139531]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MagnetArea" unique_id=316363068]
+shape = SubResource("CircleShape2D_dqkch")
+
 [connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
 [connection signal="body_exited" from="HurtBox" to="." method="_on_hurt_box_body_exited"]
 [connection signal="area_entered" from="PickupArea" to="." method="_on_pickup_area_area_entered"]
+[connection signal="area_entered" from="MagnetArea" to="." method="_on_magnet_area_area_entered"]

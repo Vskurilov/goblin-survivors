@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://c644uu8kpk5yi"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_pn3d4"]
+[ext_resource type="Texture2D" uid="uid://dtjr5rjljhow7" path="res://media/magnet-svgrepo-com.svg" id="1_tpp2l"]
+
+[resource]
+script = ExtResource("1_pn3d4")
+stat_name = "magnet_radius"
+amount = 1.5
+is_multiplicative = true
+upgrade_name = "magnet up"
+icon = ExtResource("1_tpp2l")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

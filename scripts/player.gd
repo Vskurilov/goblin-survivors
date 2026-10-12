@@ -20,7 +20,14 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var weapons:Array[WeaponData] = []
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
-
+##Радиус притяжения гемов
+@export var magnet_radius: float = 100.0:
+	set(value):
+		magnet_radius = value
+		#При загрузке сцены сеттер срабатывает до появления детей
+		if is_node_ready():
+			_apply_magnet_radius()
+ 
 var touching_enemies:Array = []
 var current_xp:int = 0
 var level:int = 1
@@ -38,6 +45,7 @@ func _ready():
 	xp_changed.emit(level, current_xp, xp_to_next_lv)
 	kills_changed.emit(kills)
 	survival_time_changed.emit(survival_time)
+	_apply_magnet_radius()
 	_setup_weapons()
 
 func _physics_process(delta):
@@ -150,6 +158,13 @@ func _on_hurt_box_body_entered(body: Node2D) -> void:
 func _on_hurt_box_body_exited(body: Node2D) -> void:
 	if body in touching_enemies:
 		touching_enemies.erase(body)
+
+func _apply_magnet_radius() -> void:
+	($MagnetArea/CollisionShape2D.shape as CircleShape2D).radius = magnet_radius
+
+func _on_magnet_area_area_entered(area: Area2D) -> void:
+	if area is Gem:
+		area.attract_to(self)
 
 func _on_pickup_area_area_entered(area: Area2D) -> void:
 	
