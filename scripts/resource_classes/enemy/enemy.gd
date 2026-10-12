@@ -74,7 +74,4 @@ func _die() -> void:
 func drop_gem():
 	if enemy_data == null or enemy_data.gem_scene == null:
 		return
-	var gem: Gem = enemy_data.gem_scene.instantiate()
-	gem.xp_value = enemy_data.xp_reward
-	gem.global_position = global_position
-	get_tree().current_scene.add_child.call_deferred(gem)
+	Gem.drop(enemy_data.gem_scene, enemy_data.xp_reward, global_position, get_tree().current_scene)

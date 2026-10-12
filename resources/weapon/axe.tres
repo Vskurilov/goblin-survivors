@@ -19,13 +19,15 @@ radius = 40.0
 [resource]
 script = ExtResource("1_i5rwr")
 projectile_scene = ExtResource("1_n1wqa")
-damage = 10.0
+damage = 1000.0
 lifetime = 5.0
 projectile_speed = 300.0
 texture = ExtResource("3_jxybs")
 collision_shape = SubResource("CircleShape2D_hi8pk")
 base_trajectory = SubResource("Resource_rad8y")
 on_hit_effect = ExtResource("2_424j3")
+target_count = 10
+projectile_per_target = 10
 weapon_name = "Axe"
 identity = Array[String](["Thrown", "Axe", "Martial"])
 fire_rate = 4.0
