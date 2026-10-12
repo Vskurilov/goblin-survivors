@@ -12,13 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
+[ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
-[ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="13_ma7h6"]
-[ext_resource type="Resource" uid="uid://bykqq4s0huf03" path="res://resources/effects/JavelinBleedEffect.tres" id="14_e2s0e"]
-[ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="15_gsxep"]
-[ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="16_v0vrg"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
-[ext_resource type="Texture2D" uid="uid://cxwxiu4mwmvh2" path="res://media/noun-javelin-974222.svg" id="17_dg70y"]
 [ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
 [ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="19_2ofn6"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
@@ -40,32 +36,6 @@ body_radius = 25.0
 collision_shape = ExtResource("6_fs0b5")
 xp_reward = 10
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
-
-[sub_resource type="Resource" id="Resource_dp3eg"]
-script = ExtResource("13_ma7h6")
-metadata/_custom_type_script = "uid://djp7cru2m7rmx"
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_vhqel"]
-size = Vector2(12, 0.1)
-
-[sub_resource type="Resource" id="Resource_pnhog"]
-script = ExtResource("16_v0vrg")
-projectile_scene = ExtResource("15_gsxep")
-projectile_speed = 500.0
-texture = ExtResource("17_dg70y")
-projectile_scale = 10.0
-collision_shape = SubResource("RectangleShape2D_vhqel")
-sprite_angle_offset = 0.7853981633974483
-hitbox_angle_offset = -0.7853981633974483
-target_mode = 1
-base_trajectory = SubResource("Resource_dp3eg")
-on_hit_effect = ExtResource("14_e2s0e")
-spawn_offset_distance = 100.0
-weapon_name = "javelin"
-identity = Array[String](["Javelin", "Thrown", "Martial"])
-fire_rate = 2.0
-tags = Array[String](["Ice"])
-metadata/_custom_type_script = "uid://cj2chqr7efsb"
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -90,7 +60,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("7_jbj1t")]([SubResource("Resource_pnhog")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_2ofn6")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3
