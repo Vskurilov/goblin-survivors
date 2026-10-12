@@ -47,7 +47,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-max_health = 1000.0
+max_health = 100.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_cvmbd")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
