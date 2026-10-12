@@ -33,7 +33,7 @@ func _upgrade_visual_feedback(delta: float) -> void:
 		sprite.material.set_shader_parameter("tint_amount", 1.0)
 	elif active_effects.size() > 0:
 		# Несколько эффектов - видел последний наложенный стак.
-		sprite.material.set_shader_parameter("tint_color", active_effects)
+		sprite.material.set_shader_parameter("tint_color", active_effects.back()["effect"].tint_color)
 		sprite.material.set_shader_parameter("tint_amount", 0.6)
 	else:
 		sprite.material.set_shader_parameter("tint_amount", 0.0)
@@ -106,7 +106,7 @@ func get_status_speed_mult() -> float:
 		mult = minf(mult, entry["effect"].get_move_speed_mult())
 	return mult
 
-### ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
+## ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
 ## и тик статус-эффекта приходят сюда. Поэтому сторож is_dead стоит один раз
 ## на всех: queue_free() отложен до конца кадра, и узел продолжает принимать
 ## удары, поставленные в очередь в этом же кадре.
