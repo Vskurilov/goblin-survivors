@@ -152,6 +152,7 @@ func _on_hurt_box_body_exited(body: Node2D) -> void:
 		touching_enemies.erase(body)
 
 func _on_pickup_area_area_entered(area: Area2D) -> void:
-	if area.is_in_group("gem"):
+	
+	if area is Gem:
 		area.queue_free()
-		gain_xp(5)
+		gain_xp(area.xp_value)
