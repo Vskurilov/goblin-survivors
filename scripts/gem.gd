@@ -28,7 +28,7 @@ func _init() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		alive_count -= 1
-
+		
 ## Единственная точка появления гема. Сверх лимита опыт идет в копилку.
 static func drop(scene: PackedScene, xp: int, at: Vector2, parent: Node) -> void:
 	if alive_count >= MAX_ON_MAP and _overflow_alive():
@@ -48,7 +48,7 @@ static func _overflow_alive() -> bool:
 	
 func _become_overflow() -> void:
 	_overflow_gem = self
-	# $Sprite2D доспупен до добавления в дерево: дети есть сразу после intantiate
+	# $Sprite2D доступен до добавления в дерево: дети есть сразу после instantiate()
 	if overflow_texture != null:
 		$Sprite2D.texture = overflow_texture
 	scale = Vector2.ONE * OVERFLOW_SCALE
