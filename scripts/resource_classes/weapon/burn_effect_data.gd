@@ -5,4 +5,5 @@ extends StatusEffectData
 
 func apply_tick(enemy:Node2D, _owner_actor: Actor = null, _weapon_bonuses: Dictionary = {}, crit_chance: float = 0.05, crit_mult: float = 2.0) -> void:
 	var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
-	enemy.take_damage(final_damage, true)
+	# self — чтобы вспышка тика была цвета этого эффекта
+	enemy.take_damage(final_damage, self)

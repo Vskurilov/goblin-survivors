@@ -4,11 +4,8 @@
 [ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="2_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="3_0ld40"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
-[ext_resource type="Resource" uid="uid://2wm5imkrc3qt" path="res://resources/enemy/goblin/goblin_chase_behavior.tres" id="5_36rkl"]
-[ext_resource type="Shape2D" uid="uid://dua5yqx0yysv1" path="res://resources/enemy/goblin/goblin_hitbox.tres" id="6_fs0b5"]
+[ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="6_dp3eg"]
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
-[ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="7_ma7h6"]
-[ext_resource type="Texture2D" uid="uid://k4mihaqalisk" path="res://media/goblin-head-svgrepo-com.svg" id="8_e2s0e"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
@@ -23,20 +20,6 @@
 [ext_resource type="Script" uid="uid://dgjorla8gq32b" path="res://scripts/ui/kill_count_label.gd" id="21_1iba3"]
 [ext_resource type="Script" uid="uid://d0qjwkkfy5pnw" path="res://scripts/ui/game_over_ui.gd" id="23_ebg2g"]
 
-[sub_resource type="Resource" id="Resource_gsxep"]
-script = ExtResource("4_gqmmt")
-health = 20
-contact_damage = 10.0
-gem_scene = ExtResource("7_ma7h6")
-texture = ExtResource("8_e2s0e")
-visual_scale = 0.1
-behavior = ExtResource("5_36rkl")
-mass = 3.0
-body_radius = 25.0
-collision_shape = ExtResource("6_fs0b5")
-xp_reward = 10
-metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
-
 [node name="Main" type="Node2D" unique_id=1517189486]
 
 [node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
@@ -50,9 +33,10 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([SubResource("Resource_gsxep")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("6_dp3eg")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
+wait_time = 0.1
 autostart = true
 
 [node name="Scene" type="Node2D" parent="." unique_id=887944876]

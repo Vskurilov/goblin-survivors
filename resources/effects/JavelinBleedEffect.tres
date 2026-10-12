@@ -8,5 +8,6 @@ damage_per_tick = 0.5
 duration = 5.0
 tick_interval = 1.0
 max_stacks = 10
+tint_color = Color(0.6, 0.050980393, 0.101960786, 1)
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

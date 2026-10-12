@@ -11,7 +11,6 @@ const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = []
 
 @export var hit_flash_duration:float = 0.12
 @export var hit_flash_color: Color = Color(1, 0.3, 0.3)
-@export var dot_tint_color: Color = Color(0.3, 1.0, 0.3)
 
 var is_dead:bool = false
 var current_health:float = 0.0
@@ -33,7 +32,8 @@ func _upgrade_visual_feedback(delta: float) -> void:
 		sprite.material.set_shader_parameter("tint_color", _flash_color)
 		sprite.material.set_shader_parameter("tint_amount", 1.0)
 	elif active_effects.size() > 0:
-		sprite.material.set_shader_parameter("tint_color", dot_tint_color)
+		# Несколько эффектов - видел последний наложенный стак.
+		sprite.material.set_shader_parameter("tint_color", active_effects)
 		sprite.material.set_shader_parameter("tint_amount", 0.6)
 	else:
 		sprite.material.set_shader_parameter("tint_amount", 0.0)
@@ -106,14 +106,15 @@ func get_status_speed_mult() -> float:
 		mult = minf(mult, entry["effect"].get_move_speed_mult())
 	return mult
 
-## ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
+### ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
 ## и тик статус-эффекта приходят сюда. Поэтому сторож is_dead стоит один раз
 ## на всех: queue_free() отложен до конца кадра, и узел продолжает принимать
 ## удары, поставленные в очередь в этом же кадре.
-func take_damage(amount:float, is_dot_tick: bool = false) -> void:
+## source_effect — эффект, чей тик нанёс урон: вспышка его цветом. Прямой удар — null.
+func take_damage(amount:float, source_effect: StatusEffectData = null) -> void:
 	if is_dead:
 		return
-	flash_hit(dot_tint_color if is_dot_tick else hit_flash_color)
+	flash_hit(source_effect.tint_color if source_effect != null else hit_flash_color)
 	current_health = maxf(current_health - amount * damage_taken_mult, 0.0)
 	_on_health_changed()
 	if current_health <= 0.0:

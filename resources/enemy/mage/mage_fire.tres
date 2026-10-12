@@ -7,5 +7,6 @@ script = ExtResource("1_2xina")
 damage_per_tick = 0.5
 tick_interval = 1.0
 max_stacks = 15
+tint_color = Color(1, 0.54901963, 0.101960786, 1)
 tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

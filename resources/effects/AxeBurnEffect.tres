@@ -8,5 +8,6 @@ damage_per_tick = 0.1
 duration = 30.0
 tick_interval = 0.7
 max_stacks = 30
+tint_color = Color(1, 0.54901963, 0.101960786, 1)
 tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

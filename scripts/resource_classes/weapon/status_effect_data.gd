@@ -6,6 +6,10 @@ extends TaggedResource
 @export var max_stacks:int = 1
 @export var stack_group: StringName = &"" 
 
+## Цвет подсветки носителя, пока эффект весит, и вспышки его тика.
+## По умолчанию зеленый
+@export var tint_color: Color = Color(0.3, 1.0, 0.3)
+
 ##Во сколько раз эффект меняет скорость движения носителя, при 1.0 - не меняет
 ## Переопределяет эффекты - модификаторы(замедление); урон по тикам его не трогает
 func get_move_speed_mult() -> float:
