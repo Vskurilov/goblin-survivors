@@ -155,7 +155,3 @@ func _on_pickup_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("gem"):
 		area.queue_free()
 		gain_xp(5)
-
-func _on_restart_button_pressed() -> void:
-	get_tree().paused = false
-	get_tree().reload_current_scene()
