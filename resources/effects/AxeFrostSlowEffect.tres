@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_vbafc")
-slow_speed_mult = 0.5
+slow_speed_mult = 0.05
 duration = 2.0
 tint_color = Color(0.4, 0.7490196, 1, 1)
 tags = Array[String](["Ice"])
