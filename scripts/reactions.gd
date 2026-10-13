@@ -23,7 +23,7 @@ static func validate() -> void:
 			continue
 		for element in pair:
 			if not element in Tags.ELEMENTS:
-				push_error("Reactions: у '%s' стихия не из '%s' не из Tags.ELEMENS." % [reaction.resource_path, reaction.elements])
+				push_error("Reactions: у '%s' стихия '%s' не из Tags.ELEMENTS." % [reaction.resource_path, element])
 		var key := "+".join(pair)
 		if seen.has(key):
 			push_error("Reaction: пара %s задана дважды: '%s' и '%s'." % [key, seen[key], reaction.resource_path])

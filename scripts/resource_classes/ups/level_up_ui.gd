@@ -96,8 +96,6 @@ func _script_stats(object) -> Array:
 func _validate_upgrade_pool() -> void:
 	if not Tags.hints_match():
 		push_error("Tags: массив имён и строка-подсказка разошлись - инспектор предлагает не тот набор")
-	if not Tags.hints_match():
-		push_error("Tags: массив имён и строка-подсказка разошлись - инспектор предлагает не тот выбо")
 	# Реакции — общий контент забега, как и теги: проверяем здесь же, на старте.
 	Reactions.validate()
 	var known:= _collect_known_stats()
