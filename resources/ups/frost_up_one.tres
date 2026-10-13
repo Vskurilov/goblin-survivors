@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://bjfdksqtybgii"]
+
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_ce50g"]
+[ext_resource type="Texture2D" uid="uid://dcbydcpla1xwp" path="res://media/ice-blue.svg" id="1_d18t7"]
+
+[resource]
+script = ExtResource("1_ce50g")
+stat_name = "slow_speed_mult"
+amount = 0.8
+is_multiplicative = true
+one_weapon = true
+required_tags = Array[String](["Ice"])
+upgrade_name = "Мороз сильнее"
+description = "Увеличить замедление"
+icon = ExtResource("1_d18t7")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

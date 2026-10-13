@@ -23,6 +23,9 @@ const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 @export var stat_name: String
 @export var amount: float
 @export var is_multiplicative: bool = false
+## Улучшить одно оружие, а не все подходящие. Какое — решает карточка,
+## как у гранта: «Горение +5 → Axe». Для стата тела не годится.
+@export var one_weapon: bool = false
 
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
 ## Оружие, если попало, всегда первым: так apply() узнаёт коллизию имён.
@@ -97,7 +100,16 @@ func _apply_body_bonus(weapon: WeaponData) -> void:
 		return
 	var current: float = weapon.weapon_bonuses.get(stat_name, 0.0)
 	weapon.weapon_bonuses[stat_name] = current + amount
-
+	
+## При one_weapon карточка выбирает оружие из тех, кому апгрейд приложится.
+func make_offer(player: Node) -> UpgradeData: 
+	if not one_weapon:
+		return self
+	var candidates: Array[WeaponData] = []
+	for weapon in player.weapons:
+		if _applies_to_weapon(weapon):
+			candidates.append(weapon)
+	return _offer_for_one_of(candidates)
 
 func apply(player: Node) -> void:
 	if stat_name in FORBIDDEN_STATS:
@@ -111,6 +123,13 @@ func apply(player: Node) -> void:
 			return
 		_apply_to_carrier(player)
 		return
+	
+	var weapons: Array = player.weapons
+	if one_weapon:
+		if target_weapon == null:
+			push_error("TaggedStatUpgradeData '%s': оружие не выбрано - апгрейд пришёл мимо make_offer(). Апгрейд не применен. " % upgrade_name)
+			return
+		weapons = [target_weapon]
 
 	for weapon in player.weapons:
 		var carriers := _find_stat_carriers(weapon)
@@ -136,7 +155,3 @@ func apply(player: Node) -> void:
 		# Тег совпал, поля нет: у этого типа оружия такого стата просто нет
 		if stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON:
 			_apply_body_bonus(weapon)
-		#else:
-			#push_warning("TaggedStatUpgradeData '%s': стат '%s' некуда положить у оружия '%s' — ни поля, ни бонуса к телу." % [
-				#upgrade_name, stat_name, weapon.weapon_name
-			#])

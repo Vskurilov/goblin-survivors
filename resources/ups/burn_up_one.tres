@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TaggedStatUpgradeData" format=3 uid="uid://kw1au0cxc7rx"]
+
+[ext_resource type="Texture2D" uid="uid://cc6guf1vi5cv8" path="res://media/flame-icon.svg" id="1_b3e2e"]
+[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="1_nyli3"]
+
+[resource]
+script = ExtResource("1_nyli3")
+stat_name = "damage_per_tick"
+amount = 0.1
+one_weapon = true
+required_tags = Array[String](["Fire"])
+upgrade_name = "Горение сильнее"
+icon = ExtResource("1_b3e2e")
+metadata/_custom_type_script = "uid://cvu3bercwdyqm"

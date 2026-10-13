@@ -11,15 +11,10 @@
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="10_ebg2g"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
-[ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
-[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="14_fs0b5"]
-[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="15_ma7h6"]
-[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="16_e2s0e"]
+[ext_resource type="Resource" uid="uid://bjfdksqtybgii" path="res://resources/ups/frost_up_one.tres" id="14_1iba3"]
+[ext_resource type="Resource" uid="uid://ck8a41lvdd4qu" path="res://resources/ups/burn_up_all.tres" id="15_yxlcp"]
+[ext_resource type="Resource" uid="uid://kw1au0cxc7rx" path="res://resources/ups/burn_up_one.tres" id="16_ebg2g"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
-[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="17_gsxep"]
-[ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
-[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="18_v0vrg"]
-[ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="19_2ofn6"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 [ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
 [ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
@@ -57,7 +52,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("1
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("15_ma7h6"), ExtResource("23_e2s0e"), ExtResource("14_fs0b5"), ExtResource("17_bb450"), ExtResource("18_nfivy"), ExtResource("19_2ofn6"), ExtResource("18_v0vrg"), ExtResource("17_gsxep"), ExtResource("16_e2s0e")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("17_bb450"), ExtResource("23_e2s0e"), ExtResource("14_1iba3"), ExtResource("15_yxlcp"), ExtResource("16_ebg2g")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

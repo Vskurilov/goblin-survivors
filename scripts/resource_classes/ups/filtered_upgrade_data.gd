@@ -10,6 +10,9 @@ extends UpgradeData
 ## и отсекается вместе со своим оружием
 @export_custom(PROPERTY_HINT_TYPE_STRING, Tags.IDENTITY_HINT) var required_identity: Array[String] = []
 
+## Оружие с карточки. Заполняет _offer_for_one_of() у копии апгрейда, в .tres всегда пусто.
+var target_weapon: WeaponData
+
 ##Несет ли ресурс(оружие или эффект) требуемый тег.
 func _carries_tag(tagged_resource: TaggedResource) -> bool:
 	if required_tags.is_empty():
@@ -27,4 +30,15 @@ func _matches_identity(weapon: WeaponData) -> bool:
 		if identity_name in required_identity:
 			return true
 	return false
-		
+	
+## Копия апгрейда для карточки: оружие выбрано случайно и вписано в название.
+## Оригинал лежит в пуле и не должен помнить выбранное оружие.
+## Одна запись в пуле — шанс выпадения не растёт от числа оружия.
+func  _offer_for_one_of(candidates: Array[WeaponData]) -> UpgradeData:
+	if candidates.is_empty():
+		push_error("'%s': некому выдать, а карточка уже показана." % upgrade_name)
+		return self
+	var offer:  FilteredUpgradeData = duplicate()
+	offer.target_weapon = candidates.pick_random()
+	offer.upgrade_name = "%s → %s " % [upgrade_name, offer.target_weapon.weapon_name]
+	return offer

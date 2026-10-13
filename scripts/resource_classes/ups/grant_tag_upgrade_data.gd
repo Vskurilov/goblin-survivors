@@ -9,9 +9,6 @@ extends FilteredUpgradeData
 ## Эффект стихии, который грант добавляет оружию (холод → мороз). Пусто — только тег.
 @export var granted_effect: StatusEffectData
 
-## Оружие с карточки. Заполняет make_offer() у копии гранта, в .tres всегда пусто.
-var target_weapon: WeaponData
-
 ## Оружие прошло фильтр, и ему не хватает хотя бы одного выдаваемого тега.
 func _can_receive(weapon: WeaponData) -> bool:
 	if weapon.has_grant:
@@ -30,21 +27,14 @@ func is_available(player: Node) -> bool:
 			return true
 	return false
 
-## Карточке нужна копия: оригинал лежит в пуле и не должен помнить выбранное оружие.
-## Грант в пуле один, поэтому шанс его выпадения не растёт от числа оружия.
-func  make_offer(player: Node) -> UpgradeData:
+## Грант всегда на одно оружие: карточка выбирает его из тех, кто может принять.
+func make_offer(player: Node) -> UpgradeData: 
 	var candidates: Array[WeaponData] = []
 	for weapon in player.weapons:
 		if _can_receive(weapon):
 			candidates.append(weapon)
-	if candidates.is_empty():
-		push_error("GrantTagUpgradeData %s: некому выдать, а карточка уже показана." % upgrade_name)
-		return self
-	var offer: GrantTagUpgradeData = duplicate()
-	offer.target_weapon = candidates.pick_random()
-	offer.upgrade_name = "%s → %s" % [upgrade_name, offer.target_weapon.weapon_name]
-	return offer
-	
+	return _offer_for_one_of(candidates)
+
 func apply(_player: Node) -> void:
 	if granted_tags.is_empty():
 		push_error("GrantTagUpgradeData '%s': granted_tags пуст. Апгрейд не применён." % upgrade_name)
