@@ -4,6 +4,5 @@
 
 [resource]
 script = ExtResource("1_2t4nu")
-damage_mult = 0.0
 elements = Array[String](["Fire", "Ice"])
 metadata/_custom_type_script = "uid://dprncsfbp7bnb"
