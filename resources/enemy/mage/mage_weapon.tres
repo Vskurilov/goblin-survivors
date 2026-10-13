@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_sno0w"]
 [ext_resource type="Resource" uid="uid://ys42capurx47" path="res://resources/enemy/mage/mage_fire.tres" id="2_8ji82"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="3_5t847"]
+[ext_resource type="Script" uid="uid://bkyiw0o13jp2j" path="res://scripts/resource_classes/weapon/slow_effect_data.gd" id="3_8ji82"]
 [ext_resource type="Texture2D" uid="uid://cc6guf1vi5cv8" path="res://media/flame-icon.svg" id="5_n4von"]
 
 [sub_resource type="Resource" id="Resource_357jk"]

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_424j3"]
 [ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
-[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/AxeBurnEffect.tres" id="2_424j3"]
+[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/BurnEffect.tres" id="2_424j3"]
 [ext_resource type="Texture2D" uid="uid://cot1ocehj02a" path="res://media/battered-axe-svgrepo-com.svg" id="3_jxybs"]
 
 [sub_resource type="Resource" id="Resource_rad8y"]
