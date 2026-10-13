@@ -36,7 +36,7 @@ func make_offer(player: Node) -> UpgradeData:
 	return _offer_for_one_of(candidates)
 
 ## Эффект стихии для этого оружия: свой из его grant_effects, иначе общий granted_effect.
-func _effect_for(weapon: WeaponData) -> SlowEffectData:
+func _effect_for(weapon: WeaponData) -> StatusEffectData:
 	for tag in granted_tags:
 		if weapon.grant_effects.has(tag):
 			return weapon.grant_effects[tag]
