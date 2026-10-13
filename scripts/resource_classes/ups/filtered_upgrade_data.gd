@@ -40,5 +40,5 @@ func  _offer_for_one_of(candidates: Array[WeaponData]) -> UpgradeData:
 		return self
 	var offer:  FilteredUpgradeData = duplicate()
 	offer.target_weapon = candidates.pick_random()
-	offer.upgrade_name = "%s → %s " % [upgrade_name, offer.target_weapon.weapon_name]
+	offer.upgrade_name = "%s → %s" % [upgrade_name, offer.target_weapon.weapon_name]
 	return offer

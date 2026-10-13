@@ -118,7 +118,7 @@ func apply(player: Node) -> void:
 		])
 		return
 	if stat_name in player:
-		if not required_tags.is_empty() or not required_identity.is_empty():
+		if not required_tags.is_empty() or not required_identity.is_empty() or one_weapon:
 			push_error("TaggedStatUpgradeData '%s': стат тела '%s' не может требовать тегов - тело их не несет." % [upgrade_name, stat_name])
 			return
 		_apply_to_carrier(player)
@@ -131,7 +131,7 @@ func apply(player: Node) -> void:
 			return
 		weapons = [target_weapon]
 
-	for weapon in player.weapons:
+	for weapon in weapons:
 		var carriers := _find_stat_carriers(weapon)
 
 		# Поле есть и у оружия, и у эффекта — коллизия имён в проекте.
