@@ -133,10 +133,10 @@ func apply(player: Node) -> void:
 		if not _matches_identity(weapon) or not _carries_tag(weapon):
 			continue
 		
-		# Тег совпал, поля нет — либо это бонус к телу, либо опечатка в stat_name.
+		# Тег совпал, поля нет: у этого типа оружия такого стата просто нет
 		if stat_name in Actor.BODY_STATS_UPGRADABLE_BY_WEAPON:
 			_apply_body_bonus(weapon)
-		else:
-			push_warning("TaggedStatUpgradeData '%s': стат '%s' некуда положить у оружия '%s' — ни поля, ни бонуса к телу." % [
-				upgrade_name, stat_name, weapon.weapon_name
-			])
+		#else:
+			#push_warning("TaggedStatUpgradeData '%s': стат '%s' некуда положить у оружия '%s' — ни поля, ни бонуса к телу." % [
+				#upgrade_name, stat_name, weapon.weapon_name
+			#])

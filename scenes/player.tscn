@@ -11,8 +11,10 @@ shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3xd07"]
+radius = 15.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dwbtc"]
+radius = 15.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
 

@@ -4,111 +4,38 @@
 [ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="2_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://b40iy5cvb2pna" path="res://scenes/enemy.tscn" id="3_0ld40"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
-[ext_resource type="Resource" uid="uid://xh5uae15vyo2" path="res://resources/enemy/goblin/goblin.tres" id="6_dg70y"]
-[ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="6_dp3eg"]
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
 [ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="7_pnhog"]
-[ext_resource type="Resource" uid="uid://dbdbks14exkom" path="res://resources/enemy/orc/orc.tres" id="8_2c4at"]
-[ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="9_g6wdg"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="9_yxlcp"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="10_ebg2g"]
-[ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="10_hq6as"]
 [ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="11_2ofn6"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
-[ext_resource type="Texture2D" uid="uid://6a3385ktyj2n" path="res://media/Attribute_criticalstrike.svg" id="19_2c4at"]
+[ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
+[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="14_fs0b5"]
+[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="15_ma7h6"]
+[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="16_e2s0e"]
+[ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
+[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="17_gsxep"]
+[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="18_v0vrg"]
+[ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="19_2ofn6"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 [ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
 [ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="20_g6wdg"]
 [ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
 [ext_resource type="Script" uid="uid://dgjorla8gq32b" path="res://scripts/ui/kill_count_label.gd" id="21_1iba3"]
-[ext_resource type="Texture2D" uid="uid://c1g6iqolyhsn3" path="res://media/Icon_Stat_Haste.svg" id="21_hq6as"]
-[ext_resource type="Texture2D" uid="uid://bi8sycpgspx14" path="res://media/heart-icon.svg" id="22_kxyth"]
-[ext_resource type="Texture2D" uid="uid://k37r836km5v5" path="res://media/shield-black-icon.svg" id="23_cobve"]
 [ext_resource type="Script" uid="uid://d0qjwkkfy5pnw" path="res://scripts/ui/game_over_ui.gd" id="23_ebg2g"]
-[ext_resource type="Texture2D" uid="uid://blnu2jifjs2ki" path="res://media/Icon_Stat_CritChance.svg" id="24_cmqll"]
-[ext_resource type="Texture2D" uid="uid://dtjr5rjljhow7" path="res://media/magnet-svgrepo-com.svg" id="25_8cp6k"]
 [ext_resource type="Texture2D" uid="uid://ckubssp7fel4q" path="res://media/fire-breath-svgrepo-com.svg" id="26_8b871"]
-[ext_resource type="Texture2D" uid="uid://bymb6y6pgwml8" path="res://media/fire-axe-svgrepo-com.svg" id="27_pdwbg"]
-[ext_resource type="Script" uid="uid://w55gdwr5tqeu" path="res://scripts/resource_classes/ups/grant_tag_upgrade_data.gd" id="28_5grtr"]
-[ext_resource type="Texture2D" uid="uid://b4mrvvnfa4l67" path="res://media/fast-speed-icon.svg" id="29_vua0o"]
 
-[sub_resource type="Resource" id="Resource_t70y2"]
-script = ExtResource("20_g6wdg")
-stat_name = "crit_mult"
-amount = 0.5
-upgrade_name = "crit mult up"
-icon = ExtResource("19_2c4at")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_8gny2"]
-script = ExtResource("20_g6wdg")
-stat_name = "speed"
-amount = 15.0
-upgrade_name = "Move Speed Up"
-icon = ExtResource("21_hq6as")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_s3wmy"]
-script = ExtResource("20_g6wdg")
-stat_name = "max_health"
-amount = 20.0
-upgrade_name = "max_health"
-icon = ExtResource("22_kxyth")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_gdcyb"]
-script = ExtResource("20_g6wdg")
-stat_name = "damage_taken_mult"
-amount = 0.9
-is_multiplicative = true
-upgrade_name = "Absorb Damage"
-icon = ExtResource("23_cobve")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_oa6sj"]
-script = ExtResource("20_g6wdg")
-stat_name = "crit_chance"
-amount = 0.05
-upgrade_name = "crit chance up"
-icon = ExtResource("24_cmqll")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_0f1tp"]
-script = ExtResource("20_g6wdg")
-stat_name = "magnet_radius"
-amount = 1.5
-is_multiplicative = true
-upgrade_name = "magnet up"
-icon = ExtResource("25_8cp6k")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_0qimb"]
+[sub_resource type="Resource" id="Resource_pnhog"]
 script = ExtResource("20_g6wdg")
 stat_name = "damage"
 amount = 5.0
 required_tags = Array[String](["Fire"])
 upgrade_name = "fire damage up"
 icon = ExtResource("26_8b871")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
-
-[sub_resource type="Resource" id="Resource_in2eo"]
-script = ExtResource("28_5grtr")
-granted_tags = Array[String](["Fire"])
-required_identity = Array[String](["Axe"])
-upgrade_name = "fire grant"
-icon = ExtResource("27_pdwbg")
-metadata/_custom_type_script = "uid://w55gdwr5tqeu"
-
-[sub_resource type="Resource" id="Resource_dyyw8"]
-script = ExtResource("20_g6wdg")
-stat_name = "attack_speed_mult"
-amount = 2.0
-required_identity = Array[String](["Axe"])
-upgrade_name = "attack speed up"
-icon = ExtResource("29_vua0o")
 metadata/_custom_type_script = "uid://cvu3bercwdyqm"
 
 [node name="Main" type="Node2D" unique_id=1517189486]
@@ -124,10 +51,9 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("6_dp3eg"), ExtResource("6_dg70y"), ExtResource("7_pnhog"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("10_hq6as")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog")])
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
-wait_time = 0.1
 autostart = true
 
 [node name="Scene" type="Node2D" parent="." unique_id=887944876]
@@ -135,13 +61,14 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
+max_health = 100.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("9_yxlcp"), ExtResource("10_ebg2g"), ExtResource("13_2ofn6"), ExtResource("11_2ofn6")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([SubResource("Resource_t70y2"), SubResource("Resource_8gny2"), SubResource("Resource_s3wmy"), SubResource("Resource_gdcyb"), SubResource("Resource_oa6sj"), SubResource("Resource_0f1tp"), SubResource("Resource_0qimb"), SubResource("Resource_in2eo"), SubResource("Resource_dyyw8")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("18_v0vrg"), ExtResource("14_fs0b5"), ExtResource("17_gsxep"), SubResource("Resource_pnhog"), ExtResource("17_bb450"), ExtResource("19_2ofn6"), ExtResource("16_e2s0e"), ExtResource("15_ma7h6")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

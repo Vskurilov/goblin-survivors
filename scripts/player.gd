@@ -153,6 +153,7 @@ func _setup_weapons():
 		timer.timeout.connect(weapon.fire.bind(self))
 		add_child(timer)
 		weapon_timers.append(timer)
+		timer.start()
 
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):
