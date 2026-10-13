@@ -10,7 +10,6 @@ extends  WeaponData
 @export var radius:float = 40.0
 @export var target_mode:TargetMode = TargetMode.RANDOM
 @export var texture:Texture2D
-@export var on_hit_effect:StatusEffectData
 @export var zone_count: int = 1
 
 func  fire(player:Node) -> void:
@@ -29,7 +28,6 @@ func  fire(player:Node) -> void:
 		aoe.duration = zone_duration
 		aoe.radius = radius
 		aoe.texture = texture
-		aoe.on_hit_effect = on_hit_effect
 		aoe.target_group = player.get_target_group()
 		arm_carrier(aoe) 
 		player.get_tree().current_scene.add_child(aoe)

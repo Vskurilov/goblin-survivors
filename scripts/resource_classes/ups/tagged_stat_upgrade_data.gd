@@ -3,8 +3,8 @@ extends FilteredUpgradeData
 
 ## Апгрейд статов, который САМ находит свою мишень по тегу.
 ##
-## Принцип: улучшение ложится на носителя тега. Носителей у оружия два —
-## само оружие (fire_rate, damage, target_count...) и его эффект
+## Принцип: улучшение ложится на носителя тега. Носители у оружия — само
+## оружие (fire_rate, damage, target_count...) и каждый из его эффектов
 ## (damage_per_tick, duration, max_stacks...). Тег может стоять на любом из них.
 ##
 ## Куда именно ляжет стат — ВЫЧИСЛЯЕТСЯ из данных, а не указывается вручную.
@@ -25,7 +25,7 @@ const FORBIDDEN_STATS: Array[String] = ["tags", "identity"]
 @export var is_multiplicative: bool = false
 
 ## Носители тега у данного оружия, у которых РЕАЛЬНО есть поле stat_name.
-## Возвращает 0, 1 или 2 элемента. Два — это коллизия имён полей, её ловит apply().
+## Оружие, если попало, всегда первым: так apply() узнаёт коллизию имён.
 ## "stat_name in resource" (а не get() != null) — потому что get() не различает
 ## "поля нет" и "поле есть, но равно null" (проверено на 4.6).
 func _find_stat_carriers(weapon: WeaponData) -> Array:
@@ -35,9 +35,9 @@ func _find_stat_carriers(weapon: WeaponData) -> Array:
 		return carriers
 	if _carries_tag(weapon) and stat_name in weapon:
 		carriers.append(weapon)
-	var effect: StatusEffectData = weapon.get("on_hit_effect")
-	if effect != null and _carries_tag(effect) and stat_name in effect:
-		carriers.append(effect)
+	for effect in weapon.on_hit_effects:
+		if effect != null and _carries_tag(effect) and stat_name in effect:
+			carriers.append(effect)
 	return carriers
 
 ## Приложится ли апгрейд к этому оружию хоть как-нибудь.
@@ -115,16 +115,18 @@ func apply(player: Node) -> void:
 	for weapon in player.weapons:
 		var carriers := _find_stat_carriers(weapon)
 
-		# Двое носителей с одинаковым именем поля — коллизия имён в проекте.
+		# Поле есть и у оружия, и у эффекта — коллизия имён в проекте.
 		# Молча применить к любому = тихо сдвинуть не тот баланс. Ругаемся громко.
-		if carriers.size() > 1:
+		# Два эффекта с одним полем — не коллизия: апгрейд получают оба.
+		if carriers.size() > 1 and carriers[0] == weapon:
 			push_error("TaggedStatUpgradeData '%s': коллизия имён — стат '%s' есть И у оружия '%s', И у его эффекта. Переименуй одно из полей." % [
 				upgrade_name, stat_name, weapon.weapon_name
 			])
 			continue
 
-		if carriers.size() == 1:
-			_apply_to_carrier(carriers[0])
+		if not carriers.is_empty():
+			for carrier in carriers:
+				_apply_to_carrier(carrier)
 			continue
 
 		# Оружие не про этот фильтр — молча мимо, это норма.

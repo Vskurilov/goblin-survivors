@@ -7,7 +7,7 @@ extends Area2D
 @export var radius: float = 40.0
 @export var texture: Texture2D
 
-var on_hit_effect: StatusEffectData
+var on_hit_effects: Array[StatusEffectData] = []
 var owner_actor: Actor
 var weapon_bonuses : Dictionary = {}
 var crit_chance: float = 0.05
@@ -55,5 +55,7 @@ func _deal_tick_damage() -> void:
 		if body.is_in_group(target_group):
 			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 			body.take_damage(final_damage)
-			if on_hit_effect:
-				body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, self)
+			var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
+			for effect in on_hit_effects:
+				if effect != null:
+					body.apply_status_effect(effect, effect_owner, self)

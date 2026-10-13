@@ -15,7 +15,7 @@ var trajectory: TrajectoryData
 var travel_time: float = 0.0
 var wave_phase_offset: float = 0.0
 var age: float = 0.0
-var on_hit_effect: StatusEffectData
+var on_hit_effects: Array[StatusEffectData] = []
 var owner_actor: Actor
 var target_group: StringName = &""
 var weapon_bonuses : Dictionary = {}
@@ -51,6 +51,8 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	var final_damage = WeaponData.roll_crit(damage, crit_chance, crit_mult)
 	body.take_damage(final_damage)
-	if on_hit_effect:
-		body.apply_status_effect(on_hit_effect, owner_actor if is_instance_valid(owner_actor) else null, self)
+	var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
+	for effect in on_hit_effects:
+		if effect != null:
+			body.apply_status_effect(effect, effect_owner, self)
 	queue_free()

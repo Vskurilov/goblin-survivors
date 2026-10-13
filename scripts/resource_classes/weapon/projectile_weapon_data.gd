@@ -13,7 +13,6 @@ extends WeaponData
 @export var target_mode: TargetMode = TargetMode.NEAREST
 @export var base_trajectory: TrajectoryData
 @export_range(0.0, 1, 0.01) var spawn_delay_max: float = 0.0
-@export var on_hit_effect: StatusEffectData
 @export var target_count: int = 1
 @export var projectile_per_target: int = 1
 @export_range(-180, 180, 0.1) var spread_angle_degrees: float = 30.0
@@ -66,7 +65,6 @@ func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	projectile.hitbox_angle_offset = hitbox_angle_offset
 	projectile.trajectory = base_trajectory
 	projectile.lifetime = lifetime
-	projectile.on_hit_effect = on_hit_effect
 	projectile.owner_actor = shooter
 	projectile.target_group = shooter.get_target_group()
 	arm_carrier(projectile) 

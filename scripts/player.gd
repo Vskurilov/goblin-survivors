@@ -134,9 +134,13 @@ func _setup_weapons():
 		# duplicate() не копирует массивы: без этого грант-тег запишется в сам .tres
 		# и переживёт рестарт забега (проверено на 4.6).
 		weapons[i].tags = weapons[i].tags.duplicate()
-		var effect = weapons[i].get("on_hit_effect")
-		if effect != null:
-			weapons[i].set("on_hit_effect", effect.duplicate())
+		# Свои копии эффектов: апгрейд эффекта не должен попасть в .tres.
+		# Типизированный массив собираем циклом: map() вернул бы нетипизированный.
+		var effects: Array[StatusEffectData] = []
+		for effect in weapons[i].on_hit_effects:
+			if effect != null:
+				effects.append(effect.duplicate())
+		weapons[i].on_hit_effects = effects
 		var bonuses = weapons[i].get("weapon_bonuses")
 		if bonuses != null:
 			weapons[i].set("weapon_bonuses", bonuses.duplicate())
@@ -149,7 +153,6 @@ func _setup_weapons():
 		timer.timeout.connect(weapon.fire.bind(self))
 		add_child(timer)
 		weapon_timers.append(timer)
-		timer.start()
 
 func _on_hurt_box_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):
