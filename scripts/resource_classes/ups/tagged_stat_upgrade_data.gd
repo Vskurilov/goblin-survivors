@@ -66,7 +66,7 @@ func is_available(player: Node) -> bool:
 ## иначе карточка однажды покажет одно, а применится другое.
 ## int-поле усекаем сами, ровно как усёк бы движок при set().
 func _new_value(current):
-	var value = current * amount if MissingNode else current + amount
+	var value = current * amount if is_multiplicative else current + amount
 	if typeof(current) == TYPE_INT:
 		return int(value)
 	return value
