@@ -11,3 +11,8 @@ func apply(_player:Node) -> void:
 
 func is_available(_player:Node) -> bool:
 	return true
+
+## Что показать на карточке левелапа. Обычный апгрейд показывает себя.
+## Грант переопределяет: выбирает оружие и называет его на карточке.
+func make_offer(_player: Node) -> UpgradeData:
+	return self

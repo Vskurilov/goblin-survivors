@@ -34,6 +34,9 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## Эффекты, которые оружие вешает при попадании.
 @export var on_hit_effects: Array[StatusEffectData] = []
 
+# Получило ли оружие грант стихии. Грант на оружие один, второй сюда не ляжет.
+## Не @export: живёт только в копии оружия у игрока и в .tres не попадает.
+var has_grant: bool = false
 # Параметры намеренно повторяют имена полей: функция static, доступа к полям
 # экземпляра нет, а зовут её носители (Projectile/AoeZone) со своего снапшота.
 @warning_ignore("shadowed_variable")

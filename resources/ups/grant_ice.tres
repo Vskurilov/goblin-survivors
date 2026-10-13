@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrantTagUpgradeData" format=3 uid="uid://cxx0ovl7l31bh"]
+
+[ext_resource type="Script" uid="uid://w55gdwr5tqeu" path="res://scripts/resource_classes/ups/grant_tag_upgrade_data.gd" id="1_2urmm"]
+[ext_resource type="Texture2D" uid="uid://b1uniqkm4po5a" path="res://media/ice-svgrepo-com.svg" id="1_h48aj"]
+[ext_resource type="Resource" uid="uid://d3435gx5rlx83" path="res://resources/effects/FrostSlowEffect.tres" id="1_sewj8"]
+
+[resource]
+script = ExtResource("1_2urmm")
+granted_effect = ExtResource("1_sewj8")
+required_identity = Array[String](["Martial"])
+upgrade_name = "Лед на оружие"
+icon = ExtResource("1_h48aj")
+metadata/_custom_type_script = "uid://w55gdwr5tqeu"

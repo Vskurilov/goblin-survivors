@@ -19,24 +19,15 @@
 [ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="16_e2s0e"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
 [ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="17_gsxep"]
+[ext_resource type="Resource" uid="uid://bkxtktkd6ncsx" path="res://resources/ups/fire_damage_up.tres" id="18_nfivy"]
 [ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="18_v0vrg"]
 [ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="19_2ofn6"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 [ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
-[ext_resource type="Script" uid="uid://cvu3bercwdyqm" path="res://scripts/resource_classes/ups/tagged_stat_upgrade_data.gd" id="20_g6wdg"]
 [ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
 [ext_resource type="Script" uid="uid://dgjorla8gq32b" path="res://scripts/ui/kill_count_label.gd" id="21_1iba3"]
+[ext_resource type="Resource" uid="uid://cxx0ovl7l31bh" path="res://resources/ups/grant_ice.tres" id="23_e2s0e"]
 [ext_resource type="Script" uid="uid://d0qjwkkfy5pnw" path="res://scripts/ui/game_over_ui.gd" id="23_ebg2g"]
-[ext_resource type="Texture2D" uid="uid://ckubssp7fel4q" path="res://media/fire-breath-svgrepo-com.svg" id="26_8b871"]
-
-[sub_resource type="Resource" id="Resource_pnhog"]
-script = ExtResource("20_g6wdg")
-stat_name = "damage"
-amount = 5.0
-required_tags = Array[String](["Fire"])
-upgrade_name = "fire damage up"
-icon = ExtResource("26_8b871")
-metadata/_custom_type_script = "uid://cvu3bercwdyqm"
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -68,7 +59,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("9_yxlcp"), ExtResource("10
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("18_v0vrg"), ExtResource("14_fs0b5"), ExtResource("17_gsxep"), SubResource("Resource_pnhog"), ExtResource("17_bb450"), ExtResource("19_2ofn6"), ExtResource("16_e2s0e"), ExtResource("15_ma7h6")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("15_ma7h6"), ExtResource("23_e2s0e"), ExtResource("14_fs0b5"), ExtResource("17_bb450"), ExtResource("18_nfivy"), ExtResource("13_jkv2x"), ExtResource("19_2ofn6"), ExtResource("18_v0vrg"), ExtResource("17_gsxep"), ExtResource("16_e2s0e")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8

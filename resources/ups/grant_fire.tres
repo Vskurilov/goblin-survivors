@@ -1,12 +1,14 @@
 [gd_resource type="Resource" script_class="GrantTagUpgradeData" format=3 uid="uid://ci3mjkfxfwfm3"]
 
-[ext_resource type="Texture2D" uid="uid://bymb6y6pgwml8" path="res://media/fire-axe-svgrepo-com.svg" id="1_3ljq6"]
 [ext_resource type="Script" uid="uid://w55gdwr5tqeu" path="res://scripts/resource_classes/ups/grant_tag_upgrade_data.gd" id="1_rt3sc"]
+[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/BurnEffect.tres" id="1_ssv58"]
+[ext_resource type="Texture2D" uid="uid://bbl2r45wmip1c" path="res://media/fire-svgrepo-com.svg" id="2_a6uuo"]
 
 [resource]
 script = ExtResource("1_rt3sc")
 granted_tags = Array[String](["Fire"])
-required_identity = Array[String](["Axe"])
-upgrade_name = "fire grant"
-icon = ExtResource("1_3ljq6")
+granted_effect = ExtResource("1_ssv58")
+required_identity = Array[String](["Martial"])
+upgrade_name = "Огонь на оружие"
+icon = ExtResource("2_a6uuo")
 metadata/_custom_type_script = "uid://w55gdwr5tqeu"
