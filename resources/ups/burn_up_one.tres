@@ -9,6 +9,6 @@ stat_name = "damage_per_tick"
 amount = 0.1
 one_weapon = true
 required_tags = Array[String](["Fire"])
-upgrade_name = "Горение сильнее"
+upgrade_name = "Горение сильнее на 0.1"
 icon = ExtResource("1_b3e2e")
 metadata/_custom_type_script = "uid://cvu3bercwdyqm"

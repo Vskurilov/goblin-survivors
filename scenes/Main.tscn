@@ -15,6 +15,7 @@
 [ext_resource type="Resource" uid="uid://ck8a41lvdd4qu" path="res://resources/ups/burn_up_all.tres" id="15_yxlcp"]
 [ext_resource type="Resource" uid="uid://kw1au0cxc7rx" path="res://resources/ups/burn_up_one.tres" id="16_ebg2g"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
+[ext_resource type="Resource" uid="uid://dpa44g1il3q05" path="res://resources/ups/burn_up_one_10.tres" id="17_yxlcp"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
 [ext_resource type="Script" uid="uid://balhan5x57lcu" path="res://scripts/ui/level_label.gd" id="20_1nqs0"]
 [ext_resource type="Script" uid="uid://bc3okex8qcfue" path="res://scripts/ui/timer_label.gd" id="20_yxlcp"]
@@ -48,16 +49,11 @@ position = Vector2(611, 240)
 max_health = 100.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("13_2ofn6")])
 
-[node name="Player2" parent="Scene" unique_id=871106329 instance=ExtResource("9_og1vs")]
-position = Vector2(611, 240)
-max_health = 100.0
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("13_2ofn6")])
-
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("17_bb450"), ExtResource("23_e2s0e"), ExtResource("14_1iba3"), ExtResource("15_yxlcp"), ExtResource("16_ebg2g")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("17_bb450"), ExtResource("23_e2s0e"), ExtResource("14_1iba3"), ExtResource("15_yxlcp"), ExtResource("16_ebg2g"), ExtResource("17_yxlcp")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
@@ -181,10 +177,4 @@ text = "Again?"
 [connection signal="run_ended" from="Scene/Player" to="GameOverUI" method="_on_player_run_ended"]
 [connection signal="survival_time_changed" from="Scene/Player" to="HUD/TimerLabel" method="_on_player_survival_time_changed"]
 [connection signal="xp_changed" from="Scene/Player" to="HUD/LevelLabel" method="_on_player_xp_changed"]
-[connection signal="health_changed" from="Scene/Player2" to="HUD/HealthBar" method="_on_player_health_changed"]
-[connection signal="kills_changed" from="Scene/Player2" to="HUD/KillCountLabel" method="_on_player_kills_changed"]
-[connection signal="leveled_up" from="Scene/Player2" to="LevelUpUI" method="_on_player_leveled_up"]
-[connection signal="run_ended" from="Scene/Player2" to="GameOverUI" method="_on_player_run_ended"]
-[connection signal="survival_time_changed" from="Scene/Player2" to="HUD/TimerLabel" method="_on_player_survival_time_changed"]
-[connection signal="xp_changed" from="Scene/Player2" to="HUD/LevelLabel" method="_on_player_xp_changed"]
 [connection signal="pressed" from="GameOverUI/GameOverBox/RestartButton" to="GameOverUI" method="_on_restart_button_pressed"]
