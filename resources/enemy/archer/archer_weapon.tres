@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://djp7cru2m7rmx" path="res://scripts/resource_classes/weapon/straight_trajectory_data.gd" id="1_50dqq"]
 [ext_resource type="Resource" uid="uid://cddrbiynjtd00" path="res://resources/enemy/archer/archer_poison.tres" id="2_56dny"]
 [ext_resource type="Texture2D" uid="uid://drnjq0oirbdnf" path="res://media/Gemini_Generated_Image_a9rytda9rytda9ry.svg" id="3_50dqq"]
+[ext_resource type="Script" uid="uid://ba6wij1lkn45f" path="res://scripts/resource_classes/weapon/status_effect_data.gd" id="3_xytll"]
 
 [sub_resource type="Resource" id="Resource_56dny"]
 script = ExtResource("1_50dqq")
@@ -21,5 +22,6 @@ projectile_scale = 0.5
 collision_shape = SubResource("RectangleShape2D_56dny")
 base_trajectory = SubResource("Resource_56dny")
 on_hit_effect = ExtResource("2_56dny")
+on_hit_effects = Array[ExtResource("3_xytll")]([ExtResource("2_56dny")])
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

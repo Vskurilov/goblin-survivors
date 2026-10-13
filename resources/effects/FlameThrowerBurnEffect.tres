@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BurnEffectData" format=3 uid="uid://bcndxakj18bhn"]
+
+[ext_resource type="Script" uid="uid://c1n4qqjkdi41f" path="res://scripts/resource_classes/weapon/burn_effect_data.gd" id="1_djdnj"]
+
+[resource]
+script = ExtResource("1_djdnj")
+damage_per_tick = 0.1
+duration = 30.0
+tick_interval = 0.7
+max_stacks = 30
+tint_color = Color(1, 0.54901963, 0.101960786, 1)
+tags = Array[String](["Fire"])
+metadata/_custom_type_script = "uid://c1n4qqjkdi41f"

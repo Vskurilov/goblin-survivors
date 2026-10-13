@@ -32,7 +32,7 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## с читателем в BODY_STATS_UPGRADABLE_BY_WEAPON (actor.gd).
 @export var weapon_bonuses : Dictionary = {}
 ## Эффекты, которые оружие вешает при попадании.
-@export var on_hit_effects: Array[SlowEffectData] = []
+@export var on_hit_effects: Array[StatusEffectData] = []
 
 # Параметры намеренно повторяют имена полей: функция static, доступа к полям
 # экземпляра нет, а зовут её носители (Projectile/AoeZone) со своего снапшота.

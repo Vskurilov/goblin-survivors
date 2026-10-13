@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://d3u1nlncoieu1" path="res://scripts/resource_classes/weapon/aoe_weapon_data.gd" id="1_cokop"]
 [ext_resource type="PackedScene" uid="uid://4uaah23fgnp3" path="res://scenes/aoe_zone.tscn" id="1_pp3yj"]
-[ext_resource type="Resource" uid="uid://dxccv7pl70er2" path="res://resources/effects/BurnEffect.tres" id="2_64byg"]
+[ext_resource type="Resource" uid="uid://b6m3im04bmbvd" path="res://resources/effects/FireRingBurnEffect.tres" id="2_v8rcp"]
 [ext_resource type="Texture2D" uid="uid://cc75dih4fjq2d" path="res://media/circle.svg" id="3_64byg"]
+[ext_resource type="Script" uid="uid://ba6wij1lkn45f" path="res://scripts/resource_classes/weapon/status_effect_data.gd" id="3_mbacb"]
 
 [resource]
 script = ExtResource("1_cokop")
@@ -11,10 +12,11 @@ aoe_scene = ExtResource("1_pp3yj")
 zone_tick_interval = 1.0
 target_mode = 1
 texture = ExtResource("3_64byg")
-on_hit_effect = ExtResource("2_64byg")
+on_hit_effect = ExtResource("2_v8rcp")
 zone_count = 2
 weapon_name = "fire ring"
 identity = Array[String](["FireRing", "Magic", "Zone"])
 fire_rate = 5.0
+on_hit_effects = Array[ExtResource("3_mbacb")]([ExtResource("2_v8rcp")])
 tags = Array[String](["Fire"])
 metadata/_custom_type_script = "uid://d3u1nlncoieu1"

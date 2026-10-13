@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SlowEffectData" format=3 uid="uid://dvct841gqun2s"]
+
+[ext_resource type="Script" uid="uid://bkyiw0o13jp2j" path="res://scripts/resource_classes/weapon/slow_effect_data.gd" id="1_slm6o"]
+
+[resource]
+script = ExtResource("1_slm6o")
+slow_speed_mult = 0.5
+duration = 2.0
+tint_color = Color(0.4, 0.7490196, 1, 1)
+tags = Array[String](["Ice"])
+metadata/_custom_type_script = "uid://bkyiw0o13jp2j"
