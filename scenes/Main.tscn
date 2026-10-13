@@ -7,10 +7,8 @@
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
 [ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="7_pnhog"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
-[ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="9_yxlcp"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="10_ebg2g"]
-[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="11_2ofn6"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="13_jkv2x"]
@@ -53,7 +51,7 @@ position = Vector2(-34, 83)
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
 max_health = 100.0
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("9_yxlcp"), ExtResource("10_ebg2g"), ExtResource("13_2ofn6"), ExtResource("11_2ofn6")])
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("13_2ofn6")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3

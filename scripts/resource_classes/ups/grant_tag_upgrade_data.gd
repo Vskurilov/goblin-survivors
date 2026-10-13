@@ -43,7 +43,7 @@ func  make_offer(player: Node) -> UpgradeData:
 	offer.upgrade_name = "%s → %s" % [upgrade_name, offer.target_weapon.weapon_name]
 	return offer
 	
-func apply(player: Node) -> void:
+func apply(_player: Node) -> void:
 	if granted_tags.is_empty():
 		push_error("GrantTagUpgradeData '%s': granted_tags пуст. Апгрейд не применён." % upgrade_name)
 		return

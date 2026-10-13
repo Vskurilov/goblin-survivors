@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_2urmm")
+granted_tags = Array[String](["Ice"])
 granted_effect = ExtResource("1_sewj8")
 required_identity = Array[String](["Martial"])
 upgrade_name = "Лед на оружие"
