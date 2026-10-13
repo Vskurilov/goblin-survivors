@@ -22,3 +22,10 @@ func make_offer(_player: Node) -> UpgradeData:
 func make_offers(player: Node) -> Array[UpgradeData]:
 	var offers: Array[UpgradeData] = [make_offer(player)]
 	return offers
+
+## Текст карточки левелапа: название и описание, если оно есть.
+## Апгрейд статов переопределяет: дописывает «было → станет»
+func get_card_text(_player: Node) -> String:
+	if description.is_empty():
+		return upgrade_name
+	return "%s\n%s" % [upgrade_name, description]

@@ -37,7 +37,7 @@ func show_choices(player:Node) -> void:
 	for i in buttons.size():
 		if i < current_choices.size():
 			buttons[i].visible = true
-			buttons[i].text = current_choices[i].upgrade_name
+			buttons[i].text = current_choices[i].get_card_text(player)
 			buttons[i].icon = current_choices[i].icon
 		else:
 			buttons[i].visible = false

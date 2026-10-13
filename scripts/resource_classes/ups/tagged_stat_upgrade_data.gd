@@ -61,6 +61,15 @@ func is_available(player: Node) -> bool:
 		if _applies_to_weapon(weapon):
 			return true
 	return false
+	
+## Новое значение стата. Одна формула и для apply, и для карточки:
+## иначе карточка однажды покажет одно, а применится другое.
+## int-поле усекаем сами, ровно как усёк бы движок при set().
+func _new_value(current):
+	var value = current * amount if MissingNode else current + amount
+	if typeof(current) == TYPE_INT:
+		return int(value)
+	return value
 
 ## Записать стат в найденного носителя (оружие или эффект — код один и тот же).
 ## ВНИМАНИЕ: int-поля (max_stacks, target_count, zone_count) движок усекает молча:
@@ -74,7 +83,7 @@ func _apply_to_carrier(carrier: Object) -> void:
 			upgrade_name, stat_name, current_type
 		])
 		return
-	var new_value = current * amount if is_multiplicative else current + amount
+	var new_value = _new_value(current)
 	
 	# Инвариант: стат оружия/эффекта, бывший положительным, не имеет права
 	# стать нулём или отрицательным. Все такие статы (fire_rate, damage, duration,
@@ -112,6 +121,31 @@ func make_offers(player: Node) -> Array[UpgradeData]:
 		if _applies_to_weapon(weapon):
 			offers.append(_offer_for(weapon))
 	return offers
+
+## Карточка: «Axe: 0.3 → 0.33» по строке на каждого носителя, которого тронет apply.
+func get_card_text(player: Node) -> String:
+	var lines: Array[String] = [super(player)]
+	if stat_name in player:
+		lines.append(_preview(player))
+		return "\n".join(lines)
+	var weapons: Array = [target_weapon] if one_weapon else player.weapons
+	for weapon in weapons:
+		for carrier in _find_stat_carriers(weapon):
+			lines.append("%s: %s" % [weapon.weapon_name, _preview(carrier)])
+	return "\n".join(lines)
+
+func _preview(carrier: Object) -> String:
+	var current = carrier.get(stat_name)
+	# Не число: apply громко откажет, карточка просто не врёт.
+	if typeof(current) != TYPE_FLOAT and typeof(current) != TYPE_INT:
+		return "не число"
+	return "%s → %s" % [_format(current), _format(_new_value(current))]
+
+## Плавающий хвост в карточке не нужен: 0.33000000000000004 → «0.33».
+func _format(value) -> String:
+	if typeof(value) == TYPE_INT:
+		return str(value)
+	return String.num(value, 4)
 
 func apply(player: Node) -> void:
 	if stat_name in FORBIDDEN_STATS:
