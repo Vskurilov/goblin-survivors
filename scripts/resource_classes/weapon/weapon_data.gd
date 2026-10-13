@@ -33,6 +33,9 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 @export var weapon_bonuses : Dictionary = {}
 ## Эффекты, которые оружие вешает при попадании.
 @export var on_hit_effects: Array[StatusEffectData] = []
+## Какой эффект это оружие получает от гранта стихии: Fire → свой ожог топора.
+## Стихии нет в словаре — оружие получит Granted Effect самого гранта.
+@export var grant_effects: Dictionary[String, StatusEffectData] = {}
 
 # Получило ли оружие грант стихии. Грант на оружие один, второй сюда не ляжет.
 ## Не @export: живёт только в копии оружия у игрока и в .tres не попадает.
@@ -57,6 +60,17 @@ func arm_carrier(carrier:Node) -> void:
 	#Снимок списка: эффект, выданный позже, не попадёт в уже летящий снаряд
 	carrier.on_hit_effects = on_hit_effects.duplicate()
 
+## Ключ словаря набирается руками — опечатка («fire») молча не сработает.
+## Поэтому громкая проверка на старте забега.
+func validate_grant_effects() -> void:
+	for tag in grant_effects:
+		var effect: StatusEffectData = grant_effects[tag]
+		if not tag in Tags.ELEMENTS:
+			push_error("Оружие '%s': в grant_effects ключ '%s' не из Tags.ELEMENTS." % [weapon_name, tag])
+		elif effect == null:
+			push_error("Оружие '%s': в grant_effects для '%s' пустой эффект." % [weapon_name, tag])
+		elif not effect.has_tag(tag):
+			push_error("Оружие '%s': эффект для '%s' не несёт этот тег - апгрейды стихий до него не дойдут." % [weapon_name, tag])
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
 	

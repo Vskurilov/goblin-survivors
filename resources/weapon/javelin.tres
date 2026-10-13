@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="3_5ufd5"]
 [ext_resource type="Script" uid="uid://ba6wij1lkn45f" path="res://scripts/resource_classes/weapon/status_effect_data.gd" id="3_7lfpy"]
 [ext_resource type="Texture2D" uid="uid://cxwxiu4mwmvh2" path="res://media/noun-javelin-974222.svg" id="3_e2qha"]
+[ext_resource type="Resource" uid="uid://dvct841gqun2s" path="res://resources/effects/JavelinFrostSlowEffect.tres" id="3_wlsb4"]
 
 [sub_resource type="Resource" id="Resource_dp3eg"]
 script = ExtResource("1_sqxgk")
@@ -28,5 +29,8 @@ spawn_offset_distance = 100.0
 weapon_name = "javelin"
 identity = Array[String](["Javelin", "Thrown", "Martial"])
 fire_rate = 2.0
+grant_effects = Dictionary[String, ExtResource("3_7lfpy")]({
+"Ice": ExtResource("3_wlsb4")
+})
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

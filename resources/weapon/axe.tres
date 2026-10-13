@@ -3,8 +3,10 @@
 [ext_resource type="Script" uid="uid://xl4c4pcg3o2x" path="res://scripts/resource_classes/weapon/wave_trajectory_data.gd" id="1_424j3"]
 [ext_resource type="Script" uid="uid://cj2chqr7efsb" path="res://scripts/resource_classes/weapon/projectile_weapon_data.gd" id="1_i5rwr"]
 [ext_resource type="PackedScene" uid="uid://cyvcf4hhdms1e" path="res://scenes/projectile.tscn" id="1_n1wqa"]
+[ext_resource type="Resource" uid="uid://b0uaonr24v7ae" path="res://resources/effects/AxeBurnEffect.tres" id="2_rad8y"]
 [ext_resource type="Texture2D" uid="uid://cot1ocehj02a" path="res://media/battered-axe-svgrepo-com.svg" id="3_jxybs"]
 [ext_resource type="Script" uid="uid://ba6wij1lkn45f" path="res://scripts/resource_classes/weapon/status_effect_data.gd" id="3_vgvix"]
+[ext_resource type="Resource" uid="uid://dn7w62tc4s6ja" path="res://resources/effects/AxeFrostSlowEffect.tres" id="4_vgvix"]
 
 [sub_resource type="Resource" id="Resource_rad8y"]
 script = ExtResource("1_424j3")
@@ -28,5 +30,9 @@ weapon_name = "Axe"
 identity = Array[String](["Thrown", "Axe", "Martial"])
 fire_rate = 4.0
 crit_chance = 0.1
+grant_effects = Dictionary[String, ExtResource("3_vgvix")]({
+"Fire": ExtResource("2_rad8y"),
+"Ice": ExtResource("4_vgvix")
+})
 tags = Array[String](["Physical"])
 metadata/_custom_type_script = "uid://cj2chqr7efsb"

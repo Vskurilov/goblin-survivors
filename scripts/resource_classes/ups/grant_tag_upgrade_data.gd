@@ -35,6 +35,13 @@ func make_offer(player: Node) -> UpgradeData:
 			candidates.append(weapon)
 	return _offer_for_one_of(candidates)
 
+## Эффект стихии для этого оружия: свой из его grant_effects, иначе общий granted_effect.
+func _effect_for(weapon: WeaponData) -> SlowEffectData:
+	for tag in granted_tags:
+		if weapon.grant_effects.has(tag):
+			return weapon.grant_effects[tag]
+	return granted_effect
+
 func apply(_player: Node) -> void:
 	if granted_tags.is_empty():
 		push_error("GrantTagUpgradeData '%s': granted_tags пуст. Апгрейд не применён." % upgrade_name)
@@ -46,6 +53,8 @@ func apply(_player: Node) -> void:
 		if not target_weapon.has_tag(tag):
 			target_weapon.tags.append(tag)
 	# Своя копия эффекта: её прокачка не заденет тот же эффект на другом оружии.
-	if granted_effect != null:
-		target_weapon.on_hit_effects.append(granted_effect.duplicate())
+	var effect := _effect_for(target_weapon)
+	if effect != null:
+		target_weapon.on_hit_effects.append(effect.duplicate())
 	target_weapon.has_grant = true
+	

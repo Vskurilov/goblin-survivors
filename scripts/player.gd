@@ -141,6 +141,7 @@ func _setup_weapons():
 			if effect != null:
 				effects.append(effect.duplicate())
 		weapons[i].on_hit_effects = effects
+		weapons[i].validate_grant_effects()
 		var bonuses = weapons[i].get("weapon_bonuses")
 		if bonuses != null:
 			weapons[i].set("weapon_bonuses", bonuses.duplicate())
