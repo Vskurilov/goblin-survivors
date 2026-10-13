@@ -49,14 +49,36 @@ func _key_match(key_a, key_b) -> bool:
 		return false
 	return key_a == key_b
 
+## Стак — снимок в момент наложения: статы эффекта и носителя.
+## Апгрейд, взятый позже, достаётся только следующим наложениям.
+## "original" — эффект оружия, с которого снят снимок: по нему ключ стака и лимит.
+func _make_effect_entry(effect: StatusEffectData, owner_actor: Actor, carrier: Node) -> Dictionary:
+	return {
+		"effect": effect.duplicate(),
+		"original": effect,
+		"time_left": effect.duration,
+		"time_since_tick": 0.0,
+		"owner_actor": owner_actor,
+		"tick_interval": effect.tick_interval / (carrier.attack_speed_mult if carrier else 1.0),
+		"crit_chance": carrier.crit_chance if carrier else 0.05,
+		"crit_mult": carrier.crit_mult if carrier else 2.0,
+		"weapon_bonuses": carrier.weapon_bonuses if carrier else {},
+	}
+
 func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, carrier: Node = null) -> void:
+	# Реакция стихий съедает входящий эффект: стаком он уже не ложится.
+	var reaction := Reactions.find(effect, active_effects)
+	if reaction != null:
+		reaction.react(self, _make_effect_entry(effect, owner_actor, carrier))
+		return
 	var new_key = _get_stack_key(effect)
 	var existing_count := 0
 	var oldest_index := -1
 	var oldest_time_left := INF
 		
 	for i in range(active_effects.size()):
-		var existing_effect: StatusEffectData = active_effects[i]["effect"]
+		# Сравниваем оригиналы: у каждого снимка свой объект, ключ по нему не совпал бы никогда.		
+		var existing_effect: StatusEffectData = active_effects[i]["original"]
 		if _key_match(_get_stack_key(existing_effect), new_key):
 			if existing_effect.max_stacks != effect.max_stacks:
 				push_warning("stack_group %s: разные max_stacks у %s (%d) и %s (%d) — держи один лимит на всю группу" % [
@@ -68,18 +90,13 @@ func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, ca
 				oldest_time_left = active_effects[i]["time_left"]
 				oldest_index = i
 	if existing_count < effect.max_stacks:
-		active_effects.append({
-		"effect": effect,
-		"time_left": effect.duration,
-		"time_since_tick": 0.0,
-		"owner_actor": owner_actor,
-		"tick_interval": effect.tick_interval / (carrier.attack_speed_mult if carrier else 1.0),
-		"crit_chance": carrier.crit_chance if carrier else 0.05,
-		"crit_mult": carrier.crit_mult if carrier else 2.0,
-		"weapon_bonuses": carrier.weapon_bonuses if carrier else {},
-		})
+		active_effects.append(_make_effect_entry(effect, owner_actor, carrier))
 	elif oldest_index != -1:
-		active_effects[oldest_index]["time_left"] = active_effects[oldest_index]["effect"].duration
+		# Лимит набран: старейший стек заменяется свежим наложением — новые статы и полная длительность.
+		# Фаза тика сохраняется: иначе частые попадания не дадут стаку тикнуть ни разу.
+		var entry := _make_effect_entry(effect, owner_actor, carrier)
+		entry["time_since_tick"] = active_effects[oldest_index]["time_since_tick"]
+		active_effects[oldest_index] = entry
 
 func _process_status_effects(delta: float) -> void:
 	for i in range(active_effects.size() - 1, -1, -1):

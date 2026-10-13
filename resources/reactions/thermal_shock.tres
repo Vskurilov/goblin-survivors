@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DetonationReactionData" format=3 uid="uid://cheulg6bmuyhq"]
+
+[ext_resource type="Script" uid="uid://dprncsfbp7bnb" path="res://scripts/resource_classes/reaction/detonation_reaction_data.gd" id="1_2t4nu"]
+
+[resource]
+script = ExtResource("1_2t4nu")
+damage_mult = 0.0
+elements = Array[String](["Fire", "Ice"])
+metadata/_custom_type_script = "uid://dprncsfbp7bnb"

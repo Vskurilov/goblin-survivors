@@ -7,3 +7,10 @@ func apply_tick(enemy:Node2D, _owner_actor: Actor = null, _weapon_bonuses: Dicti
 	var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
 	# self — чтобы вспышка тика была цвета этого эффекта
 	enemy.take_damage(final_damage, self)
+
+## Каждый тик со своим броском крита — как если бы стак дотикал сам.
+func damage_over_ticks(ticks: int, crit_chance: float, crit_mult: float) -> float:
+	var total := 0.0
+	for i in ticks:
+		total += WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
+	return total
