@@ -29,9 +29,11 @@ func show_choices(player:Node) -> void:
 	_current_player = player
 	var available_pool: Array[UpgradeData] = [] 
 	available_pool.assign(upgrade_pool.filter(func(upgrade: UpgradeData): return upgrade.is_available(player)))
-	current_choices = _pick_random(available_pool, buttons.size())
-	for i in current_choices.size():
-		current_choices[i] = current_choices[i].make_offer(player)
+	# Запись пула может дать несколько карточек: бафф с one_weapon — по одной на оружие.
+	var offers: Array[UpgradeData] = []
+	for upgrade in available_pool:
+		offers.append_array(upgrade.make_offers(player))
+	current_choices = _pick_random(offers, buttons.size())
 	for i in buttons.size():
 		if i < current_choices.size():
 			buttons[i].visible = true

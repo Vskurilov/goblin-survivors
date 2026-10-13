@@ -31,14 +31,17 @@ func _matches_identity(weapon: WeaponData) -> bool:
 			return true
 	return false
 	
-## Копия апгрейда для карточки: оружие выбрано случайно и вписано в название.
-## Оригинал лежит в пуле и не должен помнить выбранное оружие.
-## Одна запись в пуле — шанс выпадения не растёт от числа оружия.
-func  _offer_for_one_of(candidates: Array[WeaponData]) -> UpgradeData:
+## Грант: одна карточка, оружие случайное — шанс не растёт от числа оружия.
+func _offer_for_one_of(candidates: Array[WeaponData]) -> UpgradeData:
 	if candidates.is_empty():
 		push_error("'%s': некому выдать, а карточка уже показана." % upgrade_name)
 		return self
-	var offer:  FilteredUpgradeData = duplicate()
-	offer.target_weapon = candidates.pick_random()
-	offer.upgrade_name = "%s → %s" % [upgrade_name, offer.target_weapon.weapon_name]
+	return _offer_for(candidates.pick_random())
+
+## Копия апгрейда для карточки с этим оружием в названии.
+## Оригинал лежит в пуле и не должен помнить выбранное оружие.
+func _offer_for(weapon: WeaponData) -> UpgradeData:
+	var offer: FilteredUpgradeData = duplicate()
+	offer.target_weapon = weapon
+	offer.upgrade_name = "%s → %s" % [upgrade_name, weapon.weapon_name]
 	return offer

@@ -101,15 +101,17 @@ func _apply_body_bonus(weapon: WeaponData) -> void:
 	var current: float = weapon.weapon_bonuses.get(stat_name, 0.0)
 	weapon.weapon_bonuses[stat_name] = current + amount
 	
-## При one_weapon карточка выбирает оружие из тех, кому апгрейд приложится.
-func make_offer(player: Node) -> UpgradeData: 
+## При one_weapon — по карточке на каждое оружие, которому апгрейд приложится:
+## игрок сам выбирает, что качать.
+func make_offers(player: Node) -> Array[UpgradeData]: 
+	var offers: Array[UpgradeData] = []
 	if not one_weapon:
-		return self
-	var candidates: Array[WeaponData] = []
+		offers.append(self)
+		return offers
 	for weapon in player.weapons:
 		if _applies_to_weapon(weapon):
-			candidates.append(weapon)
-	return _offer_for_one_of(candidates)
+			offers.append(_offer_for(weapon))
+	return offers
 
 func apply(player: Node) -> void:
 	if stat_name in FORBIDDEN_STATS:

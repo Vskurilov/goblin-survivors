@@ -16,3 +16,9 @@ func is_available(_player:Node) -> bool:
 ## Грант переопределяет: выбирает оружие и называет его на карточке.
 func make_offer(_player: Node) -> UpgradeData:
 	return self
+
+## Сколько карточек даёт эта запись пула. Обычно одну.
+## Бафф с one_weapon переопределяет: по карточке на каждое подходящее оружие.
+func make_offers(player: Node) -> Array[UpgradeData]:
+	var offers: Array[UpgradeData] = [make_offer(player)]
+	return offers
