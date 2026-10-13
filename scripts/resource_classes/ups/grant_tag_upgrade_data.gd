@@ -14,6 +14,8 @@ var target_weapon: WeaponData
 
 ## Оружие прошло фильтр, и ему не хватает хотя бы одного выдаваемого тега.
 func _can_receive(weapon: WeaponData) -> bool:
+	if weapon.has_grant:
+		return false
 	if not _matches_identity(weapon) or not _carries_tag(weapon):
 		return false
 	for tag in granted_tags:

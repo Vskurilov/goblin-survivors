@@ -99,9 +99,9 @@ func _validate_upgrade_pool() -> void:
 		_validate_filter_names(upgrade)
 		if "granted_tags" in upgrade and upgrade.granted_tags.is_empty():
 			push_error("upgrade_pool: у апгрейда '%s' пуст granted_tags - выдавать нечего." % upgrade.upgrade_name)
-			if "granted_effect" in upgrade and upgrade.granted_effect != null:
-				if not upgrade.granted_tags.any(func(tag): return upgrade.granted_effect.has_tag(tag)):
-					push_error("upgrade_pool: эффект гранта '%s' не несёт ни одного из его тегов '%s' - апгрейды стихий до эффекта не дойдут." % [upgrade.upgrade_name, upgrade.granted_tags])
+		if "granted_effect" in upgrade and upgrade.granted_effect != null:
+			if not upgrade.granted_tags.any(func(tag): return upgrade.granted_effect.has_tag(tag)):
+				push_error("upgrade_pool: эффект гранта '%s' не несёт ни одного из его тегов '%s' - апгрейды стихий до эффекта не дойдут." % [upgrade.upgrade_name, upgrade.granted_tags])
 		# Апгрейды без стата (выдача тегов) — не наше дело.
 		if not "stat_name" in upgrade:
 			continue

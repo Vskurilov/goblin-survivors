@@ -57,7 +57,7 @@ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("1
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("15_ma7h6"), ExtResource("23_e2s0e"), ExtResource("14_fs0b5"), ExtResource("17_bb450"), ExtResource("18_nfivy"), ExtResource("13_jkv2x"), ExtResource("19_2ofn6"), ExtResource("18_v0vrg"), ExtResource("17_gsxep"), ExtResource("16_e2s0e")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("13_jkv2x"), ExtResource("15_ma7h6"), ExtResource("23_e2s0e"), ExtResource("14_fs0b5"), ExtResource("17_bb450"), ExtResource("18_nfivy"), ExtResource("19_2ofn6"), ExtResource("18_v0vrg"), ExtResource("17_gsxep"), ExtResource("16_e2s0e")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
