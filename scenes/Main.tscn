@@ -17,8 +17,10 @@
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
 [ext_resource type="Resource" uid="uid://bjfdksqtybgii" path="res://resources/ups/frost_up_one.tres" id="14_1iba3"]
+[ext_resource type="Resource" uid="uid://c3nxr1iof4ihd" path="res://resources/weapon/flame_thrower.tres" id="15_e2s0e"]
 [ext_resource type="Resource" uid="uid://ck8a41lvdd4qu" path="res://resources/ups/burn_up_all.tres" id="15_yxlcp"]
 [ext_resource type="Resource" uid="uid://kw1au0cxc7rx" path="res://resources/ups/burn_up_one.tres" id="16_ebg2g"]
+[ext_resource type="Resource" uid="uid://my417rnir1rp" path="res://resources/weapon/fire_ring.tres" id="16_gsxep"]
 [ext_resource type="Resource" uid="uid://ci3mjkfxfwfm3" path="res://resources/ups/grant_fire.tres" id="17_bb450"]
 [ext_resource type="Resource" uid="uid://dpa44g1il3q05" path="res://resources/ups/burn_up_one_10.tres" id="17_yxlcp"]
 [ext_resource type="Script" uid="uid://dtnup6uaetv5h" path="res://scripts/ui/health_bar.gd" id="19_nfivy"]
@@ -27,6 +29,13 @@
 [ext_resource type="Script" uid="uid://dgjorla8gq32b" path="res://scripts/ui/kill_count_label.gd" id="21_1iba3"]
 [ext_resource type="Resource" uid="uid://cxx0ovl7l31bh" path="res://resources/ups/grant_ice.tres" id="23_e2s0e"]
 [ext_resource type="Script" uid="uid://d0qjwkkfy5pnw" path="res://scripts/ui/game_over_ui.gd" id="23_ebg2g"]
+[ext_resource type="Resource" uid="uid://de75q5x6cpoop" path="res://resources/ups/max_health.tres" id="25_hq6as"]
+[ext_resource type="Resource" uid="uid://7ghxj63ng4pb" path="res://resources/ups/damage_absorb_mult.tres" id="26_kxyth"]
+[ext_resource type="Resource" uid="uid://i7qgfroqfju1" path="res://resources/ups/crit_chance_up.tres" id="27_cobve"]
+[ext_resource type="Resource" uid="uid://c644uu8kpk5yi" path="res://resources/ups/magnet_up.tres" id="28_cmqll"]
+[ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="29_8cp6k"]
+[ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="30_8b871"]
+[ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="31_pdwbg"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -41,7 +50,8 @@ region_rect = Rect2(0, 0, 4000, 4000)
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dg70y"), ExtResource("9_g6wdg"), ExtResource("8_2c4at"), ExtResource("10_hq6as"), ExtResource("6_dp3eg")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dp3eg"), ExtResource("10_hq6as"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("6_dg70y")])
+max_alive = 200
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
@@ -51,13 +61,14 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-weapons = Array[ExtResource("7_jbj1t")]([ExtResource("10_ebg2g"), ExtResource("13_2ofn6")])
+max_health = 150.0
+weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_2ofn6"), ExtResource("10_ebg2g"), ExtResource("15_e2s0e"), ExtResource("16_gsxep")])
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3
 visible = false
 script = ExtResource("10_2wyq8")
-upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("17_bb450"), ExtResource("23_e2s0e"), ExtResource("14_1iba3"), ExtResource("15_yxlcp"), ExtResource("16_ebg2g"), ExtResource("17_yxlcp")])
+upgrade_pool = Array[ExtResource("11_vxglm")]([ExtResource("17_bb450"), ExtResource("23_e2s0e"), ExtResource("14_1iba3"), ExtResource("15_yxlcp"), ExtResource("16_ebg2g"), ExtResource("17_yxlcp"), ExtResource("25_hq6as"), ExtResource("26_kxyth"), ExtResource("27_cobve"), ExtResource("28_cmqll"), ExtResource("29_8cp6k"), ExtResource("30_8b871"), ExtResource("31_pdwbg")])
 
 [node name="UpdateButtons" type="HBoxContainer" parent="LevelUpUI" unique_id=487369555]
 anchors_preset = 8
