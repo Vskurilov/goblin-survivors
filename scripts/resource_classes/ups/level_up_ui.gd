@@ -16,7 +16,47 @@ func _ready() -> void:
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
 		# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 64 px.
 		buttons[i].add_theme_constant_override("icon_max_width", 64)
+		# Курсор — это фокус кнопки: мышь переносит его на карточку под собой.
+		buttons[i].mouse_entered.connect(buttons[i].grab_focus)
+		buttons[i].add_theme_stylebox_override("focus", _make_cursor_style())
 	_validate_upgrade_pool()
+
+## Рамка карточки под курсором. Рисуется поверх кнопки, фон не трогает.
+func _make_cursor_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.draw_center = false
+	style.set_border_width_all(2)
+	style.border_color = Color(1.0, 0.741, 1.0, 1.0)
+	style.set_expand_margin_all(2)
+	return style
+
+## Передвигает курсор для выбора апгрейда
+func _move_cursor(step: int) -> void:
+	var shown: Array[Button] = []
+	for button in buttons:
+		if button.visible:
+			shown.append(button)
+	if shown.is_empty():
+		return
+	var index := shown.find(get_viewport().gui_get_focus_owner())
+	if index == -1:
+		index = 0
+	else:
+		index = clampi(index + step, 0, shown.size() - 1)
+	shown[index].grab_focus()
+
+## Стрелки и Enter/Space кнопки обрабатывают сами (ui_left/ui_right/ui_accept).
+## A/D (move_left/move_right) двигаем курсор вручную.
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if event.is_action_pressed("move_left"):
+		_move_cursor(-1)
+	elif event.is_action_pressed("move_right"):
+		_move_cursor(1)
+	else:
+		return
+	get_viewport().set_input_as_handled()
 
 ## Окно стави паузу само и само её снимает в _on_button_pressed.
 func _on_player_leveled_up(player: Player) -> void:
@@ -42,6 +82,9 @@ func show_choices(player:Node) -> void:
 		else:
 			buttons[i].visible = false
 	visible = true
+	# Каждое новое окно начинает с первой карточки.
+	if not current_choices.is_empty():
+		buttons[0].grab_focus()
 
 func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 	var shuffled = pool.duplicate()
