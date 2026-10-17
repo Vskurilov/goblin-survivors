@@ -14,6 +14,7 @@ speed = 40.0
 contact_damage = 10.0
 gem_scene = ExtResource("3_fuyli")
 texture = ExtResource("5_qitdc")
+draw_order = 5
 visual_scale = 0.075
 behavior = ExtResource("1_lfgvm")
 mass = 10.0

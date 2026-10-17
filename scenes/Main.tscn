@@ -40,6 +40,7 @@
 [node name="Main" type="Node2D" unique_id=1517189486]
 
 [node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
+z_index = -200
 texture_repeat = 2
 position = Vector2(-82, 65)
 rotation = 0.0025917965

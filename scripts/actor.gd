@@ -27,16 +27,24 @@ func flash_hit(color: Color = hit_flash_color) -> void:
 	_flash_color = color
 
 func _upgrade_visual_feedback(delta: float) -> void:
+	# Белый с альфой 1.0 — без оттенка.
+	var tint := Color.WHITE
 	if _hit_flash_time_left > 0.0:
 		_hit_flash_time_left -= delta
-		sprite.material.set_shader_parameter("tint_color", _flash_color)
-		sprite.material.set_shader_parameter("tint_amount", 1.0)
+		tint = _make_tint(_flash_color, 1.0)
 	elif active_effects.size() > 0:
 		# Несколько эффектов - видел последний наложенный стак.
-		sprite.material.set_shader_parameter("tint_color", active_effects.back()["effect"].tint_color)
-		sprite.material.set_shader_parameter("tint_amount", 0.6)
-	else:
-		sprite.material.set_shader_parameter("tint_amount", 0.0)
+		tint = _make_tint(active_effects.back()["effect"].tint_color, 0.6)
+	# Пишем только при смене: незачем звать сервер отрисовки каждый шаг физики у каждого врага.
+	if sprite.self_modulate != tint:
+		sprite.self_modulate = tint
+
+## Оттенок для шейдера одним цветом, его несёт self_modulate спрайта: rgb — цвет,
+## альфа — сила (1.0 — без оттенка, 0.5 — полный). Материал тогда у всех врагов
+## общий, и их спрайты склеиваются в один вызов отрисовки.
+static func _make_tint(color: Color, amount: float) -> Color:
+	return Color(color.r, color.g, color.b, 1.0 - amount * 0.5)
+
  
 func _get_stack_key(effect: StatusEffectData):
 	if effect.stack_group != '':

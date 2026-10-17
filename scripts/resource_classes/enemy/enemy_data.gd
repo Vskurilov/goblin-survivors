@@ -7,6 +7,10 @@ extends  Resource
 @export var contact_damage: float = 20.0
 @export var gem_scene: PackedScene
 @export var texture: Texture2D
+## Порядок наложения типа: больше — рисуется поверх других типов. Враги одного типа
+## рисуются подряд, и Godot склеивает их спрайты в один вызов отрисовки.
+## У типов с разными текстурами значения должны быть разными, иначе спрайты снова перемешаются.
+@export_range(0, 99) var draw_order: int = 0
 @export var visual_scale: float = 1.0
 @export var behavior: EnemyBehaviorData
 @export var mass: float = 1.0

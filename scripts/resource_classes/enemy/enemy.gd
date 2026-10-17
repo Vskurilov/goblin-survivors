@@ -11,6 +11,10 @@ var player: Actor
 var nearby_enemies:Array = []
 var nearby_player = null
 
+## Враги рисуются над фоном (у него -200), но под игроком, снарядами и гемами (у них 0).
+## Внутри — группами по типу, см. EnemyData.draw_order.
+const DRAW_Z: int = -100
+
 func get_target_group() -> StringName:
 	return &"player"
 
@@ -28,6 +32,7 @@ func _ready():
 	$Sprite2D.scale = Vector2(enemy_data.visual_scale, enemy_data.visual_scale)
 	if enemy_data.texture:
 		$Sprite2D.texture = enemy_data.texture
+	$Sprite2D.z_index = DRAW_Z + enemy_data.draw_order
 	if enemy_data.collision_shape:
 		$CollisionShape2D.shape = enemy_data.collision_shape
 	$SeparationArea/CollisionShape2D.shape = $SeparationArea/CollisionShape2D.shape.duplicate()
