@@ -99,7 +99,7 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 		var best: Node2D = null
 		var best_score: float = 0.0
 		for candidate in candidates:
-			if result.has(candidate):
+			if candidate.is_dead or result.has(candidate):
 				continue
 			var score: float = origin.distance_squared_to(candidate.global_position) * sign_mult
 			if best == null or score < best_score: 

@@ -65,7 +65,7 @@ func _physics_process(delta):
 func _on_body_entered(body: Node2D) -> void:
 	if _spent or body == owner_actor:
 		return
-	if body == owner_actor:
+	if not body.is_in_group(target_group):
 		return
 	_touched.append(body as Actor)
 	
@@ -93,4 +93,4 @@ func _hit_touched() -> void:
 		for effect in on_hit_effects:
 			if effect != null:
 				target.apply_status_effect(effect, effect_owner, self)
-		queue_free()
+	queue_free()
