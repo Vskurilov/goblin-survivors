@@ -28,7 +28,7 @@ func _ready() -> void:
 func _make_cursor_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.draw_center = false
-	style.set_border_width_all(2)
+	style.set_border_width_all(10)
 	style.border_color = Color(1.0, 0.741, 1.0, 1.0)
 	style.set_expand_margin_all(2)
 	return style
