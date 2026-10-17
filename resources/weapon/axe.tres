@@ -26,6 +26,7 @@ projectile_speed = 300.0
 texture = ExtResource("3_jxybs")
 collision_shape = SubResource("CircleShape2D_hi8pk")
 base_trajectory = SubResource("Resource_rad8y")
+hit_limit = 32
 weapon_name = "Axe"
 identity = Array[String](["Thrown", "Axe", "Martial"])
 fire_rate = 4.0

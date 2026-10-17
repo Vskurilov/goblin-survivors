@@ -14,6 +14,9 @@ extends WeaponData
 @export var base_trajectory: TrajectoryData
 @export_range(0.0, 1, 0.01) var spawn_delay_max: float = 0.0
 @export var target_count: int = 1
+## Сколько врагов снаряд бьёт в момент первого касания: ближайших к своему центру.
+## 0 — без предела, как было до шага 1.
+@export_range(0, 100,1, "or_greater") var hit_limit: int = 0
 @export var projectile_per_target: int = 1
 @export_range(-180, 180, 0.1) var spread_angle_degrees: float = 30.0
 @export var sync_spawn_delay: bool = true
@@ -65,6 +68,7 @@ func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	projectile.hitbox_angle_offset = hitbox_angle_offset
 	projectile.trajectory = base_trajectory
 	projectile.lifetime = lifetime
+	projectile.hit_limit = hit_limit
 	projectile.owner_actor = shooter
 	projectile.target_group = shooter.get_target_group()
 	arm_carrier(projectile) 

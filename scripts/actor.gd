@@ -66,6 +66,9 @@ func _make_effect_entry(effect: StatusEffectData, owner_actor: Actor, carrier: N
 	}
 
 func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, carrier: Node = null) -> void:
+	# На убитого не ложатся ни стаки, ни реакции: он только ждёт удаления.
+	if is_dead:
+		return
 	# Реакция стихий съедает входящий эффект: стаком он уже не ложится.
 	var reaction := Reactions.find(effect, active_effects)
 	if reaction != null:
@@ -108,7 +111,8 @@ func _process_status_effects(delta: float) -> void:
 		effect_data["time_since_tick"] += delta
 		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
 			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses"], effect_data["crit_chance"], effect_data["crit_mult"])
-			effect_data["time_since_tick"] = 0.0
+			# Остаток переносится (закон 62): обнуление теряло до шага физики на каждый тик.
+			effect_data["time_since_tick"] -= effect_data["tick_interval"]
 		effect_data["time_left"] -= delta
 		if effect_data["time_left"] <= 0:
 			active_effects.remove_at(i)

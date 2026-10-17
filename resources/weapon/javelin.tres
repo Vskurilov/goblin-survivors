@@ -26,6 +26,7 @@ sprite_angle_offset = 0.7853981633974483
 hitbox_angle_offset = -0.7853981633974483
 target_mode = 1
 base_trajectory = SubResource("Resource_dp3eg")
+hit_limit = 14
 spawn_offset_distance = 100.0
 weapon_name = "javelin"
 identity = Array[String](["Javelin", "Thrown", "Martial"])

@@ -52,8 +52,13 @@ func _on_separation_area_body_exited(body:Node2D) -> void:
 		nearby_player = null
 
 func _physics_process(delta: float) -> void:
+	# Убитый ждёт удаления до конца шага физики: эффекты, ход и атака ему уже не положены.
+	if is_dead:
+		return
 	_process_status_effects(delta)
-	
+	# Тик горения мог убить прямо сейчас.
+	if is_dead:
+		return
 	if not is_instance_valid(player):
 		return
 	if player.is_dead:

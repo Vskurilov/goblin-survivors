@@ -65,7 +65,8 @@ func _physics_process(delta):
 			if not is_instance_valid(enemy):
 				touching_enemies.remove_at(i)
 				continue
-			if enemy.enemy_data == null:
+			# Убитый в этом шаге ещё в списке до своего удаления, но уже не бьёт.
+			if enemy.is_dead or enemy.enemy_data == null:
 				continue
 			total_damage += enemy.enemy_data.contact_damage
 		if total_damage > 0.0:
@@ -88,14 +89,16 @@ static func format_time(seconds_value: float) -> String:
 
 func gain_xp(amount):
 	current_xp += amount
-	var did_level_up = false
+	var levels_gained := 0	
 	while current_xp >= xp_to_next_lv:
 		level += 1
 		xp_to_next_lv = xp_to_next_lv + int(xp_to_next_lv * ((1.1**2)/2))
-		did_level_up = true
-	if did_level_up:
+		levels_gained += 1
+	if levels_gained > 0:
 		heal_to_full()
-		leveled_up.emit(self)
+		# Сигнал на каждый уровень: окно выбора ставит лишние в очередь.
+		for i in levels_gained:
+			leveled_up.emit(self)
 	xp_changed.emit(level, current_xp,xp_to_next_lv)
 
 func add_kill():

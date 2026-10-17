@@ -9,7 +9,10 @@ extends CanvasLayer
 ]
 
 var current_choices: Array[UpgradeData] = []
+
 var _current_player: Node
+## Уровни, полученные, пока окно открыто: каждый получит своё окно после выбора.
+var _pending_levels: int = 0
 
 func _ready() -> void:
 	for i in buttons.size():
@@ -62,6 +65,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_player_leveled_up(player: Player) -> void:
 	if not has_upgrades(player):
 		return
+	# Окно уже открыто: сигналы одного шага физики идут и после паузы (закон 63).
+	if visible:
+		_pending_levels += 1
+		return
 	get_tree().paused = true
 	show_choices(player)
 
@@ -93,6 +100,12 @@ func _pick_random(pool:Array[UpgradeData], count:int) -> Array[UpgradeData]:
 
 func _on_button_pressed(index:int) -> void:
 	_current_player.apply_upgrade(current_choices[index])
+	# Следующий уровень из очереди: новые карточки, пауза не снимается.
+	if _pending_levels > 0 and has_upgrades(_current_player):
+		_pending_levels -= 1
+		show_choices(_current_player)
+		return
+	_pending_levels = 0
 	get_tree().paused = false
 	visible = false
 

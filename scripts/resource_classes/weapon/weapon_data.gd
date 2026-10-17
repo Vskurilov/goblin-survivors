@@ -83,13 +83,14 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 	var actual_count: int = mini(count, candidates.size())
 	if actual_count <= 0:
 		return result
+	# Убитый стоит в группе до своего удаления — он не цель.
 	if mode == TargetMode.RANDOM:
-		if actual_count == 1:
-			result.append(candidates.pick_random())
-			return result
 		candidates.shuffle()
-		for i in actual_count:
-			result.append(candidates[i])
+		for candidate in candidates:
+			if not candidate.is_dead:
+				result.append(candidate)
+				if result.size() == actual_count:
+					break
 		return result
 	# Знак переворачивает сравнение: «дальше» — это «меньше» со знаком минус.
 	var sign_mult: float = -1.0 if mode == TargetMode.FARTHEST else 1.0
@@ -104,5 +105,8 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 			if best == null or score < best_score: 
 				best = candidate
 				best_score = score
+		# Живых меньше, чем просили.
+		if best == null:
+			break
 		result.append(best)
 	return result

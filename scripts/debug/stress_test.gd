@@ -757,13 +757,8 @@ func _on_projectile_added(projectile: Projectile) -> void:
 		kind = 1
 		_c["shots"] += 1
 		_proj_hits[id] = 0
-		# Наш счётчик первым, потом обработчик снаряда: видим цель до удара.
-		var originals := projectile.body_entered.get_connections()
-		for connection in originals:
-			projectile.body_entered.disconnect(connection["callable"])
-		projectile.body_entered.connect(_on_player_projectile_hit.bind(projectile))
-		for connection in originals:
-			projectile.body_entered.connect(connection["callable"], connection["flags"])
+		# Снаряд сам сообщает о каждом ударе, до урона (шаг 1).
+		projectile.hit.connect(_on_player_projectile_hit.bind(projectile))
 	elif projectile.owner_actor == _shooter:
 		kind = 2
 		_arrows_alive += 1
@@ -774,11 +769,9 @@ func _on_projectile_added(projectile: Projectile) -> void:
 	projectile.tree_exiting.connect(_on_projectile_exiting.bind(id), CONNECT_ONE_SHOT)
 
 
-func _on_player_projectile_hit(body: Node2D, projectile: Projectile) -> void:
-	if body == projectile.owner_actor or not body.is_in_group(projectile.target_group):
-		return
+func _on_player_projectile_hit(target: Actor, projectile: Projectile) -> void:
 	_proj_hits[projectile.get_instance_id()] += 1
-	if body is Actor and (body as Actor).is_dead:
+	if target.is_dead:
 		_c["corpse_hits"] += 1
 
 
