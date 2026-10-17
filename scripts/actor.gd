@@ -152,7 +152,7 @@ func take_damage(amount:float, source_effect: StatusEffectData = null) -> void:
 
 
 ## Реакция вида на изменение здоровья. У врага вида нет — заглушка пуста.
-func  _on_health_changed() -> void:
+func _on_health_changed() -> void:
 	pass
 
 ## Смерть — событие, а не состояние здоровья. Флаг поднимается в take_damage

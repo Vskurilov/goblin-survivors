@@ -1,6 +1,6 @@
 class_name AoeWeaponData
 
-extends  WeaponData
+extends WeaponData
 
 @export var aoe_scene: PackedScene
 @export var zone_damage_per_tick:float = 1.0
@@ -12,7 +12,7 @@ extends  WeaponData
 @export var texture:Texture2D
 @export var zone_count: int = 1
 
-func  fire(player:Node) -> void:
+func fire(player:Node) -> void:
 	if player.is_dead:
 		return
 	var targets = pick_targets(player, target_mode, zone_count)

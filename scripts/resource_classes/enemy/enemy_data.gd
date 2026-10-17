@@ -1,5 +1,5 @@
 class_name EnemyData
-extends  Resource
+extends Resource
 
 @export var enemy_name: String = 'Goblin'
 @export var health: int = 3

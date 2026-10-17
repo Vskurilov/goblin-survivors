@@ -1,7 +1,7 @@
 extends Actor
 class_name Enemy
 
-signal  died
+signal died
 
 @export var enemy_data: EnemyData
 
@@ -45,7 +45,7 @@ func _ready():
 func _on_separation_area_body_entered(body:Node2D) -> void:
 	if body == self:
 		return
-	if  body.is_in_group("enemies"):
+	if body.is_in_group("enemies"):
 		nearby_enemies.append(body)
 	elif body.is_in_group("player"):
 		nearby_player = body
