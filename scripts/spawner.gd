@@ -106,7 +106,7 @@ func _despawn_far(limit: float) -> void:
 ## Угроза живых по типам врага. Мёртвых и убранных в этом кадре не считаем, как в _alive_count.
 func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
 	var by_type: Dictionary[EnemyData, float] = {}
-	for enemy in get_tree().get_first_node_in_group("enemies"):
+	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if not enemy.is_dead and not enemy.is_queued_for_deletion():
 			by_type[enemy.enemy_data] = by_type.get(enemy.enemy_data, 0.0) + enemy.enemy_data.threat_cost
 	return by_type
@@ -144,6 +144,6 @@ func _spawn(data: EnemyData, radius: float) -> void:
 	var offset = Vector2.RIGHT.rotated(angle) * radius
 	var enemy = enemy_scene.instantiate()
 	enemy.enemy_data = data
-	enemy.global_position = player.gobal_position * offset
+	enemy.global_position = player.global_position + offset
 	add_child(enemy)
 	enemy.died.connect(player.add_kill)

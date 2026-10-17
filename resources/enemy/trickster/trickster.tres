@@ -17,5 +17,6 @@ visual_scale = 0.05
 behavior = ExtResource("1_uuns6")
 mass = 4.0
 collision_shape = ExtResource("2_vtyeh")
+threat_cost = 3
 unlock_time = 120.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
