@@ -18,4 +18,6 @@ behavior = ExtResource("1_rut7q")
 mass = 3.0
 body_radius = 25.0
 collision_shape = ExtResource("2_musx0")
+threat_cost = 2
+unlock_time = 120.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

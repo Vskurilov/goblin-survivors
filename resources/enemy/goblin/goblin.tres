@@ -18,4 +18,6 @@ mass = 3.0
 body_radius = 25.0
 collision_shape = ExtResource("2_45ncr")
 xp_reward = 10
+threat_cost = 3
+unlock_time = 60.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

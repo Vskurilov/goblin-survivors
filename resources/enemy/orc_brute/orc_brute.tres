@@ -19,4 +19,6 @@ behavior = ExtResource("1_lfgvm")
 mass = 10.0
 body_radius = 30.0
 collision_shape = ExtResource("2_ygigc")
+threat_cost = 4
+unlock_time = 180.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

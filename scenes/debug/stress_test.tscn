@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://6bnm7hm6h3ut"]
+
+[ext_resource type="Script" uid="uid://deepc8j6t8aj6" path="res://scripts/debug/stress_test.gd" id="1_8rhp2"]
+
+[node name="StressTest" type="Node2D" unique_id=1303816850]
+script = ExtResource("1_8rhp2")
+scenario = 5

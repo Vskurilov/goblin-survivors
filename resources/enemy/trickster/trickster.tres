@@ -4,14 +4,18 @@
 [ext_resource type="Resource" uid="uid://gmps7q674vjx" path="res://resources/enemy/trickster/trickster_behavior.tres" id="1_uuns6"]
 [ext_resource type="Shape2D" uid="uid://dpnb0ajnnpysd" path="res://resources/enemy/trickster/trickster_hitbox.tres" id="2_vtyeh"]
 [ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="3_ayye3"]
-[ext_resource type="Texture2D" uid="uid://c6mrewc7ts2wi" path="res://media/Gemini_Generated_Image_wgq7sbwgq7sbwgq7.svg" id="5_1pwad"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_c4xgl"]
+load_path = "res://.godot/imported/Gemini_Generated_Image_wgq7sbwgq7sbwgq7.svg-237f12b1065404664d65994f5e0b9175.ctex"
 
 [resource]
 script = ExtResource("1_rsfmu")
+speed = 150.0
 gem_scene = ExtResource("3_ayye3")
-texture = ExtResource("5_1pwad")
+texture = SubResource("CompressedTexture2D_c4xgl")
 visual_scale = 0.05
 behavior = ExtResource("1_uuns6")
 mass = 4.0
 collision_shape = ExtResource("2_vtyeh")
+unlock_time = 120.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
