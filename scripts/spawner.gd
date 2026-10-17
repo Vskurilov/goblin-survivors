@@ -14,7 +14,7 @@ extends Node2D
 ## Угроза на экране в начале забега: сумма threat_cost живых врагов.
 @export var threat_start: float = 10.0
 ## На сколько угроза на экране растёт за минуту забега.
-@export var threat_per_minute: float
+@export var threat_per_minute: float = 15.0
 ## На сколько этот прирост сам растёт каждую минуту: 0 — ровный рост, больше — дальше больше.
 @export_range(0.0, 10.0, 0.1, "or_greater") var threat_acceleration: float = 1.0
 

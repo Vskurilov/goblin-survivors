@@ -9,6 +9,7 @@
 [resource]
 script = ExtResource("3_45ncr")
 health = 20
+speed = 90.0
 contact_damage = 10.0
 gem_scene = ExtResource("1_tymsc")
 texture = ExtResource("3_rd5jj")
@@ -18,6 +19,5 @@ mass = 3.0
 body_radius = 25.0
 collision_shape = ExtResource("2_45ncr")
 xp_reward = 10
-threat_cost = 3
-unlock_time = 60.0
+threat_cost = 1
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

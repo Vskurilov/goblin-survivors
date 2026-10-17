@@ -17,4 +17,5 @@ behavior = ExtResource("1_jpuri")
 mass = 3.0
 collision_shape = ExtResource("2_72ysm")
 threat_cost = 2
+unlock_time = 15.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"
