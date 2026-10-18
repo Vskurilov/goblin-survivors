@@ -22,7 +22,7 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var body_radius: float = 30.0
 ## Враг касается игрока и бьёт контактным уроном, когда их центры ближе, чем этот
 ## радиус плюс радиус тела врага (Enemy.get_contact_radius). Касания считает Horde.
-@export var hurt_raduius: float = 45.0
+@export var hurt_radius: float = 45.0
 ##Радиус притяжения гемов
 @export var magnet_radius: float = 100.0:
 	set(value):
