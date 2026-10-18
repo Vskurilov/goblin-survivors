@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_2xina")
-damage_per_tick = 5.0
+damage_per_tick = 1.0
 tick_interval = 1.0
 max_stacks = 15
 tint_color = Color(1, 0.54901963, 0.101960786, 1)

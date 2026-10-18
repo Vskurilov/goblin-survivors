@@ -29,7 +29,7 @@ const COLUMNS: Array[String] = [
 	"fires_per_s", "fires_expected_per_s", "fires_per_real_s", "shots_per_s",
 	"targets_avg", "targets_max", "multi_share", "corpse_hits", "dead_shots",
 	"deaths", "kills", "damage_per_s", "xp_dropped", "xp_picked", "xp_on_map", "xp_lost",
-	"levels", "level_signals", "windows", "note",
+	"levels", "level_signals", "windows", "crowd_overlaps", "touching", "note",
 ]
 ## Части кадра в окне: до физики, скрипты физики, шаг физики, процесс, после процесса, отрисовка, искусственная задержка.
 const PART_COUNT := 7
@@ -114,6 +114,8 @@ class Span extends RefCounted:
 	var draws := 0.0
 	var phys_objects := 0.0
 	var phys_pairs := 0.0
+	var overlaps := 0.0
+	var touching := 0.0
 	var counters := {}
 	var damage0 := 0.0
 	var kills0 := 0
@@ -131,6 +133,7 @@ var _main: Node
 var _player: Player
 # У спавнера и окна уровня нет class_name: поля берутся по имени.
 var _spawner
+var _horde: Horde
 var _level_ui
 var _spawn_timer: Timer
 var _edge: EdgeNode
@@ -201,6 +204,7 @@ func _ready() -> void:
 	add_child(_main)
 	_player = _main.get_node("Scene/Player")
 	_spawner = _main.get_node("Spawner")
+	_horde = _main.get_node("Horde")
 	_spawn_timer = _spawner.get_node("Timer")
 	_level_ui = _main.get_node("LevelUpUI")
 	_ema_parts.resize(PART_COUNT)
@@ -592,6 +596,7 @@ func _close_span() -> Dictionary:
 		"late_ms": s.parts[4] / tick_frames, "render_ms": s.parts[5] / tick_frames, "delay_ms": s.parts[6] / tick_frames,
 		"gpu_ms": s.gpu_ms / tick_frames, "draw_calls": s.draws / tick_frames,
 		"phys_objects": s.phys_objects / tick_frames, "phys_pairs": s.phys_pairs / tick_frames,
+				"crowd_overlaps": s.overlaps / tick_frames, "touching": s.touching / tick_frames,
 		"nodes": int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),
 		"orphans": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
 		"resources": int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)),
@@ -728,6 +733,8 @@ func _account_frame(frame_ms: float, parts: PackedFloat64Array) -> void:
 		_span.draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	_span.phys_objects += Performance.get_monitor(Performance.PHYSICS_2D_ACTIVE_OBJECTS)
 	_span.phys_pairs += Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS)
+	_span.overlaps += _horde.overlaps / float(maxi(_horde.enemies.size(), 1))
+	_span.touching += _horde.touching_player
 
 
 # ---------------------------------------------------------------- счётчики корректности

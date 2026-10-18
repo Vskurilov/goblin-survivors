@@ -4,4 +4,4 @@
 
 [node name="StressTest" type="Node2D" unique_id=1303816850]
 script = ExtResource("1_8rhp2")
-scenario = 5
+scenario = 1

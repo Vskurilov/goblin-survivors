@@ -22,5 +22,5 @@ body_radius = 50.0
 collision_shape = ExtResource("2_exidb")
 xp_reward = 10
 threat_cost = 7
-unlock_time = 300.0
+unlock_time = 30.0
 metadata/_custom_type_script = "uid://cdgl5iy1g7ikt"

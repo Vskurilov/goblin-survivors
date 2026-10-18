@@ -8,8 +8,9 @@ signal died
 var behavior_state: Dictionary = {}
 var speed: float
 var player: Actor
-var nearby_enemies:Array = []
-var nearby_player = null
+## Номер в реестре Horde: по нему враг берёт свой толчок расталкивания. -1 — не в реестре.
+var horde_index: int = -1
+var _horde: Horde
 
 ## Враги рисуются над фоном (у него -200), но под игроком, снарядами и гемами (у них 0).
 ## Внутри — группами по типу, см. EnemyData.draw_order.
@@ -35,26 +36,24 @@ func _ready():
 	$Sprite2D.z_index = DRAW_Z + enemy_data.draw_order
 	if enemy_data.collision_shape:
 		$CollisionShape2D.shape = enemy_data.collision_shape
-	$SeparationArea/CollisionShape2D.shape = $SeparationArea/CollisionShape2D.shape.duplicate()
-	$SeparationArea/CollisionShape2D.shape.radius = enemy_data.body_radius + 60.0
-	$SeparationArea.body_entered.connect(_on_separation_area_body_entered)
-	$SeparationArea.body_exited.connect(_on_separation_area_body_exited)
 	player = get_tree().get_first_node_in_group("player")
-	
-
-func _on_separation_area_body_entered(body:Node2D) -> void:
-	if body == self:
+	_horde = get_tree().get_first_node_in_group(&"horde") as Horde
+	if _horde == null:
+		push_warning("В сцене нет узла Horde: врагу некому считать расталкивание.")
+		queue_free()
 		return
-	if body.is_in_group("enemies"):
-		nearby_enemies.append(body)
-	elif body.is_in_group("player"):
-		nearby_player = body
+	_horde.register(self)
 	
-func _on_separation_area_body_exited(body:Node2D) -> void:
-	if body in nearby_enemies:
-		nearby_enemies.erase(body)
-	if body == nearby_player:
-		nearby_player = null
+# Узел покидает дерево в конце кадра, когда queue_free() доходит до дела.
+func _exit_tree() -> void:
+	if horde_index >= 0 and is_instance_valid(_horde):
+		_horde.unregister(self)
+
+## Радиус тела для касания игрока: фигура CollisionShape2D с масштабом узла
+## (в enemy.tscn он 3). У круга это его радиус, у других фигур — половина ширины.
+func get_contact_radius() -> float:
+	var body_shape: CollisionShape2D = $CollisionShape2D
+	return body_shape.shape.get_rect().size.x * 0.5 * body_shape.scale.x
 
 func _physics_process(delta: float) -> void:
 	# Убитый ждёт удаления до конца шага физики: эффекты, ход и атака ему уже не положены.
@@ -70,9 +69,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if enemy_data.behavior == null:
 		return
-	
-	velocity = enemy_data.behavior.get_velocity(self, player, delta)
-	move_and_slide()
+	# Маска у врага 0, поэтому move_and_slide() и так просто сдвигал на velocity * delta.
+	velocity = enemy_data.behavior.get_velocity(self, player, delta) + _horde.sep_vel[horde_index]
+	global_position += velocity * delta
 	enemy_data.behavior.try_attack(self, player, delta)
 	
 func _die() -> void:

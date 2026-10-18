@@ -23,6 +23,8 @@ extends Node2D
 const MAX_SPAWNS_PER_TICK := 5
 
 @onready var player = get_tree().get_first_node_in_group("player")
+## Живых врагов спавнер берёт из реестра орды, а не обходом группы.
+@onready var _horde: Horde = get_tree().get_first_node_in_group(&"horde")
 
 ## Один громкий отчёт на старте: дыры в контенте видно сразу,
 ## а не на первом спавне через минуту забега.
@@ -91,7 +93,7 @@ func _spawn_radius() -> float:
 # Живые враги. Убитый или убранный в этом кадре остаётся в группе до конца кадра — его не считаем.
 func _alive_count() -> int:
 	var count := 0
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _horde.enemies:
 		if not enemy.is_dead and not enemy.is_queued_for_deletion():
 			count += 1
 	return count
@@ -99,14 +101,14 @@ func _alive_count() -> int:
 ## Отставших далеко убираем молча: без гема, без убийства и без сигнала died.
 ## Заметка: продумать работу для боссов/уникальных противник - возможно их не стоит удалять
 func _despawn_far(limit: float) -> void:
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _horde.enemies:
 		if enemy.global_position.distance_to(player.global_position) > limit:
 			enemy.queue_free()
 
-## Угроза живых по типам врага. Мёртвых и убранных в этом кадре не считаем, как в _alive_count.
+## Угроза живых по типам врага. Мёртвых и убранных в этом кадре не считаем, как в _alive_count.  «остаётся в группе» → «остаётся в реестре».
 func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
 	var by_type: Dictionary[EnemyData, float] = {}
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _horde.enemies:
 		if not enemy.is_dead and not enemy.is_queued_for_deletion():
 			by_type[enemy.enemy_data] = by_type.get(enemy.enemy_data, 0.0) + enemy.enemy_data.threat_cost
 	return by_type

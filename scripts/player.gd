@@ -20,6 +20,9 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var weapons:Array[WeaponData] = []
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
+## Враг касается игрока и бьёт контактным уроном, когда их центры ближе, чем этот
+## радиус плюс радиус тела врага (Enemy.get_contact_radius). Касания считает Horde.
+@export var hurt_raduius: float = 45.0
 ##Радиус притяжения гемов
 @export var magnet_radius: float = 100.0:
 	set(value):
@@ -27,8 +30,7 @@ const MIN_FIRE_PERIOD: float = 0.01
 		#При загрузке сцены сеттер срабатывает до появления детей
 		if is_node_ready():
 			_apply_magnet_radius()
- 
-var touching_enemies:Array = []
+
 var current_xp:int = 0
 var level:int = 1
 var xp_to_next_lv:int = 10
@@ -58,20 +60,7 @@ func _physics_process(delta):
 		survival_time = survival_time + delta
 		if int(survival_time) != whole_seconds:
 			survival_time_changed.emit(survival_time)
-	if not touching_enemies.is_empty():
-		var total_damage = 0.0
-		for i in range(touching_enemies.size() - 1, -1, -1):
-			var enemy = touching_enemies[i]
-			if not is_instance_valid(enemy):
-				touching_enemies.remove_at(i)
-				continue
-			# Убитый в этом шаге ещё в списке до своего удаления, но уже не бьёт.
-			if enemy.is_dead or enemy.enemy_data == null:
-				continue
-			total_damage += enemy.enemy_data.contact_damage
-		if total_damage > 0.0:
-			take_damage(total_damage * delta)
-
+	
 func _on_health_changed() -> void:
 	health_changed.emit(current_health, max_health)
 	
@@ -158,14 +147,6 @@ func _setup_weapons():
 		add_child(timer)
 		weapon_timers.append(timer)
 		timer.start()
-
-func _on_hurt_box_body_entered(body: Node2D) -> void:
-	if body.is_in_group("enemies"):
-		touching_enemies.append(body)
-
-func _on_hurt_box_body_exited(body: Node2D) -> void:
-	if body in touching_enemies:
-		touching_enemies.erase(body)
 
 func _apply_magnet_radius() -> void:
 	($MagnetArea/CollisionShape2D.shape as CircleShape2D).radius = magnet_radius

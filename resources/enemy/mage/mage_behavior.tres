@@ -6,4 +6,6 @@
 [resource]
 script = ExtResource("1_dkp8y")
 projectile_data = ExtResource("1_mxs42")
+preferred_distance = 350.0
+distance_tolerance = 50.0
 metadata/_custom_type_script = "uid://bk4koccmcjm8o"

@@ -36,6 +36,7 @@
 [ext_resource type="Resource" uid="uid://bpme615y8wh3g" path="res://resources/ups/attack_speed_up.tres" id="29_8cp6k"]
 [ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="30_8b871"]
 [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="31_pdwbg"]
+[ext_resource type="Script" uid="uid://bvcs17y7xapx3" path="res://scripts/horde.gd" id="37_kxyth"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -52,7 +53,9 @@ region_rect = Rect2(0, 0, 4000, 4000)
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
 enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dp3eg"), ExtResource("10_hq6as"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("6_dg70y")])
-max_alive = 200
+max_alive = 300
+threat_start = 20.0
+threat_acceleration = 1.1
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
@@ -185,6 +188,9 @@ layout_mode = 2
 [node name="RestartButton" type="Button" parent="GameOverUI/GameOverBox" unique_id=574119270]
 layout_mode = 2
 text = "Again?"
+
+[node name="Horde" type="Node" parent="." unique_id=446001372]
+script = ExtResource("37_kxyth")
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
 [connection signal="health_changed" from="Scene/Player" to="HUD/HealthBar" method="_on_player_health_changed"]
