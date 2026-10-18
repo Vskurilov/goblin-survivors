@@ -105,7 +105,6 @@ func _despawn_far(limit: float) -> void:
 		if enemy.global_position.distance_to(player.global_position) > limit:
 			enemy.queue_free()
 
-## Угроза живых по типам врага. Мёртвых и убранных в этом кадре не считаем, как в _alive_count.  «остаётся в группе» → «остаётся в реестре».
 func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
 	var by_type: Dictionary[EnemyData, float] = {}
 	for enemy in _horde.enemies:

@@ -17,7 +17,6 @@ radius = 7.0
 [resource]
 script = ExtResource("1_ftqcm")
 projectile_scene = ExtResource("3_5t847")
-damage = 5.0
 texture = ExtResource("5_n4von")
 projectile_scale = 2.0
 collision_shape = SubResource("CircleShape2D_vxquv")

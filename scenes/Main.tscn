@@ -53,9 +53,7 @@ region_rect = Rect2(0, 0, 4000, 4000)
 script = ExtResource("2_dp3eg")
 enemy_scene = ExtResource("3_0ld40")
 enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dp3eg"), ExtResource("10_hq6as"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("6_dg70y")])
-max_alive = 300
-threat_start = 20.0
-threat_acceleration = 1.1
+max_alive = 200
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
