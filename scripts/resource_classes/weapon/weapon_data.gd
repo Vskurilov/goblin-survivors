@@ -36,6 +36,9 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## Какой эффект это оружие получает от гранта стихии: Fire → свой ожог топора.
 ## Стихии нет в словаре — оружие получит Granted Effect самого гранта.
 @export var grant_effects: Dictionary[String, StatusEffectData] = {}
+## Френдли-фаер (ядро §5.2): удар бьёт и своих — снаряд врага задевает других врагов.
+## Владельца не бьёт никогда. У игрока своих нет, ему флаг ничего не меняет.
+@export var friendly_fire: bool = false
 
 # Получило ли оружие грант стихии. Грант на оружие один, второй сюда не ляжет.
 ## Не @export: живёт только в копии оружия у игрока и в .tres не попадает.
@@ -53,6 +56,11 @@ static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) ->
 ## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
 ## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
 func arm_carrier(carrier:Node) -> void:
+	# Сторона — от владельца (его ставят раньше этого вызова): носитель бьёт цель
+	# владельца, а с френдли-фаером ещё и врагов.
+	var foes: StringName = carrier.owner_actor.get_target_group()
+	carrier.hits_enemies = foes == &"enemies" or friendly_fire
+	carrier.hits_player = foes == &"player"
 	carrier.crit_chance = crit_chance
 	carrier.crit_mult = crit_mult
 	carrier.attack_speed_mult = attack_speed_mult
@@ -74,39 +82,17 @@ func validate_grant_effects() -> void:
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
 	
-## Выбор целей без полной сортировки: один проход по списку на каждую цель,
-## сравнение в КВАДРАТАХ расстояний (sqrt не нужен). FARTHEST — та же
-## минимизация со знаком минус. O(n * count) вместо n*log(n) с двумя sqrt на сравнение.
+## Цели оружия. Игрок выбирает из живых врагов реестра Horde (Horde.pick),
+## у врага цель одна — игрок.
 func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
-	var candidates: Array = shooter.get_tree().get_nodes_in_group(shooter.get_target_group())
 	var result: Array[Node2D] = []
-	var actual_count: int = mini(count, candidates.size())
-	if actual_count <= 0:
+	var foes: StringName = shooter.get_target_group()
+	if foes == &"enemies":
+		var horde := shooter.get_tree().get_first_node_in_group(&"horde") as Horde
+		if horde != null:
+			result = horde.pick(shooter.global_position, mode, count)
 		return result
-	# Убитый стоит в группе до своего удаления — он не цель.
-	if mode == TargetMode.RANDOM:
-		candidates.shuffle()
-		for candidate in candidates:
-			if not candidate.is_dead:
-				result.append(candidate)
-				if result.size() == actual_count:
-					break
-		return result
-	# Знак переворачивает сравнение: «дальше» — это «меньше» со знаком минус.
-	var sign_mult: float = -1.0 if mode == TargetMode.FARTHEST else 1.0
-	var origin: Vector2 = shooter.global_position
-	for _i in actual_count:
-		var best: Node2D = null
-		var best_score: float = 0.0
-		for candidate in candidates:
-			if candidate.is_dead or result.has(candidate):
-				continue
-			var score: float = origin.distance_squared_to(candidate.global_position) * sign_mult
-			if best == null or score < best_score: 
-				best = candidate
-				best_score = score
-		# Живых меньше, чем просили.
-		if best == null:
-			break
-		result.append(best)
+	var target := shooter.get_tree().get_first_node_in_group(foes) as Actor
+	if count > 0 and target != null and not target.is_dead:
+		result.append(target)
 	return result

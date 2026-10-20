@@ -28,6 +28,5 @@ func fire(player:Node) -> void:
 		aoe.duration = zone_duration
 		aoe.radius = radius
 		aoe.texture = texture
-		aoe.target_group = player.get_target_group()
 		arm_carrier(aoe) 
 		player.get_tree().current_scene.add_child(aoe)

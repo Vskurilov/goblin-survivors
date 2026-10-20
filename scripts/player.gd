@@ -21,8 +21,11 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
 ## Враг касается игрока и бьёт контактным уроном, когда их центры ближе, чем этот
-## радиус плюс радиус тела врага (Enemy.get_contact_radius). Касания считает Horde.
+## радиус плюс радиус тела врага (Enemy.get_hit_radius). Касания считает Horde.
 @export var hurt_radius: float = 45.0
+## Тело игрока для снарядов и зон врагов: круг этого радиуса. Раньше — CapsuleShape2D
+## радиусом 15 и высотой 30, то есть тот же круг. Попадания считает Horde.
+@export var hit_radius: float = 15.0
 ##Радиус притяжения гемов
 @export var magnet_radius: float = 100.0:
 	set(value):
@@ -54,7 +57,8 @@ func _physics_process(delta):
 	_process_status_effects(delta)
 	var direction = Input.get_vector("move_left", "move_right", "move_up","move_down")
 	velocity = direction * speed * get_status_speed_mult()
-	move_and_slide()
+	# Маска у игрока была 0, поэтому move_and_slide() и так просто сдвигал на velocity * delta.
+	global_position += velocity * delta
 	if not is_dead:
 		var whole_seconds := int(survival_time)
 		survival_time = survival_time + delta

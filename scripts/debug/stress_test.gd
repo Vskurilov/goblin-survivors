@@ -248,8 +248,6 @@ func _setup_game() -> void:
 	_arrow_weapon = ARROW_WEAPON.duplicate()
 	_arrow_weapon.lifetime = 1.5
 	_shooter = StressShooter.new()
-	_shooter.collision_layer = 0
-	_shooter.collision_mask = 0
 	var shooter_sprite := Sprite2D.new()
 	shooter_sprite.name = "Sprite2D"
 	_shooter.add_child(shooter_sprite)

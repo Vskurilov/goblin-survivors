@@ -6,7 +6,7 @@ extends EnemyBehaviorData
 @export var preferred_distance: float = 250.0
 @export var distance_tolerance: float = 30.0
 
-func _get_velocity(enemy: CharacterBody2D, player: Node2D, _delta: float) -> Vector2:
+func _get_velocity(enemy: Enemy, player: Node2D, _delta: float) -> Vector2:
 	var to_player = player.global_position - enemy.global_position
 	var distance = to_player.length()
 	var direction = to_player.normalized()
@@ -16,7 +16,7 @@ func _get_velocity(enemy: CharacterBody2D, player: Node2D, _delta: float) -> Vec
 		return -direction * enemy.speed
 	else:
 		return Vector2.ZERO
-func  _try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
+func  _try_attack(enemy: Enemy, player: Node2D, delta: float) -> void:
 		if projectile_data == null:
 			return
 		var cooldown = enemy.behavior_state.get("attack_cooldown", 0.0) - delta

@@ -1,5 +1,5 @@
 class_name Actor
-extends CharacterBody2D
+extends Node2D
 
 
 ## Статы тела, которые оружие может усилить через weapon_bonuses.
@@ -13,6 +13,9 @@ const BODY_STATS_UPGRADABLE_BY_WEAPON: Array[String] = []
 @export var hit_flash_color: Color = Color(1, 0.3, 0.3)
 
 var is_dead:bool = false
+## Скорость последнего шага физики: её пишут игрок и враг. Физического тела нет,
+## это просто число (раньше было свойством CharacterBody2D).
+var velocity: Vector2 = Vector2.ZERO
 var current_health:float = 0.0
 var _hit_flash_time_left:float = 0.0
 var damage_taken_mult: float = 1.0

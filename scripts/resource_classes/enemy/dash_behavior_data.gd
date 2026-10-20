@@ -15,7 +15,7 @@ const STATE_RECOVER:= 3
 @export_range(0.0, 1.0, 0.01) var recovery_speed_mult:float = 0.3
 
 
-func _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func _get_velocity(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
 	var state = enemy.behavior_state.get("dash_state", STATE_APPROACH)
 	match state:
 		STATE_APPROACH:
@@ -28,7 +28,7 @@ func _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vect
 			return _recover(enemy, player, delta)
 	return Vector2.ZERO
 
-func  _approach(enemy:CharacterBody2D, player:Node2D) -> Vector2:
+func  _approach(enemy: Enemy, player:Node2D) -> Vector2:
 	var direction = (player.global_position - enemy.global_position).normalized()
 	var distance = enemy.global_position.distance_to(player.global_position)
 	if distance <= trigger_distance:
@@ -36,7 +36,7 @@ func  _approach(enemy:CharacterBody2D, player:Node2D) -> Vector2:
 		enemy.behavior_state["dash_timer"] = charge_time
 	return direction * enemy.speed
 	
-func _charge(enemy:CharacterBody2D, player:Node2D, delta:float) -> Vector2:
+func _charge(enemy: Enemy, player:Node2D, delta:float) -> Vector2:
 	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
 	if dash_timer <= 0.0:
 		enemy.behavior_state["dash_state"] = STATE_DASH
@@ -46,7 +46,7 @@ func _charge(enemy:CharacterBody2D, player:Node2D, delta:float) -> Vector2:
 		enemy.behavior_state["dash_timer"] = dash_timer
 	return Vector2.ZERO
 
-func  _dash(enemy:CharacterBody2D, delta: float) -> Vector2:
+func  _dash(enemy: Enemy, delta: float) -> Vector2:
 	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
 	if dash_timer <= 0:
 		enemy.behavior_state["dash_state"] = STATE_RECOVER
@@ -56,7 +56,7 @@ func  _dash(enemy:CharacterBody2D, delta: float) -> Vector2:
 	var dash_direction = enemy.behavior_state.get("dash_direction", Vector2.ZERO)
 	return dash_direction * dash_speed
 
-func _recover(enemy:CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func _recover(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
 	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
 	if dash_timer <= 0.0:
 		enemy.behavior_state["dash_state"] = STATE_APPROACH

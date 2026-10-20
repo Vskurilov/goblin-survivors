@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 @export var damage_per_tick: float = 5.0
 @export var tick_interval: float = 0.5
@@ -13,10 +13,14 @@ var weapon_bonuses : Dictionary = {}
 var crit_chance: float = 0.05
 var crit_mult:float = 2.0
 var attack_speed_mult:float = 1.0
-## Группа цели — снимок с носителя при спавне, как у близнеца projectile.gd.
-## Пустая по умолчанию: забытое присваивание даёт зону, которая никого не бьёт,
-## а не зону, бьющую своих.
-var target_group: StringName = &""
+## Кого бьёт зона: врагов, игрока или обоих, как у близнеца projectile.gd.
+## Ставит WeaponData.arm_carrier. По умолчанию никого: забытое присваивание даёт зону,
+## которая никого не бьёт, а не зону, бьющую своих.
+var hits_enemies: bool = false
+var hits_player: bool = false
+
+var _horde: Horde
+var _hit_shape: Horde.HitShape
 
 ## Нижняя граница периода тика: Timer.wait_time = 0 роняет таймер.
 ## Близнец того же предохранителя у оружия — Player.MIN_FIRE_PERIOD.
@@ -27,18 +31,14 @@ func _ready() -> void:
 		$Sprite2D.texture = texture
 		var texture_radius = texture.get_width() / 2.0
 		$Sprite2D.scale = Vector2.ONE * (radius / texture_radius)
-	
-	$CollisionShape2D.shape = $CollisionShape2D.shape.duplicate()
-	$CollisionShape2D.shape.radius = radius
-	
+	_horde = get_tree().get_first_node_in_group(&"horde") as Horde
+	_hit_shape = Horde.HitShape.circle(radius)
 	modulate.a = 0.3
-	monitoring = false
 	
 	get_tree().create_timer(telegraph_time,false).timeout.connect(_activate)
 
 func _activate() -> void:
 	modulate.a = 1.0
-	monitoring = true
 	
 	var tick_timer = Timer.new()
 	tick_timer.wait_time = maxf(tick_interval / attack_speed_mult, MIN_TICK_INTERVAL)
@@ -48,14 +48,15 @@ func _activate() -> void:
 	
 	get_tree().create_timer(duration,false).timeout.connect(queue_free)
 	
+## Все живые в круге, кроме владельца. Позиции — снимок Horde на начало шага:
+## по нему же раньше физика держала список тех, кто в зоне.
 func _deal_tick_damage() -> void:
-	for body in get_overlapping_bodies():
-		if body == owner_actor:
-			continue
-		if body.is_in_group(target_group):
-			var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
-			body.take_damage(final_damage)
-			var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
-			for effect in on_hit_effects:
-				if effect != null:
-					body.apply_status_effect(effect, effect_owner, self)
+	if _horde == null:
+		return
+	var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
+	for target in _horde.query_hits(_hit_shape, global_position, hits_enemies, hits_player, effect_owner, 0):
+		var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
+		target.take_damage(final_damage)
+		for effect in on_hit_effects:
+			if effect != null:
+				target.apply_status_effect(effect, effect_owner, self)

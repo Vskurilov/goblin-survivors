@@ -11,14 +11,14 @@ extends Resource
 ## Собственный ход врага. Толчок соседей прибавляет Enemy из Horde.sep_vel.
 ## Замедление режет собственный ход врага (бег, рывок), но не расталкивание:
 ## замёрзшего толкают соседи с обычной силой.
-func get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func get_velocity(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
 		return _get_velocity(enemy, player, delta) * enemy.get_status_speed_mult()
 
-func _get_velocity(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> Vector2:
+func _get_velocity(_enemy: Enemy, _player: Node2D, _delta: float) -> Vector2:
 	return Vector2.ZERO
 
-func try_attack(enemy: CharacterBody2D, player: Node2D, delta: float) -> void:
+func try_attack(enemy: Enemy, player: Node2D, delta: float) -> void:
 	_try_attack(enemy, player, delta)
 	
-func _try_attack(_enemy: CharacterBody2D, _player: Node2D, _delta: float) -> void:
+func _try_attack(_enemy: Enemy, _player: Node2D, _delta: float) -> void:
 	pass

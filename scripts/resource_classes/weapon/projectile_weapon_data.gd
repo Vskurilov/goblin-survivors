@@ -70,7 +70,6 @@ func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	projectile.lifetime = lifetime
 	projectile.hit_limit = hit_limit
 	projectile.owner_actor = shooter
-	projectile.target_group = shooter.get_target_group()
 	arm_carrier(projectile) 
 	shooter.get_tree().current_scene.add_child(projectile)
 	

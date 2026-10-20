@@ -6,7 +6,7 @@ extends  EnemyBehaviorData
 @export var wander_angle_range_degrees: float = 90.0
 @export_range(0.0,1.0, 0.01) var wander_strength: float = 0.6
 
-func _get_velocity(enemy: CharacterBody2D, player: Node2D, delta: float) -> Vector2:
+func _get_velocity(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
 	var wander_timer= enemy.behavior_state.get("wander_timer", 0.0) - delta
 	if wander_timer <= 0.0:
 		wander_timer = direction_charge_interval

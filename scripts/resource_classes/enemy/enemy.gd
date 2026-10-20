@@ -15,6 +15,9 @@ var _horde: Horde
 ## Враги рисуются над фоном (у него -200), но под игроком, снарядами и гемами (у них 0).
 ## Внутри — группами по типу, см. EnemyData.draw_order.
 const DRAW_Z: int = -100
+## Масштаб тела из прежней сцены врага (у CollisionShape2D был scale 3):
+## радиусы в *_hitbox.tres заданы без него.
+const HITBOX_SCALE: float = 3.0
 
 func get_target_group() -> StringName:
 	return &"player"
@@ -34,8 +37,6 @@ func _ready():
 	if enemy_data.texture:
 		$Sprite2D.texture = enemy_data.texture
 	$Sprite2D.z_index = DRAW_Z + enemy_data.draw_order
-	if enemy_data.collision_shape:
-		$CollisionShape2D.shape = enemy_data.collision_shape
 	player = get_tree().get_first_node_in_group("player")
 	_horde = get_tree().get_first_node_in_group(&"horde") as Horde
 	if _horde == null:
@@ -49,11 +50,15 @@ func _exit_tree() -> void:
 	if horde_index >= 0 and is_instance_valid(_horde):
 		_horde.unregister(self)
 
-## Радиус тела для касания игрока: фигура CollisionShape2D с масштабом узла
-## (в enemy.tscn он 3). У круга это его радиус, у других фигур — половина ширины.
-func get_contact_radius() -> float:
-	var body_shape: CollisionShape2D = $CollisionShape2D
-	return body_shape.shape.get_rect().size.x * 0.5 * body_shape.scale.x
+## Тело врага для попаданий и касания игрока — круг. Радиус — у фигуры
+## enemy_data.collision_shape (у круга его радиус, у других фигур половина ширины),
+## умноженный на HITBOX_SCALE. Попадания и касания считает Horde.
+func get_hit_radius() -> float:
+	# Без фигуры — круг радиусом 10, как фигура по умолчанию в прежней сцене врага.
+	var half_width := 10.0
+	if enemy_data.collision_shape != null:
+		half_width = enemy_data.collision_shape.get_rect().size.x * 0.5
+	return half_width * HITBOX_SCALE
 
 func _physics_process(delta: float) -> void:
 	# Убитый ждёт удаления до конца шага физики: эффекты, ход и атака ему уже не положены.
@@ -69,7 +74,6 @@ func _physics_process(delta: float) -> void:
 		return
 	if enemy_data.behavior == null:
 		return
-	# Маска у врага 0, поэтому move_and_slide() и так просто сдвигал на velocity * delta.
 	velocity = enemy_data.behavior.get_velocity(self, player, delta) + _horde.sep_vel[horde_index]
 	global_position += velocity * delta
 	enemy_data.behavior.try_attack(self, player, delta)
