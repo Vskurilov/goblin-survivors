@@ -5,10 +5,11 @@ const ALL: Array[ReactionData] = [
 	preload("res://resources/reactions/thermal_shock.tres")
 ]
 
-## Реакция, которую запустит входящий эффект на цели с такими стаками, или null.
-static func find(incoming: StatusEffectData, entries: Array) -> ReactionData:
+## Реакция, которую запустит входящий эффект на цели, или null.
+## incoming — стихии входящего (Tags.element_bits), target_stacks — Actor.element_stacks.
+static func find(incoming: int, target_stacks: PackedInt32Array) -> ReactionData:
 	for reaction in ALL:
-		if reaction.matches(incoming, entries):
+		if reaction.matches(incoming, target_stacks):
 			return reaction
 	return null
 

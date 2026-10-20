@@ -567,7 +567,7 @@ func _close_span() -> Dictionary:
 	var stacks := 0
 	var stacks_max := 0
 	for enemy in enemies:
-		var count: int = enemy.active_effects.size()
+		var count: int = enemy.stack_rows.size()
 		stacks += count
 		stacks_max = maxi(stacks_max, count)
 	var diff := {}

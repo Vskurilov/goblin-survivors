@@ -37,6 +37,7 @@
 [ext_resource type="Resource" uid="uid://hbvbsasse542" path="res://resources/ups/crit_mult_up.tres" id="30_8b871"]
 [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="31_pdwbg"]
 [ext_resource type="Script" uid="uid://bvcs17y7xapx3" path="res://scripts/horde.gd" id="37_kxyth"]
+[ext_resource type="Script" uid="uid://dypw2bdc5yu2k" path="res://scripts/effect_table.gd" id="38_eftbl"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -189,6 +190,9 @@ text = "Again?"
 
 [node name="Horde" type="Node" parent="." unique_id=446001372]
 script = ExtResource("37_kxyth")
+
+[node name="EffectTable" type="Node" parent="." unique_id=1871205433]
+script = ExtResource("38_eftbl")
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
 [connection signal="health_changed" from="Scene/Player" to="HUD/HealthBar" method="_on_player_health_changed"]

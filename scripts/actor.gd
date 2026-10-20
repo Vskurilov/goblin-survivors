@@ -19,8 +19,23 @@ var velocity: Vector2 = Vector2.ZERO
 var current_health:float = 0.0
 var _hit_flash_time_left:float = 0.0
 var damage_taken_mult: float = 1.0
-var active_effects: Array = []
 var _flash_color:Color = Color.WHITE
+## Оттенок ждёт шага цели: идёт вспышка удара или сменился последний стак.
+## Враг и игрок зовут _update_tint в шаге физики, только пока флаг поднят.
+var _tint_pending: bool = false
+
+## Стаки статус-эффектов этой цели — номера строк в EffectTable, в порядке наложения.
+## Ведёт их таблица, цель только хранит.
+var stack_rows := PackedInt32Array()
+## Сколько стаков каждой стихии висит на цели, номер — в Tags.ELEMENTS. По ним реакции.
+var element_stacks := PackedInt32Array()
+## Множитель скорости от эффектов: из нескольких замедлений действует сильнейшее,
+## они не перемножаются. При 1.0 скорость не меняется. Пишет EffectTable.
+var status_speed_mult: float = 1.0
+# Эффект последнего наложенного стака, пока он висит: его цвет — оттенок цели.
+var _stack_effect: StatusEffectData
+var _shown_tint := Color.WHITE
+var _effects: EffectTable
 
 func get_target_group() -> StringName:
 	return &""
@@ -28,18 +43,32 @@ func get_target_group() -> StringName:
 func flash_hit(color: Color = hit_flash_color) -> void:
 	_hit_flash_time_left = hit_flash_duration
 	_flash_color = color
+	_tint_pending = true
 
-func _upgrade_visual_feedback(delta: float) -> void:
+## Последний наложенный стак сменился. Зовёт EffectTable, null — стаков не осталось.
+func show_stack_tint(effect: StatusEffectData) -> void:
+	if effect != _stack_effect:
+		_stack_effect = effect
+		_tint_pending = true
+
+## Оттенок спрайта в шаге цели: вспышка удара, пока от неё что-то осталось в начале шага,
+## иначе цвет последнего наложенного стака, иначе без оттенка. Зовётся только после
+## события (удар, смена стаков) и до конца вспышки, а не каждый шаг. Убитый до своего
+## шага не доходит, и оттенок ему не пишется.
+func _update_tint(delta: float) -> void:
 	# Белый с альфой 1.0 — без оттенка.
 	var tint := Color.WHITE
 	if _hit_flash_time_left > 0.0:
+		# Флаг не снимаем: в следующем шаге вспышку надо погасить.
 		_hit_flash_time_left -= delta
 		tint = _make_tint(_flash_color, 1.0)
-	elif active_effects.size() > 0:
-		# Несколько эффектов - видел последний наложенный стак.
-		tint = _make_tint(active_effects.back()["effect"].tint_color, 0.6)
-	# Пишем только при смене: незачем звать сервер отрисовки каждый шаг физики у каждого врага.
-	if sprite.self_modulate != tint:
+	else:
+		_tint_pending = false
+		if _stack_effect != null:
+			tint = _make_tint(_stack_effect.tint_color, 0.6)
+	# Пишем только при смене: незачем звать сервер отрисовки каждый шаг вспышки.
+	if tint != _shown_tint:
+		_shown_tint = tint
 		sprite.self_modulate = tint
 
 ## Оттенок для шейдера одним цветом, его несёт self_modulate спрайта: rgb — цвет,
@@ -48,95 +77,23 @@ func _upgrade_visual_feedback(delta: float) -> void:
 static func _make_tint(color: Color, amount: float) -> Color:
 	return Color(color.r, color.g, color.b, 1.0 - amount * 0.5)
 
- 
-func _get_stack_key(effect: StatusEffectData):
-	if effect.stack_group != '':
-		return effect.stack_group
-	else:
-		return effect
-
-func _key_match(key_a, key_b) -> bool:
-	if typeof(key_a) != typeof(key_b):
-		return false
-	return key_a == key_b
-
-## Стак — снимок в момент наложения: статы эффекта и носителя.
-## Апгрейд, взятый позже, достаётся только следующим наложениям.
-## "original" — эффект оружия, с которого снят снимок: по нему ключ стака и лимит.
-func _make_effect_entry(effect: StatusEffectData, owner_actor: Actor, carrier: Node) -> Dictionary:
-	return {
-		"effect": effect.duplicate(),
-		"original": effect,
-		"time_left": effect.duration,
-		"time_since_tick": 0.0,
-		"owner_actor": owner_actor,
-		"tick_interval": effect.tick_interval / (carrier.attack_speed_mult if carrier else 1.0),
-		"crit_chance": carrier.crit_chance if carrier else 0.05,
-		"crit_mult": carrier.crit_mult if carrier else 2.0,
-		"weapon_bonuses": carrier.weapon_bonuses if carrier else {},
-	}
-
-func apply_status_effect(effect: StatusEffectData, owner_actor: Actor = null, carrier: Node = null) -> void:
+## Единственная точка наложения эффекта. Стаки, тики и реакции ведёт EffectTable.
+## Кто наложил, таблица пока не хранит: тику он не нужен.
+func apply_status_effect(effect: StatusEffectData, _owner_actor: Actor = null, carrier: Node = null) -> void:
 	# На убитого не ложатся ни стаки, ни реакции: он только ждёт удаления.
 	if is_dead:
 		return
-	# Реакция стихий съедает входящий эффект: стаком он уже не ложится.
-	var reaction := Reactions.find(effect, active_effects)
-	if reaction != null:
-		reaction.react(self, _make_effect_entry(effect, owner_actor, carrier))
-		return
-	var new_key = _get_stack_key(effect)
-	var existing_count := 0
-	var oldest_index := -1
-	var oldest_time_left := INF
-		
-	for i in range(active_effects.size()):
-		# Сравниваем оригиналы: у каждого снимка свой объект, ключ по нему не совпал бы никогда.		
-		var existing_effect: StatusEffectData = active_effects[i]["original"]
-		if _key_match(_get_stack_key(existing_effect), new_key):
-			if existing_effect.max_stacks != effect.max_stacks:
-				push_warning("stack_group %s: разные max_stacks у %s (%d) и %s (%d) — держи один лимит на всю группу" % [
-					str(new_key), existing_effect.resource_path, existing_effect.max_stacks,
-					effect.resource_path, effect.max_stacks
-				])
-			existing_count += 1
-			if active_effects[i]["time_left"] < oldest_time_left:
-				oldest_time_left = active_effects[i]["time_left"]
-				oldest_index = i
-	if existing_count < effect.max_stacks:
-		active_effects.append(_make_effect_entry(effect, owner_actor, carrier))
-	elif oldest_index != -1:
-		# Лимит набран: старейший стек заменяется свежим наложением — новые статы и полная длительность.
-		# Фаза тика сохраняется: иначе частые попадания не дадут стаку тикнуть ни разу.
-		var entry := _make_effect_entry(effect, owner_actor, carrier)
-		entry["time_since_tick"] = active_effects[oldest_index]["time_since_tick"]
-		active_effects[oldest_index] = entry
+	if _effects == null:
+		_effects = get_tree().get_first_node_in_group(&"effect_table") as EffectTable
+		if _effects == null:
+			push_warning("В сцене нет узла EffectTable: эффект %s не наложен." % effect.resource_path)
+			return
+	_effects.apply(self, effect, carrier)
 
-func _process_status_effects(delta: float) -> void:
-	for i in range(active_effects.size() - 1, -1, -1):
-		var effect_data = active_effects[i]
-		var effect_owner = effect_data["owner_actor"]
-		if not is_instance_valid(effect_owner):
-			effect_owner = null
-			effect_data["owner_actor"] = null
-		effect_data["time_since_tick"] += delta
-		if effect_data["time_since_tick"] >= effect_data["tick_interval"]:
-			effect_data["effect"].apply_tick(self, effect_data["owner_actor"], effect_data["weapon_bonuses"], effect_data["crit_chance"], effect_data["crit_mult"])
-			# Остаток переносится (закон 62): обнуление теряло до шага физики на каждый тик.
-			effect_data["time_since_tick"] -= effect_data["tick_interval"]
-		effect_data["time_left"] -= delta
-		if effect_data["time_left"] <= 0:
-			active_effects.remove_at(i)
-	_upgrade_visual_feedback(delta)
-
-## Итоговый множитель скорости от активных эффектов. Не хранится, а считается
-## каждый раз: истечение, обновление стака и апгрейд скорости не требуют "вернуть
-## как было". Из нескольких замедлений действует сильнейшее, они не перемножаются.
-func get_status_speed_mult() -> float:
-	var mult := 1.0
-	for entry in active_effects:
-		mult = minf(mult, entry["effect"].get_move_speed_mult())
-	return mult
+## Цель уходит из игры: её стаки снимаются, иначе таблица позовёт удалённый узел.
+func _clear_status_effects() -> void:
+	if not stack_rows.is_empty() and is_instance_valid(_effects):
+		_effects.clear(self)
 
 ## ЕДИНСТВЕННЫЙ путь урона для обеих сущностей: прямое попадание, тик зоны
 ## и тик статус-эффекта приходят сюда. Поэтому сторож is_dead стоит один раз

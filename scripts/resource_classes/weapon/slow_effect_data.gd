@@ -8,7 +8,3 @@ extends StatusEffectData
 
 func get_move_speed_mult() -> float:
 	return slow_speed_mult
-
-## Урона нет: тик пустой. Без этой заглушки базовый класс ругается на каждом тике.
-func apply_tick(_enemy: Node2D, _owner_actor: Actor = null, _weapon_bonuses: Dictionary = {}, _crit_chance: float = 0.05, _crit_mult: float = 2.0) -> void:
-	pass

@@ -54,9 +54,10 @@ func _ready():
 	_setup_weapons()
 
 func _physics_process(delta):
-	_process_status_effects(delta)
+	if _tint_pending:
+		_update_tint(delta)
 	var direction = Input.get_vector("move_left", "move_right", "move_up","move_down")
-	velocity = direction * speed * get_status_speed_mult()
+	velocity = direction * speed * status_speed_mult
 	# Маска у игрока была 0, поэтому move_and_slide() и так просто сдвигал на velocity * delta.
 	global_position += velocity * delta
 	if not is_dead:

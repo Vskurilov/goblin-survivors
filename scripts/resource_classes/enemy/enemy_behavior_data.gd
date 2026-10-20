@@ -12,7 +12,7 @@ extends Resource
 ## Замедление режет собственный ход врага (бег, рывок), но не расталкивание:
 ## замёрзшего толкают соседи с обычной силой.
 func get_velocity(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
-		return _get_velocity(enemy, player, delta) * enemy.get_status_speed_mult()
+		return _get_velocity(enemy, player, delta) * enemy.status_speed_mult
 
 func _get_velocity(_enemy: Enemy, _player: Node2D, _delta: float) -> Vector2:
 	return Vector2.ZERO

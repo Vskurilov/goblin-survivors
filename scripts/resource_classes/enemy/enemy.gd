@@ -49,6 +49,7 @@ func _ready():
 func _exit_tree() -> void:
 	if horde_index >= 0 and is_instance_valid(_horde):
 		_horde.unregister(self)
+	_clear_status_effects()
 
 ## Тело врага для попаданий и касания игрока — круг. Радиус — у фигуры
 ## enemy_data.collision_shape (у круга его радиус, у других фигур половина ширины),
@@ -61,13 +62,12 @@ func get_hit_radius() -> float:
 	return half_width * HITBOX_SCALE
 
 func _physics_process(delta: float) -> void:
-	# Убитый ждёт удаления до конца шага физики: эффекты, ход и атака ему уже не положены.
+	# Убитый ждёт удаления до конца шага физики: ход и атака ему уже не положены.
+	# Тики эффектов прошли раньше, в EffectTable: убитый тиком сюда уже мёртвым.
 	if is_dead:
 		return
-	_process_status_effects(delta)
-	# Тик горения мог убить прямо сейчас.
-	if is_dead:
-		return
+	if _tint_pending:
+		_update_tint(delta)
 	if not is_instance_valid(player):
 		return
 	if player.is_dead:

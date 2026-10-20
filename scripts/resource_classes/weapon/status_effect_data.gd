@@ -15,10 +15,8 @@ extends TaggedResource
 func get_move_speed_mult() -> float:
 	return 1.0
 
-func apply_tick(_enemy:Node2D, _owner_actor: Actor = null, _weapon_bonuses : Dictionary = {}, _crit_chance:float = 0.05, _crit_mult:float = 2.0) -> void:
-	push_error("StatusEffectData.apply_tick() не переопределен в " + str(get_script().resource_path))
-
-## Урон за столько тиков разом — для реакций. У эффекта без урона ноль.
-func damage_over_ticks(_ticks: int, _crit_chance: float, _crit_mult: float) -> float:
+## Урон одного тика до крита. 0 — эффект не тикает (замедление).
+## EffectTable снимает его в строку стака при наложении и дальше тикает сама.
+func get_tick_damage() -> float:
 	return 0.0
 	
