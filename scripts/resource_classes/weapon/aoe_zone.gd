@@ -48,15 +48,15 @@ func _activate() -> void:
 	
 	get_tree().create_timer(duration,false).timeout.connect(queue_free)
 	
-## Все живые в круге, кроме владельца. Позиции — снимок Horde на начало шага:
+## Все живые в круге. Позиции — снимок Horde на начало шага:
 ## по нему же раньше физика держала список тех, кто в зоне.
+## Зону ставит игрок, а себя он не бьёт (hits_player у его зоны выключен).
 func _deal_tick_damage() -> void:
 	if _horde == null:
 		return
-	var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
-	for target in _horde.query_hits(_hit_shape, global_position, hits_enemies, hits_player, effect_owner, 0):
+	for target in _horde.query_hits(_hit_shape, global_position, hits_enemies, hits_player, Horde.NOBODY, 0):
 		var final_damage = WeaponData.roll_crit(damage_per_tick, crit_chance, crit_mult)
-		target.take_damage(final_damage)
+		_horde.hurt(target, final_damage)
 		for effect in on_hit_effects:
 			if effect != null:
-				target.apply_status_effect(effect, effect_owner, self)
+				_horde.apply_effect(target, effect, self)

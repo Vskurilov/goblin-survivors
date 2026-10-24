@@ -6,7 +6,8 @@ const ALL: Array[ReactionData] = [
 ]
 
 ## Реакция, которую запустит входящий эффект на цели, или null.
-## incoming — стихии входящего (Tags.element_bits), target_stacks — Actor.element_stacks.
+## incoming — стихии входящего (Tags.element_bits), target_stacks — счётчики стаков цели
+## по стихиям (их держит EffectTable).
 static func find(incoming: int, target_stacks: PackedInt32Array) -> ReactionData:
 	for reaction in ALL:
 		if reaction.matches(incoming, target_stacks):

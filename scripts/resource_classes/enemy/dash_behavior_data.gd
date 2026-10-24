@@ -2,6 +2,9 @@ class_name DashBehaviorData
 
 extends  EnemyBehaviorData
 
+## Колонки строки: Horde.state — фаза (STATE_*), Horde.timer — сколько осталось фазе,
+## Horde.aim — направление рывка.
+
 const STATE_APPROACH:= 0
 const STATE_CHARGE:= 1
 const STATE_DASH:= 2
@@ -15,52 +18,52 @@ const STATE_RECOVER:= 3
 @export_range(0.0, 1.0, 0.01) var recovery_speed_mult:float = 0.3
 
 
-func _get_velocity(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
-	var state = enemy.behavior_state.get("dash_state", STATE_APPROACH)
+func _get_velocity(horde: Horde, t: int, player_pos: Vector2, delta: float) -> Vector2:
+	var state = horde.state[t]
 	match state:
 		STATE_APPROACH:
-			return _approach(enemy, player)
+			return _approach(horde, t, player_pos)
 		STATE_CHARGE:
-			return _charge(enemy, player, delta)
+			return _charge(horde, t, player_pos, delta)
 		STATE_DASH:
-			return _dash(enemy,delta)
+			return _dash(horde, t, delta)
 		STATE_RECOVER:
-			return _recover(enemy, player, delta)
+			return _recover(horde, t, player_pos, delta)
 	return Vector2.ZERO
 
-func  _approach(enemy: Enemy, player:Node2D) -> Vector2:
-	var direction = (player.global_position - enemy.global_position).normalized()
-	var distance = enemy.global_position.distance_to(player.global_position)
+func  _approach(horde: Horde, t: int, player_pos: Vector2) -> Vector2:
+	var direction = (player_pos - horde.pos[t]).normalized()
+	var distance = horde.pos[t].distance_to(player_pos)
 	if distance <= trigger_distance:
-		enemy.behavior_state["dash_state"] = STATE_CHARGE
-		enemy.behavior_state["dash_timer"] = charge_time
-	return direction * enemy.speed
+		horde.state[t] = STATE_CHARGE
+		horde.timer[t] = charge_time
+	return direction * horde.speed[t]
 	
-func _charge(enemy: Enemy, player:Node2D, delta:float) -> Vector2:
-	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
+func _charge(horde: Horde, t: int, player_pos: Vector2, delta:float) -> Vector2:
+	var dash_timer = horde.timer[t] - delta
 	if dash_timer <= 0.0:
-		enemy.behavior_state["dash_state"] = STATE_DASH
-		enemy.behavior_state["dash_timer"] = dash_duration
-		enemy.behavior_state["dash_direction"] = (player.global_position - enemy.global_position).normalized()
+		horde.state[t] = STATE_DASH
+		horde.timer[t] = dash_duration
+		horde.aim[t] = (player_pos - horde.pos[t]).normalized()
 	else:
-		enemy.behavior_state["dash_timer"] = dash_timer
+		horde.timer[t] = dash_timer
 	return Vector2.ZERO
 
-func  _dash(enemy: Enemy, delta: float) -> Vector2:
-	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
+func  _dash(horde: Horde, t: int, delta: float) -> Vector2:
+	var dash_timer = horde.timer[t] - delta
 	if dash_timer <= 0:
-		enemy.behavior_state["dash_state"] = STATE_RECOVER
-		enemy.behavior_state["dash_timer"] = recovery_time
+		horde.state[t] = STATE_RECOVER
+		horde.timer[t] = recovery_time
 	else:
-		enemy.behavior_state["dash_timer"] = dash_timer
-	var dash_direction = enemy.behavior_state.get("dash_direction", Vector2.ZERO)
+		horde.timer[t] = dash_timer
+	var dash_direction = horde.aim[t]
 	return dash_direction * dash_speed
 
-func _recover(enemy: Enemy, player: Node2D, delta: float) -> Vector2:
-	var dash_timer = enemy.behavior_state.get("dash_timer", 0.0) - delta
+func _recover(horde: Horde, t: int, player_pos: Vector2, delta: float) -> Vector2:
+	var dash_timer = horde.timer[t] - delta
 	if dash_timer <= 0.0:
-		enemy.behavior_state["dash_state"] = STATE_APPROACH
+		horde.state[t] = STATE_APPROACH
 	else:
-		enemy.behavior_state["dash_timer"] = dash_timer
-	var direction = (player.global_position - enemy.global_position).normalized()
-	return direction * enemy.speed * recovery_speed_mult
+		horde.timer[t] = dash_timer
+	var direction = (player_pos - horde.pos[t]).normalized()
+	return direction * horde.speed[t] * recovery_speed_mult

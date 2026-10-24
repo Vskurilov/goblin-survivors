@@ -20,7 +20,7 @@ func fire(player:Node) -> void:
 		return
 	for target in targets:
 		var aoe:Node2D = aoe_scene.instantiate()
-		aoe.global_position = target.global_position
+		aoe.global_position = target
 		aoe.owner_actor = player
 		aoe.damage_per_tick = zone_damage_per_tick
 		aoe.tick_interval = zone_tick_interval
@@ -28,5 +28,5 @@ func fire(player:Node) -> void:
 		aoe.duration = zone_duration
 		aoe.radius = radius
 		aoe.texture = texture
-		arm_carrier(aoe) 
+		arm_carrier(aoe, player.get_target_group())
 		player.get_tree().current_scene.add_child(aoe)

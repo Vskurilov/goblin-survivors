@@ -3,9 +3,12 @@ class_name EffectTable
 
 ## Все стаки статус-эффектов всех целей, врагов и игрока (срез С3 плана орды).
 ## Строка таблицы — один стак: снимок чисел эффекта и носителя в момент наложения.
-## У каждой строки один кадр её ближайшего события (тик или конец), и шаг физики
+## У каждой строки один кадр её ближайшего события (тик или конец), и шаг таблицы
 ## трогает только строки своего кадра, а не все стаки всех целей.
-## Цель хранит номера своих строк (Actor.stack_rows) и счётчики стихий: по ним реакции.
+## Цель — номер в Horde: строка врага или Horde.PLAYER (срез С4). Номера строк каждой
+## цели и её счётчики стихий (по ним реакции) таблица держит у себя, замедление цели
+## пишет в Horde, урон и вспышки наносит через Horde.
+## Шаг таблицы зовёт Horde в своём шаге физики: после толчка, раньше хода врагов.
 
 ## Колесо кадров. Событие дальше этого строка ждёт по частям: таблица будит её
 ## раньше, видит, что ещё рано, и перекладывает дальше.
@@ -14,7 +17,8 @@ const WHEEL: int = 256
 const EPS: float = 0.000001
 
 # Колонки строк: номер строки — индекс во всех сразу.
-var _target: Array[Actor] = []
+# Цель стака — номер в Horde.
+var _target := PackedInt32Array()
 # Эффект оружия, с которого снят снимок: ключ стака, лимит, стихии и цвет берутся с него.
 var _effect: Array[StatusEffectData] = []
 var _key := PackedInt32Array()
@@ -33,6 +37,12 @@ var _free := PackedInt32Array()
 # Ключ стака числом: stack_group или сам эффект → номер. Сравнивать числа дешевле.
 var _key_ids: Dictionary = {}
 
+# Стаки каждой цели — номера строк в порядке наложения — и сколько стаков каждой стихии
+# на ней висит (номер стихии — в Tags.ELEMENTS). Индекс — номер цели плюс один:
+# у игрока (Horde.PLAYER) это 0.
+var _stacks: Array[PackedInt32Array] = []
+var _element_stacks: Array[PackedInt32Array] = []
+
 # Ячейка колеса — номера строк на кадр, у которого тот же остаток от деления на WHEEL.
 var _wheel: Array[PackedInt32Array] = []
 var _wheel_count := PackedInt32Array()
@@ -42,22 +52,27 @@ var _frame: int = 0
 var _now: float = 0.0
 var _step: float = 1.0 / 60.0
 
+var _horde: Horde
+
 
 func _enter_tree() -> void:
 	add_to_group(&"effect_table")
 
 
 func _ready() -> void:
-	# Раньше врагов и игрока (у них 0), как Horde: тик, который убил, случился до хода врага.
-	process_physics_priority = -1
 	_step = 1.0 / Engine.physics_ticks_per_second
 	_wheel.resize(WHEEL)
 	for slot in WHEEL:
 		_wheel[slot] = PackedInt32Array()
 	_wheel_count.resize(WHEEL)
+	_horde = get_tree().get_first_node_in_group(&"horde") as Horde
+	if _horde == null:
+		push_warning("В сцене нет узла Horde: тикать эффектам некому.")
 
 
-func _physics_process(delta: float) -> void:
+## Шаг таблицы: тики и концы стаков этого кадра. Зовёт Horde в своём шаге физики,
+## раньше хода врагов: тик, который убил, случился до хода врага.
+func step(delta: float) -> void:
 	_frame += 1
 	_now += delta
 	_step = delta
@@ -76,16 +91,16 @@ func _physics_process(delta: float) -> void:
 		if _due[row] != _frame:
 			continue
 		var target := _target[row]
-		# Убитый ждёт удаления: стаки ему больше не тикают, их снимет clear().
-		if target.is_dead:
+		# Убитый ждёт уборки: стаки ему больше не тикают, их снимет clear().
+		if _horde.is_dead(target):
 			continue
 		var next := _next_tick[row]
 		if _damage[row] > 0.0 and next <= cut and next <= _expire[row] + EPS:
 			# Следующий тик — ровно через интервал от этого: остаток не теряется (закон 62).
 			_next_tick[row] = next + _interval[row]
 			# Эффект — источник урона: вспышка тика его цвета.
-			target.take_damage(WeaponData.roll_crit(_damage[row], _crit_chance[row], _crit_mult[row]), _effect[row])
-			if _due[row] != _frame or target.is_dead:
+			_horde.hurt(target, WeaponData.roll_crit(_damage[row], _crit_chance[row], _crit_mult[row]), _effect[row])
+			if _due[row] != _frame or _horde.is_dead(target):
 				continue
 		if _expire[row] <= cut:
 			remove(row)
@@ -93,13 +108,15 @@ func _physics_process(delta: float) -> void:
 			_schedule(row)
 
 
-## Наложение эффекта на цель, путь один: Actor.apply_status_effect.
+## Наложение эффекта на цель target (номер в Horde), путь один: Horde.apply_effect.
 ## carrier — снаряд или зона: скорость атаки и крит в момент удара. Без носителя — 1.0, 5% и ×2.
-func apply(target: Actor, effect: StatusEffectData, carrier: Node) -> void:
+func apply(target: int, effect: StatusEffectData, carrier: Node) -> void:
+	_ensure_target(target)
 	var elements := Tags.element_bits(effect.tags)
+	var element_stacks := _element_stacks[target + 1]
 	# Реакция стихий съедает входящий эффект: стаком он уже не ложится.
-	if elements != 0 and not target.element_stacks.is_empty():
-		var reaction := Reactions.find(elements, target.element_stacks)
+	if elements != 0 and not element_stacks.is_empty():
+		var reaction := Reactions.find(elements, element_stacks)
 		if reaction != null:
 			var incoming := _alloc()
 			_fill(incoming, target, effect, -1, elements, carrier)
@@ -107,7 +124,7 @@ func apply(target: Actor, effect: StatusEffectData, carrier: Node) -> void:
 			_release(incoming)
 			return
 	var key := _key_of(effect)
-	var rows := target.stack_rows
+	var rows := _stacks[target + 1]
 	var count := 0
 	var oldest := -1
 	var oldest_expire := INF
@@ -129,7 +146,7 @@ func apply(target: Actor, effect: StatusEffectData, carrier: Node) -> void:
 		_fill(row, target, effect, key, elements, carrier)
 		rows.append(row)
 		_count_elements(target, elements, 1)
-		target.status_speed_mult = minf(target.status_speed_mult, _speed[row])
+		_horde.set_speed_mult(target, minf(_horde.get_speed_mult(target), _speed[row]))
 		_schedule(row)
 	elif oldest != -1:
 		# Лимит набран: старейший стак заменяется свежим наложением — новые статы и полная
@@ -143,33 +160,58 @@ func apply(target: Actor, effect: StatusEffectData, carrier: Node) -> void:
 		if was_slower:
 			_update_speed(target)
 		else:
-			target.status_speed_mult = minf(target.status_speed_mult, _speed[oldest])
+			_horde.set_speed_mult(target, minf(_horde.get_speed_mult(target), _speed[oldest]))
 		_schedule(oldest)
 	else:
 		return
-	target.show_stack_tint(_effect[rows[rows.size() - 1]])
+	_horde.show_stack_tint(target, _effect[rows[rows.size() - 1]])
 
 
 ## Снимает стак с цели: строка свободна, стихии и замедление цели пересчитаны без него.
 func remove(row: int) -> void:
 	var target := _target[row]
-	var rows := target.stack_rows
+	var rows := _stacks[target + 1]
 	rows.remove_at(rows.find(row))
 	_count_elements(target, _elements[row], -1)
 	var was_slower := _speed[row] < 1.0
 	_release(row)
 	if was_slower:
 		_update_speed(target)
-	target.show_stack_tint(null if rows.is_empty() else _effect[rows[rows.size() - 1]])
+	_horde.show_stack_tint(target, null if rows.is_empty() else _effect[rows[rows.size() - 1]])
 
 
-## Цель уходит из игры (Enemy._exit_tree): все её строки свободны.
-func clear(target: Actor) -> void:
-	for row in target.stack_rows:
+## Цель уходит из игры (Horde, конец кадра её уборки): все её строки свободны,
+## номер цели достанется следующему врагу чистым.
+func clear(target: int) -> void:
+	if target + 1 >= _stacks.size():
+		return
+	var rows := _stacks[target + 1]
+	for row in rows:
 		_release(row)
-	target.stack_rows.clear()
-	target.element_stacks.clear()
-	target.status_speed_mult = 1.0
+	rows.clear()
+	_element_stacks[target + 1].clear()
+	_horde.set_speed_mult(target, 1.0)
+
+
+## Номера строк стаков цели, в порядке наложения. Снимать стак — только через remove().
+func rows_of(target: int) -> PackedInt32Array:
+	_ensure_target(target)
+	return _stacks[target + 1]
+
+
+## Сколько стаков висит на цели.
+func stack_count(target: int) -> int:
+	return _stacks[target + 1].size() if target + 1 < _stacks.size() else 0
+
+
+## Урон реакции цели: без эффекта-источника, вспышка обычная.
+func hurt(target: int, amount: float) -> void:
+	_horde.hurt(target, amount)
+
+
+## Вспышка на цели цветом реакции.
+func flash(target: int, color: Color) -> void:
+	_horde.flash(target, color)
 
 
 ## Сколько стак нанёс бы, если бы дотикал до конца: каждый тик со своим броском крита.
@@ -201,7 +243,7 @@ func _alloc() -> int:
 
 func _release(row: int) -> void:
 	_due[row] = -1
-	_target[row] = null
+	_target[row] = Horde.NOBODY
 	_effect[row] = null
 	_free.append(row)
 
@@ -229,7 +271,7 @@ func _grow() -> void:
 
 ## Снимок в строку: статы эффекта и носителя в момент наложения.
 ## Апгрейд, взятый позже, достаётся только следующим наложениям.
-func _fill(row: int, target: Actor, effect: StatusEffectData, key: int, elements: int, carrier: Node) -> void:
+func _fill(row: int, target: int, effect: StatusEffectData, key: int, elements: int, carrier: Node) -> void:
 	_target[row] = target
 	_effect[row] = effect
 	_key[row] = key
@@ -255,10 +297,24 @@ func _key_of(effect: StatusEffectData) -> int:
 	return id
 
 
-func _count_elements(target: Actor, elements: int, change: int) -> void:
+# Списки цели: номера врагов растут вместе с Horde, игрок — на нуле.
+func _ensure_target(target: int) -> void:
+	var need := target + 2
+	var old := _stacks.size()
+	if old >= need:
+		return
+	var size := maxi(need, maxi(old * 2, 256))
+	_stacks.resize(size)
+	_element_stacks.resize(size)
+	for i in range(old, size):
+		_stacks[i] = PackedInt32Array()
+		_element_stacks[i] = PackedInt32Array()
+
+
+func _count_elements(target: int, elements: int, change: int) -> void:
 	if elements == 0:
 		return
-	var stacks := target.element_stacks
+	var stacks := _element_stacks[target + 1]
 	if stacks.is_empty():
 		stacks.resize(Tags.ELEMENTS.size())
 	for i in stacks.size():
@@ -267,11 +323,11 @@ func _count_elements(target: Actor, elements: int, change: int) -> void:
 
 
 ## Из нескольких замедлений действует сильнейшее, они не перемножаются.
-func _update_speed(target: Actor) -> void:
+func _update_speed(target: int) -> void:
 	var mult := 1.0
-	for row in target.stack_rows:
+	for row in _stacks[target + 1]:
 		mult = minf(mult, _speed[row])
-	target.status_speed_mult = mult
+	_horde.set_speed_mult(target, mult)
 
 
 ## Кладёт строку в колесо на кадр её ближайшего события: тик или конец стака.

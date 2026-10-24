@@ -1,6 +1,7 @@
 extends Node2D
 
-@export var enemy_scene: PackedScene
+## Враги — строки Horde (срез С4): спавнер их там создаёт, считает и убирает отставших.
+
 ## Повтор врага в пуле — его вес: какую долю угрозы на экране он держит.
 @export var enemy_pool: Array[EnemyData]
 ## Сколько врагов живёт одновременно. На капе новые не появляются:
@@ -23,14 +24,16 @@ extends Node2D
 const MAX_SPAWNS_PER_TICK := 5
 
 @onready var player = get_tree().get_first_node_in_group("player")
-## Живых врагов спавнер берёт из реестра орды, а не обходом группы.
 @onready var _horde: Horde = get_tree().get_first_node_in_group(&"horde")
 
 ## Один громкий отчёт на старте: дыры в контенте видно сразу,
 ## а не на первом спавне через минуту забега.
 func _ready() -> void:
-	if enemy_scene == null:
-		push_error("Spawner '%s': не задана enemy_scene." % name)
+	if _horde == null:
+		push_error("Spawner '%s': в сцене нет узла Horde - врагам негде жить." % name)
+	elif player != null:
+		# Каждое убийство — в счёт игрока. Раньше к игроку подключался каждый враг сам.
+		_horde.died.connect(_on_enemy_died)
 	if max_alive <= 0:
 		push_error("Spawner '%s': max_alive = %d - враги не появятся." % [name, max_alive])
 	if despawn_radius_mult <= 1.0:
@@ -49,15 +52,17 @@ func _ready() -> void:
 			
 func _on_timer_timeout() -> void:
 	# На старте об этом уже кричали — здесь молча не спавним.
-	if enemy_scene == null:
+	if _horde == null:
 		return
 	if player == null:
 		return
 	if player.is_dead:
 		return
 	var radius := _spawn_radius()
-	_despawn_far(radius * despawn_radius_mult)
-	var alive := _alive_count()
+	# Отставших далеко убираем молча: без гема, без убийства и без сигнала died.
+	# Заметка: продумать работу для боссов/уникальных противник - возможно их не стоит удалять
+	_horde.despawn_far(player.global_position, radius * despawn_radius_mult)
+	var alive := _horde.alive_count()
 	if alive >= max_alive:
 		return
 	var seconds: float = player.survival_time
@@ -90,26 +95,15 @@ func _spawn_radius() -> float:
 		visible_size /= camera.zoom
 	return visible_size.length() / 2.0 + spawn_margin
 
-# Живые враги. Убитый или убранный в этом кадре остаётся в реестре до конца кадра — его не считаем.
-func _alive_count() -> int:
-	var count := 0
-	for enemy in _horde.enemies:
-		if not enemy.is_dead and not enemy.is_removed:
-			count += 1
-	return count
+func _on_enemy_died(_target: int) -> void:
+	player.add_kill()
 
-## Отставших далеко убираем молча: без гема, без убийства и без сигнала died.
-## Заметка: продумать работу для боссов/уникальных противник - возможно их не стоит удалять
-func _despawn_far(limit: float) -> void:
-	for enemy in _horde.enemies:
-		if enemy.global_position.distance_to(player.global_position) > limit:
-			_horde.remove(enemy)
-
+# Живые враги по типам. Убитый или убранный в этом кадре ещё в реестре Horde до конца кадра — его не считаем.
 func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
 	var by_type: Dictionary[EnemyData, float] = {}
-	for enemy in _horde.enemies:
-		if not enemy.is_dead and not enemy.is_removed:
-			by_type[enemy.enemy_data] = by_type.get(enemy.enemy_data, 0.0) + enemy.enemy_data.threat_cost
+	for t in _horde.alive_rows():
+		var data := _horde.data_of(t)
+		by_type[data] = by_type.get(data, 0.0) + data.threat_cost
 	return by_type
 
 ## Цель угрозы к этой секунде забега. Прирост за минуту равен
@@ -143,8 +137,4 @@ func _pick(for_sale: Array[EnemyData], by_type: Dictionary[EnemyData, float], ta
 func _spawn(data: EnemyData, radius: float) -> void:
 	var angle = randf() * TAU
 	var offset = Vector2.RIGHT.rotated(angle) * radius
-	var enemy = enemy_scene.instantiate()
-	enemy.enemy_data = data
-	enemy.global_position = player.global_position + offset
-	add_child(enemy)
-	enemy.died.connect(player.add_kill)
+	_horde.spawn(data, player.global_position + offset)

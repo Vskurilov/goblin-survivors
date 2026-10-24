@@ -1,8 +1,9 @@
 class_name Projectile
 extends Node2D
 
-## Удар по одной цели. Идёт до урона: подписчик видит цель такой, какой её застал снаряд.
-signal hit(target: Actor)
+## Удар по одной цели — её номеру в Horde (враг или Horde.PLAYER). Идёт до урона:
+## подписчик видит цель такой, какой её застал снаряд.
+signal hit(target: int)
 
 @export var speed: float = 400
 @export var damage: float = 1.0
@@ -19,7 +20,10 @@ var travel_time: float = 0.0
 var wave_phase_offset: float = 0.0
 var age: float = 0.0
 var on_hit_effects: Array[StatusEffectData] = []
+## Владелец-узел (игрок). У выстрела врага узла нет: его номер в Horde и generation.
 var owner_actor: Actor
+var owner_row: int = Horde.NOBODY
+var owner_gen: int = 0
 ## Кого бьёт снаряд: врагов, игрока или обоих (френдли-фаер). Владельца не бьёт никогда.
 ## Ставит WeaponData.arm_carrier. По умолчанию никого: забытое присваивание даёт снаряд,
 ## который никого не бьёт, а не снаряд, бьющий своих.
@@ -72,16 +76,17 @@ func _pick_shape() -> Shape2D:
 func _hit() -> bool:
 	if _horde == null:
 		return false
-	var effect_owner: Actor = owner_actor if is_instance_valid(owner_actor) else null
-	var targets := _horde.query_hits(_hit_shape, global_position, hits_enemies, hits_player, effect_owner, hit_limit)
+	# Враг-стрелок своим снарядом себя не бьёт, пока он тот же (френдли-фаер).
+	var exclude := owner_row if _horde.is_same(owner_row, owner_gen) else Horde.NOBODY
+	var targets := _horde.query_hits(_hit_shape, global_position, hits_enemies, hits_player, exclude, hit_limit)
 	if targets.is_empty():
 		return false
 	for target in targets:
 		hit.emit(target)
 		var final_damage = WeaponData.roll_crit(damage, crit_chance, crit_mult)
-		target.take_damage(final_damage)
+		_horde.hurt(target, final_damage)
 		for effect in on_hit_effects:
 			if effect != null:
-				target.apply_status_effect(effect, effect_owner, self)
+				_horde.apply_effect(target, effect, self)
 	queue_free()
 	return true

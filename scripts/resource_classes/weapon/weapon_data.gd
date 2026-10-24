@@ -55,10 +55,9 @@ static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) ->
 ## конструктивно: новая ветка спавна обязана звать этот метод, а новый
 ## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
 ## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
-func arm_carrier(carrier:Node) -> void:
-	# Сторона — от владельца (его ставят раньше этого вызова): носитель бьёт цель
-	# владельца, а с френдли-фаером ещё и врагов.
-	var foes: StringName = carrier.owner_actor.get_target_group()
+## foes — сторона владельца: группа его целей (get_target_group(), у врага-строки
+## Horde.FOES). Носитель бьёт её, а с френдли-фаером ещё и врагов.
+func arm_carrier(carrier:Node, foes: StringName) -> void:
 	carrier.hits_enemies = foes == &"enemies" or friendly_fire
 	carrier.hits_player = foes == &"player"
 	carrier.crit_chance = crit_chance
@@ -82,10 +81,10 @@ func validate_grant_effects() -> void:
 func fire(_player:Node):
 	push_warning("fire не реализован для: " + weapon_name)
 	
-## Цели оружия. Игрок выбирает из живых врагов реестра Horde (Horde.pick),
+## Цели оружия — их позиции. Игрок выбирает из живых врагов Horde (Horde.pick),
 ## у врага цель одна — игрок.
-func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
-	var result: Array[Node2D] = []
+func pick_targets(shooter:Node, mode: TargetMode, count: int) -> PackedVector2Array:
+	var result := PackedVector2Array()
 	var foes: StringName = shooter.get_target_group()
 	if foes == &"enemies":
 		var horde := shooter.get_tree().get_first_node_in_group(&"horde") as Horde
@@ -94,5 +93,5 @@ func pick_targets(shooter:Node, mode: TargetMode, count: int) -> Array[Node2D]:
 		return result
 	var target := shooter.get_tree().get_first_node_in_group(foes) as Actor
 	if count > 0 and target != null and not target.is_dead:
-		result.append(target)
+		result.append(target.global_position)
 	return result

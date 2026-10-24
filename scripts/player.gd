@@ -21,7 +21,7 @@ const MIN_FIRE_PERIOD: float = 0.01
 @export var mass: float = 8.0
 @export var body_radius: float = 30.0
 ## Враг касается игрока и бьёт контактным уроном, когда их центры ближе, чем этот
-## радиус плюс радиус тела врага (Enemy.get_hit_radius). Касания считает Horde.
+## радиус плюс радиус тела врага (EnemyData.get_hit_radius). Касания считает Horde.
 @export var hurt_radius: float = 45.0
 ## Тело игрока для снарядов и зон врагов: круг этого радиуса. Раньше — CapsuleShape2D
 ## радиусом 15 и высотой 30, то есть тот же круг. Попадания считает Horde.

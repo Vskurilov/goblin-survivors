@@ -134,6 +134,7 @@ var _player: Player
 # У спавнера и окна уровня нет class_name: поля берутся по имени.
 var _spawner
 var _horde: Horde
+var _effects: EffectTable
 var _gem_field: Gems
 var _level_ui
 var _spawn_timer: Timer
@@ -154,7 +155,6 @@ var _c := {
 	"proj_hit": 0, "proj_multi": 0, "proj_targets": 0,
 	"xp_dropped": 0, "level_signals": 0, "windows": 0,
 }
-var _damage_removed := 0.0
 var _game_ticks := 0
 var _projectiles_alive := 0
 var _arrows_alive := 0
@@ -205,6 +205,7 @@ func _ready() -> void:
 	_player = _main.get_node("Scene/Player")
 	_spawner = _main.get_node("Spawner")
 	_horde = _main.get_node("Horde")
+	_effects = _main.get_node("EffectTable")
 	_gem_field = _main.get_node("Gems")
 	_spawn_timer = _spawner.get_node("Timer")
 	_level_ui = _main.get_node("LevelUpUI")
@@ -258,6 +259,7 @@ func _setup_game() -> void:
 func _setup_probes() -> void:
 	var tree := get_tree()
 	tree.node_added.connect(_on_node_added)
+	_horde.died.connect(_on_enemy_died)
 	tree.physics_frame.connect(_on_physics_frame)
 	tree.process_frame.connect(_on_process_frame)
 	_draw_signals = DisplayServer.get_name() != "headless"
@@ -355,16 +357,17 @@ func _run_mass_death() -> void:
 		await frame_ended
 		_open_span("death", "deaths=%d" % count)
 		await get_tree().physics_frame
-		var victims := _alive_enemies()
+		var victims := Array(_horde.alive_rows())
 		victims.shuffle()
 		victims.resize(mini(count, victims.size()))
+		# Наше убийство не урон оружия: здоровье бессмертных, снятое циклом, в урон не идёт.
+		# Счётчик возвращаем, а не вычитаем: миллиарды в сумме съели бы точность урона.
+		var dealt := _horde.damage_dealt
 		var kill_start := Time.get_ticks_usec()
-		for enemy in victims:
-			# Наше убийство не урон оружия: здоровье бессмертного в урон не идёт.
-			_damage_removed += enemy.get_meta(&"stress_hp0") - enemy.current_health
-			enemy.set_meta(&"stress_hp0", 0.0)
-			enemy.take_damage(IMMORTAL_HP * 1000.0)
+		for t: int in victims:
+			_horde.hurt(t, IMMORTAL_HP * 1000.0)
 		var kill_ms := (Time.get_ticks_usec() - kill_start) / 1000.0
+		_horde.damage_dealt = dealt
 		while _span.tick_frames < 1 + frames_after_death and _abort == "":
 			await frame_ended
 		var row := _close_span()
@@ -450,19 +453,15 @@ func _finish() -> void:
 # ---------------------------------------------------------------- нагрузка
 
 ## Добирает бессмертных врагов до count на кольце 150–900 px вокруг игрока.
+## Убийства идут в счёт игрока через спавнер: он подписан на Horde.died.
 func _set_crowd(count: int) -> void:
 	var pool: Array = _spawner.enemy_pool.filter(func(data: EnemyData) -> bool: return data != null)
-	var missing := count - _alive_enemies().size()
+	var missing := count - _horde.alive_count()
 	for i in missing:
 		var data: EnemyData = pool[_spawn_index % pool.size()]
 		_spawn_index += 1
-		var enemy: Enemy = _spawner.enemy_scene.instantiate()
-		enemy.enemy_data = data
-		enemy.global_position = _player.global_position + Vector2.from_angle(randf() * TAU) * randf_range(150.0, 900.0)
-		_spawner.add_child(enemy)
-		enemy.died.connect(_player.add_kill)
-		enemy.current_health = IMMORTAL_HP
-		enemy.set_meta(&"stress_hp0", IMMORTAL_HP)
+		var t := _horde.spawn(data, _player.global_position + Vector2.from_angle(randf() * TAU) * randf_range(150.0, 900.0))
+		_horde.set_health(t, IMMORTAL_HP)
 
 
 func _physics_process(delta: float) -> void:
@@ -487,11 +486,6 @@ func _press(action: StringName, strength: float) -> void:
 		Input.action_press(action, strength)
 	else:
 		Input.action_release(action)
-
-
-func _alive_enemies() -> Array:
-	return get_tree().get_nodes_in_group(&"enemies").filter(
-		func(enemy: Enemy) -> bool: return not enemy.is_dead and not enemy.is_removed)
 
 
 # ---------------------------------------------------------------- ожидание и окна
@@ -564,11 +558,11 @@ func _close_span() -> Dictionary:
 	var frame_sum := 0.0
 	for value in sorted:
 		frame_sum += value
-	var enemies := _alive_enemies()
+	var enemies := _horde.alive_rows()
 	var stacks := 0
 	var stacks_max := 0
-	for enemy in enemies:
-		var count: int = enemy.stack_rows.size()
+	for t in enemies:
+		var count := _effects.stack_count(t)
 		stacks += count
 		stacks_max = maxi(stacks_max, count)
 	var diff := {}
@@ -615,13 +609,10 @@ func _close_span() -> Dictionary:
 	return row
 
 
-## Урон врагам с начала сценария: потерянное здоровье живых и ушедших.
-## Перебор при смерти не считается: у мёртвого здоровье упирается в ноль.
+## Урон врагам с начала сценария: потерянное здоровье живых и ушедших (Horde.damage_dealt).
+## Наше убийство в массовой смерти в него не входит, перебор при смерти тоже.
 func _damage_total() -> float:
-	var total := _damage_removed
-	for enemy in get_tree().get_nodes_in_group(&"enemies"):
-		total += enemy.get_meta(&"stress_hp0", enemy.current_health) - enemy.current_health
-	return total
+	return _horde.damage_dealt
 
 
 # ---------------------------------------------------------------- кадр по частям
@@ -730,7 +721,7 @@ func _account_frame(frame_ms: float, parts: PackedFloat64Array) -> void:
 		_span.draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	_span.phys_objects += Performance.get_monitor(Performance.PHYSICS_2D_ACTIVE_OBJECTS)
 	_span.phys_pairs += Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS)
-	_span.overlaps += _horde.overlaps / float(maxi(_horde.enemies.size(), 1))
+	_span.overlaps += _horde.overlaps / float(maxi(_horde.registry_size(), 1))
 	_span.touching += _horde.touching_player
 
 
@@ -739,10 +730,6 @@ func _account_frame(frame_ms: float, parts: PackedFloat64Array) -> void:
 func _on_node_added(node: Node) -> void:
 	if node is Projectile:
 		_on_projectile_added(node)
-	elif node is Enemy:
-		node.ready.connect(_on_enemy_ready.bind(node), CONNECT_ONE_SHOT)
-		node.died.connect(_on_enemy_died.bind(node))
-		node.tree_exiting.connect(_on_enemy_exiting.bind(node), CONNECT_ONE_SHOT)
 	elif node.get_script() == ZONE_SCRIPT:
 		_zones_alive += 1
 		if node.owner_actor == _player:
@@ -762,16 +749,16 @@ func _on_projectile_added(projectile: Projectile) -> void:
 	elif projectile.owner_actor == _shooter:
 		kind = 2
 		_arrows_alive += 1
-	elif projectile.owner_actor is Enemy and projectile.owner_actor.is_dead:
+	elif projectile.owner_row >= 0 and _horde.is_dead(projectile.owner_row):
 		_c["dead_shots"] += 1
 	_proj_kind[id] = kind
 	_projectiles_alive += 1
 	projectile.tree_exiting.connect(_on_projectile_exiting.bind(id), CONNECT_ONE_SHOT)
 
 
-func _on_player_projectile_hit(target: Actor, projectile: Projectile) -> void:
+func _on_player_projectile_hit(target: int, projectile: Projectile) -> void:
 	_proj_hits[projectile.get_instance_id()] += 1
-	if target.is_dead:
+	if _horde.is_dead(target):
 		_c["corpse_hits"] += 1
 
 
@@ -793,18 +780,11 @@ func _on_projectile_exiting(id: int) -> void:
 				_span.targets_max = maxi(_span.targets_max, hits)
 
 
-func _on_enemy_ready(enemy: Enemy) -> void:
-	enemy.set_meta(&"stress_hp0", enemy.current_health)
-
-
-func _on_enemy_died(enemy: Enemy) -> void:
+func _on_enemy_died(target: int) -> void:
 	_c["deaths"] += 1
-	if enemy.enemy_data != null and enemy.enemy_data.gem_scene != null:
-		_c["xp_dropped"] += enemy.enemy_data.xp_reward
-
-
-func _on_enemy_exiting(enemy: Enemy) -> void:
-	_damage_removed += enemy.get_meta(&"stress_hp0", enemy.current_health) - enemy.current_health
+	var data := _horde.data_of(target)
+	if data.gem_scene != null:
+		_c["xp_dropped"] += data.xp_reward
 
 
 ## Долгий бой с апгрейдами: окно уровня сразу берёт первую карточку.
@@ -835,7 +815,7 @@ func _update_overlay() -> void:
 	lines.append("до физики %.1f · скрипты физики %.1f · шаг физики %.1f · процесс %.1f · после %.1f · отрисовка %.1f" % [
 		_ema_parts[0], _ema_parts[1], _ema_parts[2], _ema_parts[3], _ema_parts[4], _ema_parts[5]])
 	lines.append("врагов %d · снарядов %d (стрел %d) · зон %d · гемов %d" % [
-		_alive_enemies().size(), _projectiles_alive, _arrows_alive, _zones_alive, _gem_field.count()])
+		_horde.alive_count(), _projectiles_alive, _arrows_alive, _zones_alive, _gem_field.count()])
 	var hit: int = _c["proj_hit"]
 	lines.append("целей на снаряд %.2f · по мёртвым %d · выстрелов мёртвых %d" % [
 		_c["proj_targets"] / float(maxi(hit, 1)), _c["corpse_hits"], _c["dead_shots"]])

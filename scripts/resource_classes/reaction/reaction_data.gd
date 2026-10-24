@@ -3,6 +3,7 @@ extends Resource
 
 ## Реакция стихий: две стихии пары встретились на одной цели.
 ## Ищет её Reactions.find() из EffectTable.apply — единственного пути наложения эффекта.
+## Цель — номер в Horde (строка врага или Horde.PLAYER).
 
 # Номера стихий пары в Tags.ELEMENTS: считаются один раз, когда пара задана.
 # Объявлены раньше пары: её сеттер пишет сюда.
@@ -35,5 +36,6 @@ func pair_bits() -> int:
 
 ## Что делает реакция. incoming_row — строка входящего эффекта в таблице: снимок есть,
 ## но на цель она не ложится и после реакции освобождается.
-func react(_table: EffectTable, _target: Actor, _incoming_row: int) -> void:
+## Стаки цели — table.rows_of(target), урон и вспышка — table.hurt и table.flash.
+func react(_table: EffectTable, _target: int, _incoming_row: int) -> void:
 	push_error("ReactionData.react() не переопределен в " + str(get_script().resource_path))

@@ -34,7 +34,7 @@ func fire(player: Node) -> void:
 		
 	var directions: Array[Vector2] = []
 	for target in targets:
-		var base_direction: Vector2 = (target.global_position - player.global_position).normalized()
+		var base_direction: Vector2 = (target - player.global_position).normalized()
 		for i in range(projectile_per_target):
 			var angle_offset_degrees = 0.0
 			if projectile_per_target > 1:
@@ -49,15 +49,33 @@ func fire(player: Node) -> void:
 			_spawn_projectile(player, final_direction)
 		else:
 			player.get_tree().create_timer(delay, false).timeout.connect(_spawn_projectile.bind(player, final_direction))
+## Выстрел узла (игрока): снаряд летит из его позиции и бьёт его цели.
+func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
+	var projectile := _assemble(shooter.global_position, direction, shooter.get_target_group())
+	if projectile == null:
+		return
+	projectile.owner_actor = shooter
+	shooter.get_tree().current_scene.add_child(projectile)
+
+## Выстрел врага — строки t в Horde: снаряд летит из её позиции и бьёт игрока.
+## Номер стрелка снаряд хранит вместе с его generation: свой выстрел его не заденет.
+func spawn_row_projectile(horde: Horde, t: int, direction: Vector2) -> void:
+	var projectile := _assemble(horde.pos[t], direction, Horde.FOES)
+	if projectile == null:
+		return
+	projectile.owner_row = t
+	projectile.owner_gen = horde.generation(t)
+	horde.get_tree().current_scene.add_child(projectile)
+
 ## Единственное место сборки снаряда — и для игрока, и для врагов.
 ## Новое поле снаряда добавляется только сюда.
-func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
+func _assemble(at: Vector2, direction: Vector2, foes: StringName) -> Projectile:
 	if projectile_scene == null:
 		push_warning("projectile_scene не задана: " + (weapon_name if not weapon_name.is_empty() else resource_path))
-		return
+		return null
 	
 	var projectile:Projectile = projectile_scene.instantiate()
-	projectile.global_position = shooter.global_position + direction * spawn_offset_distance
+	projectile.global_position = at + direction * spawn_offset_distance
 	projectile.direction = direction
 	projectile.damage = damage
 	projectile.speed = projectile_speed
@@ -69,9 +87,8 @@ func spawn_projectile(shooter: Actor, direction: Vector2) -> void:
 	projectile.trajectory = base_trajectory
 	projectile.lifetime = lifetime
 	projectile.hit_limit = hit_limit
-	projectile.owner_actor = shooter
-	arm_carrier(projectile) 
-	shooter.get_tree().current_scene.add_child(projectile)
+	arm_carrier(projectile, foes)
+	return projectile
 	
 ## Обёртка для отложенного выстрела: за время задержки игрок мог умереть или исчезнуть.
 func _spawn_projectile(player: Node, direction: Vector2) -> void:
