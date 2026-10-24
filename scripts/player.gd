@@ -26,13 +26,12 @@ const MIN_FIRE_PERIOD: float = 0.01
 ## Тело игрока для снарядов и зон врагов: круг этого радиуса. Раньше — CapsuleShape2D
 ## радиусом 15 и высотой 30, то есть тот же круг. Попадания считает Horde.
 @export var hit_radius: float = 15.0
-##Радиус притяжения гемов
-@export var magnet_radius: float = 100.0:
-	set(value):
-		magnet_radius = value
-		#При загрузке сцены сеттер срабатывает до появления детей
-		if is_node_ready():
-			_apply_magnet_radius()
+## Радиус притяжения гемов: магнит берёт гем, когда его центр ближе этого плюс радиус
+## гема (Gem.radius). Касание считает Gems, раньше — круг MagnetArea.
+@export var magnet_radius: float = 100.0
+## Радиус подбора гемов, так же плюс радиус гема. Раньше — круг PickupArea:
+## радиус 10 при масштабе 4.
+@export var pickup_radius: float = 40.0
 
 var current_xp:int = 0
 var level:int = 1
@@ -50,7 +49,6 @@ func _ready():
 	xp_changed.emit(level, current_xp, xp_to_next_lv)
 	kills_changed.emit(kills)
 	survival_time_changed.emit(survival_time)
-	_apply_magnet_radius()
 	_setup_weapons()
 
 func _physics_process(delta):
@@ -152,16 +150,3 @@ func _setup_weapons():
 		add_child(timer)
 		weapon_timers.append(timer)
 		timer.start()
-
-func _apply_magnet_radius() -> void:
-	($MagnetArea/CollisionShape2D.shape as CircleShape2D).radius = magnet_radius
-
-func _on_magnet_area_area_entered(area: Area2D) -> void:
-	if area is Gem:
-		area.attract_to(self)
-
-func _on_pickup_area_area_entered(area: Area2D) -> void:
-	
-	if area is Gem:
-		area.queue_free()
-		gain_xp(area.xp_value)

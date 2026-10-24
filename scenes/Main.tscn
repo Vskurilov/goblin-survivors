@@ -38,6 +38,7 @@
 [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="31_pdwbg"]
 [ext_resource type="Script" uid="uid://bvcs17y7xapx3" path="res://scripts/horde.gd" id="37_kxyth"]
 [ext_resource type="Script" uid="uid://dypw2bdc5yu2k" path="res://scripts/effect_table.gd" id="38_eftbl"]
+[ext_resource type="Script" uid="uid://d15w1txv7brx2" path="res://scripts/gems.gd" id="39_gems"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -66,6 +67,9 @@ position = Vector2(-34, 83)
 position = Vector2(611, 240)
 max_health = 150.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_2ofn6"), ExtResource("10_ebg2g"), ExtResource("15_e2s0e"), ExtResource("16_gsxep")])
+
+[node name="Gems" type="Node2D" parent="." unique_id=795425564]
+script = ExtResource("39_gems")
 
 [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
 process_mode = 3

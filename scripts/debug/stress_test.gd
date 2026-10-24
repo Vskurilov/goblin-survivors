@@ -134,6 +134,7 @@ var _player: Player
 # У спавнера и окна уровня нет class_name: поля берутся по имени.
 var _spawner
 var _horde: Horde
+var _gem_field: Gems
 var _level_ui
 var _spawn_timer: Timer
 var _edge: EdgeNode
@@ -160,7 +161,6 @@ var _arrows_alive := 0
 var _zones_alive := 0
 var _proj_kind := {}   # id снаряда -> 1 игрок, 2 стрела стрелка, 0 прочие
 var _proj_hits := {}   # id снаряда игрока -> сколько целей задел
-var _gems := {}        # id -> Gem на карте
 var _xp0 := 0
 var _level0 := 1
 var _spawn_index := 0
@@ -205,6 +205,7 @@ func _ready() -> void:
 	_player = _main.get_node("Scene/Player")
 	_spawner = _main.get_node("Spawner")
 	_horde = _main.get_node("Horde")
+	_gem_field = _main.get_node("Gems")
 	_spawn_timer = _spawner.get_node("Timer")
 	_level_ui = _main.get_node("LevelUpUI")
 	_ema_parts.resize(PART_COUNT)
@@ -490,7 +491,7 @@ func _press(action: StringName, strength: float) -> void:
 
 func _alive_enemies() -> Array:
 	return get_tree().get_nodes_in_group(&"enemies").filter(
-		func(enemy: Enemy) -> bool: return not enemy.is_dead and not enemy.is_queued_for_deletion())
+		func(enemy: Enemy) -> bool: return not enemy.is_dead and not enemy.is_removed)
 
 
 # ---------------------------------------------------------------- ожидание и окна
@@ -574,9 +575,7 @@ func _close_span() -> Dictionary:
 	for key in _c:
 		diff[key] = _c[key] - s.counters[key]
 	var hit: int = diff["proj_hit"]
-	var xp_on_map := 0
-	for gem in _gems.values():
-		xp_on_map += gem.xp_value
+	var xp_on_map := _gem_field.xp_on_map()
 	var xp_picked := _player.current_xp - _xp0
 	var fires_expected := 0.0
 	for timer in _player.weapon_timers:
@@ -599,7 +598,7 @@ func _close_span() -> Dictionary:
 		"orphans": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
 		"resources": int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)),
 		"mem_static_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
-		"projectiles": _projectiles_alive, "arrows": _arrows_alive, "zones": _zones_alive, "gems": Gem.alive_count,
+		"projectiles": _projectiles_alive, "arrows": _arrows_alive, "zones": _zones_alive, "gems": _gem_field.count(),
 		"stacks_per_enemy": stacks / float(maxi(enemies.size(), 1)), "stacks_max": stacks_max,
 		"fires_per_s": diff["fires"] / maxf(game_s, 0.001), "fires_expected_per_s": fires_expected,
 		"fires_per_real_s": diff["fires"] / maxf(wall_s, 0.001), "shots_per_s": diff["shots"] / maxf(game_s, 0.001),
@@ -744,10 +743,6 @@ func _on_node_added(node: Node) -> void:
 		node.ready.connect(_on_enemy_ready.bind(node), CONNECT_ONE_SHOT)
 		node.died.connect(_on_enemy_died.bind(node))
 		node.tree_exiting.connect(_on_enemy_exiting.bind(node), CONNECT_ONE_SHOT)
-	elif node is Gem:
-		_gems[node.get_instance_id()] = node
-		var gem_id := node.get_instance_id()
-		node.tree_exiting.connect(func() -> void: _gems.erase(gem_id), CONNECT_ONE_SHOT)
 	elif node.get_script() == ZONE_SCRIPT:
 		_zones_alive += 1
 		if node.owner_actor == _player:
@@ -840,7 +835,7 @@ func _update_overlay() -> void:
 	lines.append("до физики %.1f · скрипты физики %.1f · шаг физики %.1f · процесс %.1f · после %.1f · отрисовка %.1f" % [
 		_ema_parts[0], _ema_parts[1], _ema_parts[2], _ema_parts[3], _ema_parts[4], _ema_parts[5]])
 	lines.append("врагов %d · снарядов %d (стрел %d) · зон %d · гемов %d" % [
-		get_tree().get_nodes_in_group(&"enemies").size(), _projectiles_alive, _arrows_alive, _zones_alive, Gem.alive_count])
+		_alive_enemies().size(), _projectiles_alive, _arrows_alive, _zones_alive, _gem_field.count()])
 	var hit: int = _c["proj_hit"]
 	lines.append("целей на снаряд %.2f · по мёртвым %d · выстрелов мёртвых %d" % [
 		_c["proj_targets"] / float(maxi(hit, 1)), _c["corpse_hits"], _c["dead_shots"]])

@@ -10,7 +10,11 @@ var speed: float
 var player: Actor
 ## Номер в реестре Horde: по нему враг берёт свой толчок расталкивания. -1 — не в реестре.
 var horde_index: int = -1
+## Враг убран из игры: убит или отстал от игрока (Horde.remove). Из реестра Horde
+## уходит в конце кадра, а узел удаляется позже, по несколько за кадр.
+var is_removed: bool = false
 var _horde: Horde
+var _gems: Gems
 
 ## Враги рисуются над фоном (у него -200), но под игроком, снарядами и гемами (у них 0).
 ## Внутри — группами по типу, см. EnemyData.draw_order.
@@ -44,8 +48,16 @@ func _ready():
 		queue_free()
 		return
 	_horde.register(self)
-	
-# Узел покидает дерево в конце кадра, когда queue_free() доходит до дела.
+	_gems = get_tree().get_first_node_in_group(&"gems") as Gems
+
+## Конец кадра, в котором врага убрали: уходит из реестра и из таблицы эффектов, как
+## раньше в _exit_tree при queue_free, и прячется до удаления узла. Зовёт Horde.
+func leave() -> void:
+	_horde.unregister(self)
+	_clear_status_effects()
+	sprite.visible = false
+
+# Здесь враг уходит, только когда выгружается вся сцена: убранный ушёл раньше, в leave().
 func _exit_tree() -> void:
 	if horde_index >= 0 and is_instance_valid(_horde):
 		_horde.unregister(self)
@@ -62,9 +74,9 @@ func get_hit_radius() -> float:
 	return half_width * HITBOX_SCALE
 
 func _physics_process(delta: float) -> void:
-	# Убитый ждёт удаления до конца шага физики: ход и атака ему уже не положены.
+	# Убитый или убранный ждёт удаления узла: ход и атака ему уже не положены.
 	# Тики эффектов прошли раньше, в EffectTable: убитый тиком сюда уже мёртвым.
-	if is_dead:
+	if is_dead or is_removed:
 		return
 	if _tint_pending:
 		_update_tint(delta)
@@ -81,10 +93,10 @@ func _physics_process(delta: float) -> void:
 func _die() -> void:
 	died.emit()
 	drop_gem()
-	queue_free()
+	_horde.remove(self)
 	
 	
 func drop_gem():
-	if enemy_data == null or enemy_data.gem_scene == null:
+	if enemy_data == null or enemy_data.gem_scene == null or _gems == null:
 		return
-	Gem.drop(enemy_data.gem_scene, enemy_data.xp_reward, global_position, get_tree().current_scene)
+	_gems.drop(enemy_data.gem_scene, enemy_data.xp_reward, global_position)

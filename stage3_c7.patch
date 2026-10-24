@@ -1,0 +1,767 @@
+diff --git a/scenes/Main.tscn b/scenes/Main.tscn
+index 19e8ecd..5641ad4 100644
+--- a/scenes/Main.tscn
++++ b/scenes/Main.tscn
+@@ -38,6 +38,7 @@
+ [ext_resource type="Resource" uid="uid://bro2xobuki25n" path="res://resources/ups/move_speed_up.tres" id="31_pdwbg"]
+ [ext_resource type="Script" uid="uid://bvcs17y7xapx3" path="res://scripts/horde.gd" id="37_kxyth"]
+ [ext_resource type="Script" uid="uid://dypw2bdc5yu2k" path="res://scripts/effect_table.gd" id="38_eftbl"]
++[ext_resource type="Script" uid="uid://d15w1txv7brx2" path="res://scripts/gems.gd" id="39_gems"]
+ 
+ [node name="Main" type="Node2D" unique_id=1517189486]
+ 
+@@ -67,6 +68,9 @@ position = Vector2(611, 240)
+ max_health = 150.0
+ weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_2ofn6"), ExtResource("10_ebg2g"), ExtResource("15_e2s0e"), ExtResource("16_gsxep")])
+ 
++[node name="Gems" type="Node2D" parent="." unique_id=795425564]
++script = ExtResource("39_gems")
++
+ [node name="LevelUpUI" type="CanvasLayer" parent="." unique_id=1196080755]
+ process_mode = 3
+ visible = false
+diff --git a/scenes/gem.tscn b/scenes/gem.tscn
+index 6cb98c0..38d9792 100644
+--- a/scenes/gem.tscn
++++ b/scenes/gem.tscn
+@@ -4,17 +4,10 @@
+ [ext_resource type="Texture2D" uid="uid://ce6bpwpsu67ic" path="res://media/gem-red.svg" id="2_bhq7q"]
+ [ext_resource type="Texture2D" uid="uid://cgbiipbg5oj0g" path="res://media/gem-svgrepo-com.svg" id="2_mpwtx"]
+ 
+-[sub_resource type="CircleShape2D" id="CircleShape2D_jq8tk"]
+-
+-[node name="Gem" type="Area2D" unique_id=1390937570]
+-collision_layer = 4
+-collision_mask = 0
++[node name="Gem" type="Node2D" unique_id=1390937570]
+ script = ExtResource("1_5cxma")
+ overflow_texture = ExtResource("2_bhq7q")
+ 
+ [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1683755550]
+ scale = Vector2(0.03, 0.03)
+ texture = ExtResource("2_mpwtx")
+-
+-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=337373513]
+-shape = SubResource("CircleShape2D_jq8tk")
+diff --git a/scenes/player.tscn b/scenes/player.tscn
+index eee0c01..3ec867f 100644
+--- a/scenes/player.tscn
++++ b/scenes/player.tscn
+@@ -8,11 +8,6 @@
+ resource_local_to_scene = true
+ shader = ExtResource("2_qhqgy")
+ 
+-[sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
+-
+-[sub_resource type="CircleShape2D" id="CircleShape2D_dqkch"]
+-radius = 100.0
+-
+ [node name="Player" type="Node2D" unique_id=691450919 groups=["player"]]
+ script = ExtResource("1_qhqgy")
+ max_health = 10000.0
+@@ -23,21 +18,3 @@ scale = Vector2(0.1, 0.1)
+ texture = ExtResource("3_qhqgy")
+ 
+ [node name="Camera2D" type="Camera2D" parent="." unique_id=2008049104]
+-
+-[node name="PickupArea" type="Area2D" parent="." unique_id=2055017276]
+-collision_layer = 0
+-collision_mask = 4
+-
+-[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=430971752]
+-scale = Vector2(4, 4)
+-shape = SubResource("CircleShape2D_qhqgy")
+-
+-[node name="MagnetArea" type="Area2D" parent="." unique_id=1765139531]
+-collision_layer = 0
+-collision_mask = 4
+-
+-[node name="CollisionShape2D" type="CollisionShape2D" parent="MagnetArea" unique_id=316363068]
+-shape = SubResource("CircleShape2D_dqkch")
+-
+-[connection signal="area_entered" from="PickupArea" to="." method="_on_pickup_area_area_entered"]
+-[connection signal="area_entered" from="MagnetArea" to="." method="_on_magnet_area_area_entered"]
+diff --git a/scripts/debug/stress_test.gd b/scripts/debug/stress_test.gd
+index 1d6c508..5aaca8c 100644
+--- a/scripts/debug/stress_test.gd
++++ b/scripts/debug/stress_test.gd
+@@ -134,6 +134,7 @@ var _player: Player
+ # У спавнера и окна уровня нет class_name: поля берутся по имени.
+ var _spawner
+ var _horde: Horde
++var _gem_field: Gems
+ var _level_ui
+ var _spawn_timer: Timer
+ var _edge: EdgeNode
+@@ -160,7 +161,6 @@ var _arrows_alive := 0
+ var _zones_alive := 0
+ var _proj_kind := {}   # id снаряда -> 1 игрок, 2 стрела стрелка, 0 прочие
+ var _proj_hits := {}   # id снаряда игрока -> сколько целей задел
+-var _gems := {}        # id -> Gem на карте
+ var _xp0 := 0
+ var _level0 := 1
+ var _spawn_index := 0
+@@ -205,6 +205,7 @@ func _ready() -> void:
+ 	_player = _main.get_node("Scene/Player")
+ 	_spawner = _main.get_node("Spawner")
+ 	_horde = _main.get_node("Horde")
++	_gem_field = _main.get_node("Gems")
+ 	_spawn_timer = _spawner.get_node("Timer")
+ 	_level_ui = _main.get_node("LevelUpUI")
+ 	_ema_parts.resize(PART_COUNT)
+@@ -490,7 +491,7 @@ func _press(action: StringName, strength: float) -> void:
+ 
+ func _alive_enemies() -> Array:
+ 	return get_tree().get_nodes_in_group(&"enemies").filter(
+-		func(enemy: Enemy) -> bool: return not enemy.is_dead and not enemy.is_queued_for_deletion())
++		func(enemy: Enemy) -> bool: return not enemy.is_dead and not enemy.is_removed)
+ 
+ 
+ # ---------------------------------------------------------------- ожидание и окна
+@@ -574,9 +575,7 @@ func _close_span() -> Dictionary:
+ 	for key in _c:
+ 		diff[key] = _c[key] - s.counters[key]
+ 	var hit: int = diff["proj_hit"]
+-	var xp_on_map := 0
+-	for gem in _gems.values():
+-		xp_on_map += gem.xp_value
++	var xp_on_map := _gem_field.xp_on_map()
+ 	var xp_picked := _player.current_xp - _xp0
+ 	var fires_expected := 0.0
+ 	for timer in _player.weapon_timers:
+@@ -599,7 +598,7 @@ func _close_span() -> Dictionary:
+ 		"orphans": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
+ 		"resources": int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)),
+ 		"mem_static_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
+-		"projectiles": _projectiles_alive, "arrows": _arrows_alive, "zones": _zones_alive, "gems": Gem.alive_count,
++		"projectiles": _projectiles_alive, "arrows": _arrows_alive, "zones": _zones_alive, "gems": _gem_field.count(),
+ 		"stacks_per_enemy": stacks / float(maxi(enemies.size(), 1)), "stacks_max": stacks_max,
+ 		"fires_per_s": diff["fires"] / maxf(game_s, 0.001), "fires_expected_per_s": fires_expected,
+ 		"fires_per_real_s": diff["fires"] / maxf(wall_s, 0.001), "shots_per_s": diff["shots"] / maxf(game_s, 0.001),
+@@ -744,10 +743,6 @@ func _on_node_added(node: Node) -> void:
+ 		node.ready.connect(_on_enemy_ready.bind(node), CONNECT_ONE_SHOT)
+ 		node.died.connect(_on_enemy_died.bind(node))
+ 		node.tree_exiting.connect(_on_enemy_exiting.bind(node), CONNECT_ONE_SHOT)
+-	elif node is Gem:
+-		_gems[node.get_instance_id()] = node
+-		var gem_id := node.get_instance_id()
+-		node.tree_exiting.connect(func() -> void: _gems.erase(gem_id), CONNECT_ONE_SHOT)
+ 	elif node.get_script() == ZONE_SCRIPT:
+ 		_zones_alive += 1
+ 		if node.owner_actor == _player:
+@@ -840,7 +835,7 @@ func _update_overlay() -> void:
+ 	lines.append("до физики %.1f · скрипты физики %.1f · шаг физики %.1f · процесс %.1f · после %.1f · отрисовка %.1f" % [
+ 		_ema_parts[0], _ema_parts[1], _ema_parts[2], _ema_parts[3], _ema_parts[4], _ema_parts[5]])
+ 	lines.append("врагов %d · снарядов %d (стрел %d) · зон %d · гемов %d" % [
+-		get_tree().get_nodes_in_group(&"enemies").size(), _projectiles_alive, _arrows_alive, _zones_alive, Gem.alive_count])
++		_alive_enemies().size(), _projectiles_alive, _arrows_alive, _zones_alive, _gem_field.count()])
+ 	var hit: int = _c["proj_hit"]
+ 	lines.append("целей на снаряд %.2f · по мёртвым %d · выстрелов мёртвых %d" % [
+ 		_c["proj_targets"] / float(maxi(hit, 1)), _c["corpse_hits"], _c["dead_shots"]])
+diff --git a/scripts/gem.gd b/scripts/gem.gd
+index 0463e1e..07eeb7c 100644
+--- a/scripts/gem.gd
++++ b/scripts/gem.gd
+@@ -1,73 +1,13 @@
+ class_name Gem
+-extends Area2D
++extends Node2D
+ 
+-const ATTRACT_ACCELERATION: float = 1500.0
+-## Гем летит быстрее игрока
+-const ATTRACT_MAX_SPEED: float = 900.0
+-##Сверх этого числа новые гемы не появляются, их опыт складируется в один мегагем
+-const MAX_ON_MAP: int = 300
+-const OVERFLOW_SCALE: float = 1.5
++## Вид и размер гема опыта. Сцена с этим скриптом в игру не попадает: гемы — строки
++## в узле Gems, он один раз читает отсюда спрайт, радиус и вид копилки.
+ 
+-##Живые гемы, общий счётчик на класс, 
+-##растет при создании нового объекта, падает при удалении
+-static var alive_count: int = 0
+-static var _overflow_gem: Gem = null
+-
+-##Опыт за подбор. Ставит враг при выпадении из своего EnemyData.xp_reward.
+-var xp_value: int = 5
+-
+-## Вид копилки. Ставится в gem.tscn; пусто - выглядит как обычный гем
++## Радиус гема. Подбор — когда центр гема ближе к игроку, чем Player.pickup_radius
++## плюс этот радиус; магнит — Player.magnet_radius плюс этот радиус.
++@export var radius: float = 10.0
++## Вид копилки. Пусто — выглядит как обычный гем.
+ @export var overflow_texture: Texture2D
+-
+-var _target: Node2D = null
+-var _speed: float = 0.0
+-
+-func _init() -> void:
+-	alive_count += 1
+-
+-func _notification(what: int) -> void:
+-	if what == NOTIFICATION_PREDELETE:
+-		alive_count -= 1
+-		
+-## Единственная точка появления гема. Сверх лимита опыт идет в копилку.
+-static func drop(scene: PackedScene, xp: int, at: Vector2, parent: Node) -> void:
+-	if alive_count >= MAX_ON_MAP and _overflow_alive():
+-		_overflow_gem.xp_value += xp
+-		return
+-	var gem: Gem = scene.instantiate()
+-	gem.xp_value = xp
+-	gem.global_position = at
+-	# Лимит достигнут, но копилки нет - следующий станет ей
+-	if alive_count > MAX_ON_MAP:
+-		gem._become_overflow()
+-	parent.add_child.call_deferred(gem)
+-
+-## Если копилку уже подобрали - опыт в нее не кладется, во избежание потери опыта
+-static func _overflow_alive() -> bool:
+-	return is_instance_valid(_overflow_gem) and not _overflow_gem.is_queued_for_deletion()
+-	
+-func _become_overflow() -> void:
+-	_overflow_gem = self
+-	# $Sprite2D доступен до добавления в дерево: дети есть сразу после instantiate()
+-	if overflow_texture != null:
+-		$Sprite2D.texture = overflow_texture
+-	scale = Vector2.ONE * OVERFLOW_SCALE
+-
+-##Физика гема до взаимодействия не считается
+-func _ready() -> void:
+-	set_physics_process(false)
+-
+-##Вызов магнита игрока. Повторный вызов не меняет цель
+-func attract_to(target: Node2D) -> void:
+-	if _target != null:
+-		return
+-	_target = target
+-	set_physics_process(true)
+-
+-func _physics_process(delta: float) -> void:
+-	if not is_instance_valid(_target):
+-		_target = null
+-		set_physics_process(false)
+-		return
+-	_speed = minf(_speed + ATTRACT_ACCELERATION * delta, ATTRACT_MAX_SPEED)
+-	global_position = global_position.move_toward(_target.global_position, _speed * delta)
++## Во сколько раз копилка крупнее обычного гема, вместе с радиусом.
++@export var overflow_scale: float = 1.5
+diff --git a/scripts/gems.gd b/scripts/gems.gd
+new file mode 100644
+index 0000000..3c3fbbc
+--- /dev/null
++++ b/scripts/gems.gd
+@@ -0,0 +1,289 @@
++extends Node2D
++class_name Gems
++
++## Гемы опыта (срез С7 плана орды). Гем — строка в массивах, а не узел: в кадре
++## смерти выпадение не создаёт узлов, а все гемы рисуются одним MultiMesh.
++## Магнит и подбор — по расстоянию до игрока, без Area2D.
++## Ход гема тот же, что был с физикой. Касание ищется в конце шага, после скриптов,
++## как его искал шаг физики; подбор и магнит срабатывают в начале следующего шага,
++## раньше всех узлов, как раньше приходили сигналы area_entered.
++## Вид гема задаёт его сцена (EnemyData.gem_scene), в игру она не попадает.
++## Узел стоит в начале координат: позиции гемов — мировые.
++
++## Сверх этого числа новые гемы не появляются: их опыт копится в одном геме-копилке.
++const MAX_ON_MAP: int = 300
++const ATTRACT_ACCELERATION: float = 1500.0
++## Гем летит быстрее игрока.
++const ATTRACT_MAX_SPEED: float = 900.0
++
++# Что нашёл конец прошлого шага.
++const FOUND_NONE: int = 0
++const FOUND_MAGNET: int = 1
++const FOUND_PICKUP: int = 2
++
++# Обычные гемы: строка i — экземпляр i в MultiMesh.
++var _pos := PackedVector2Array()
++var _xp := PackedInt32Array()
++# Скорость полёта к игроку. Меньше нуля — магнит гем ещё не взял.
++# float64, как было поле гема: иначе путь гема разойдётся с прежним.
++var _speed := PackedFloat64Array()
++var _found := PackedByteArray()
++
++# Копилка: не больше одной, свои поля и свой спрайт.
++var _bank_on: bool = false
++var _bank_pos := Vector2.ZERO
++var _bank_xp: int = 0
++var _bank_speed: float = -1.0
++var _bank_found: int = FOUND_NONE
++
++# Подобраны в начале этого шага. Раньше такой гем удалялся в конце шага и до тех пор
++# считался в лимите MAX_ON_MAP: выпавшее в этом шаге видит лимит так же.
++var _picked_now: int = 0
++
++var _player: Player
++# Вид: сцена гема, радиус гема и копилки.
++var _look: PackedScene
++var _other_look_warned: bool = false
++var _radius: float = 10.0
++var _bank_radius: float = 15.0
++var _multimesh: MultiMesh
++# Экземпляры MultiMesh одним буфером: 8 чисел на гем, в отрисовку уходит одним вызовом.
++var _buffer := PackedFloat32Array()
++var _upload_queued: bool = false
++var _bank_sprite: Sprite2D
++
++
++func _enter_tree() -> void:
++	add_to_group(&"gems")
++
++
++func _ready() -> void:
++	# Позже всех узлов: гемы летят за уже сдвинутым игроком, касание — по итогу шага.
++	process_physics_priority = 1000
++	_player = get_tree().get_first_node_in_group(&"player") as Player
++	# Раньше всех узлов шага: так приходили сигналы областей игрока.
++	get_tree().physics_frame.connect(_apply_found)
++
++
++## Гем с опытом xp в точке at. Сверх MAX_ON_MAP опыт уходит в копилку.
++func drop(scene: PackedScene, xp: int, at: Vector2) -> void:
++	if not _ensure_look(scene):
++		return
++	var alive := _pos.size() + int(_bank_on) + _picked_now
++	if alive >= MAX_ON_MAP and _bank_on:
++		_bank_xp += xp
++		return
++	# Лимит набран, но копилки нет — этот гем станет ей.
++	if alive + 1 > MAX_ON_MAP:
++		_bank_on = true
++		_bank_pos = at
++		_bank_xp = xp
++		_bank_speed = -1.0
++		_bank_found = FOUND_NONE
++		_bank_sprite.position = at
++		_bank_sprite.visible = true
++		return
++	var i := _pos.size()
++	_pos.append(at)
++	_xp.append(xp)
++	_speed.append(-1.0)
++	_found.append(FOUND_NONE)
++	_buffer[i * 8 + 3] = at.x
++	_buffer[i * 8 + 7] = at.y
++	_queue_upload()
++
++
++## Гемов на карте, с копилкой.
++func count() -> int:
++	return _pos.size() + int(_bank_on)
++
++
++## Опыт в гемах на карте, с копилкой.
++func xp_on_map() -> int:
++	var total := _bank_xp if _bank_on else 0
++	for xp in _xp:
++		total += xp
++	return total
++
++
++func _physics_process(delta: float) -> void:
++	if not is_instance_valid(_player):
++		return
++	var target := _player.global_position
++	_fly(target, delta)
++	_find(target)
++
++
++## Гемы, которые взял магнит, летят к игроку: разгон до предела, как раньше в Gem.
++func _fly(target: Vector2, delta: float) -> void:
++	var pos := _pos
++	var speed := _speed
++	var buffer := _buffer
++	var moved := false
++	for i in pos.size():
++		var s: float = speed[i]
++		if s < 0.0:
++			continue
++		s = minf(s + ATTRACT_ACCELERATION * delta, ATTRACT_MAX_SPEED)
++		speed[i] = s
++		var p: Vector2 = pos[i].move_toward(target, s * delta)
++		pos[i] = p
++		buffer[i * 8 + 3] = p.x
++		buffer[i * 8 + 7] = p.y
++		moved = true
++	if moved:
++		_queue_upload()
++	if _bank_on and _bank_speed >= 0.0:
++		_bank_speed = minf(_bank_speed + ATTRACT_ACCELERATION * delta, ATTRACT_MAX_SPEED)
++		_bank_pos = _bank_pos.move_toward(target, _bank_speed * delta)
++		_bank_sprite.position = _bank_pos
++
++
++## Касание с кругами игрока по итогу шага: круг подбора и круг магнита плюс радиус гема.
++## Срабатывает в начале следующего шага (_apply_found).
++func _find(target: Vector2) -> void:
++	var pick := _player.pickup_radius + _radius
++	var pick2 := pick * pick
++	var pull := _player.magnet_radius + _radius
++	var pull2 := pull * pull
++	var pos := _pos
++	var speed := _speed
++	var found := _found
++	for i in pos.size():
++		var d2 := target.distance_squared_to(pos[i])
++		if d2 < pick2:
++			found[i] = FOUND_PICKUP
++		elif d2 < pull2 and speed[i] < 0.0:
++			found[i] = FOUND_MAGNET
++	if _bank_on:
++		var d2 := target.distance_squared_to(_bank_pos)
++		var bank_pick := _player.pickup_radius + _bank_radius
++		var bank_pull := _player.magnet_radius + _bank_radius
++		if d2 < bank_pick * bank_pick:
++			_bank_found = FOUND_PICKUP
++		elif d2 < bank_pull * bank_pull and _bank_speed < 0.0:
++			_bank_found = FOUND_MAGNET
++
++
++## Начало шага: подбор и магнит по тому, что нашёл конец прошлого шага. На паузе шага
++## физики не было бы, и находки ждут снятия паузы, как ждала физика.
++## Окно уровня ставит паузу посреди цикла, а подбор идёт дальше: сигналы одного шага
++## физики тоже приходили все (закон 63).
++func _apply_found() -> void:
++	if get_tree().paused or not is_instance_valid(_player):
++		return
++	var picked := false
++	# С конца: удалённую строку занимает последняя, а она уже пройдена.
++	for i in range(_pos.size() - 1, -1, -1):
++		var f: int = _found[i]
++		if f == FOUND_NONE:
++			continue
++		_found[i] = FOUND_NONE
++		if f == FOUND_MAGNET:
++			_speed[i] = 0.0
++			continue
++		var xp: int = _xp[i]
++		_remove_row(i)
++		_picked_now += 1
++		picked = true
++		_player.gain_xp(xp)
++	if _bank_on and _bank_found != FOUND_NONE:
++		var f := _bank_found
++		_bank_found = FOUND_NONE
++		if f == FOUND_MAGNET:
++			_bank_speed = 0.0
++		else:
++			_bank_on = false
++			_bank_sprite.visible = false
++			_picked_now += 1
++			picked = true
++			_player.gain_xp(_bank_xp)
++	if picked:
++		# Конец этого шага, где раньше удалялся узел гема. Отложенный вызов
++		# доходит и на паузе от окна уровня.
++		_forget_picked.call_deferred()
++
++
++func _forget_picked() -> void:
++	_picked_now = 0
++
++
++## Строку i занимает последняя: номера остальных не сдвигаются.
++func _remove_row(i: int) -> void:
++	var last := _pos.size() - 1
++	if i != last:
++		_pos[i] = _pos[last]
++		_xp[i] = _xp[last]
++		_speed[i] = _speed[last]
++		_found[i] = _found[last]
++		_buffer[i * 8 + 3] = _buffer[last * 8 + 3]
++		_buffer[i * 8 + 7] = _buffer[last * 8 + 7]
++	_pos.resize(last)
++	_xp.resize(last)
++	_speed.resize(last)
++	_found.resize(last)
++	_queue_upload()
++
++
++## Буфер уходит в отрисовку в конце кадра, один раз, и на паузе тоже: подобранный
++## перед окном уровня гем не висит под окном, как раньше не висел удалённый узел.
++func _queue_upload() -> void:
++	if not _upload_queued:
++		_upload_queued = true
++		_upload.call_deferred()
++
++
++func _upload() -> void:
++	_upload_queued = false
++	var rid := _multimesh.get_rid()
++	RenderingServer.multimesh_set_buffer(rid, _buffer)
++	RenderingServer.multimesh_set_visible_instances(rid, _pos.size())
++
++
++## Вид гема читается из его сцены один раз, при первом выпадении. Все враги роняют
++## одну сцену; вторую этот узел не рисует, о ней предупреждение.
++func _ensure_look(scene: PackedScene) -> bool:
++	if scene == _look:
++		return true
++	if _look != null:
++		if not _other_look_warned:
++			_other_look_warned = true
++			push_warning("Gems: второй вид гема (%s) не поддержан, рисую как %s." % [scene.resource_path, _look.resource_path])
++		return true
++	var gem := scene.instantiate() as Gem
++	if gem == null:
++		push_error("Gems: корень сцены %s — не Gem." % scene.resource_path)
++		return false
++	_look = scene
++	var sprite := gem.get_node("Sprite2D") as Sprite2D
++	var size := sprite.texture.get_size() * sprite.scale
++	_radius = gem.radius
++	_bank_radius = gem.radius * gem.overflow_scale
++	# Высота квада со знаком минус: QuadMesh в 2D иначе рисует картинку вверх ногами.
++	var quad := QuadMesh.new()
++	quad.size = Vector2(size.x, -size.y)
++	_multimesh = MultiMesh.new()
++	_multimesh.transform_format = MultiMesh.TRANSFORM_2D
++	_multimesh.mesh = quad
++	# Своя рамка на весь мир. Рамку MultiMesh для отсечения за экраном Godot берёт один раз
++	# и потом не обновляет: без своей гемы пропадали, когда камера уходила от первых гемов.
++	# Гемов не больше 300, рисовать их всегда дешевле, чем пересчитывать рамку.
++	_multimesh.custom_aabb = AABB(Vector3(-1.0e6, -1.0e6, -1.0), Vector3(2.0e6, 2.0e6, 2.0))
++	_multimesh.instance_count = MAX_ON_MAP
++	_multimesh.visible_instance_count = 0
++	# Поворота и масштаба у гема нет: базис единичный, меняется только позиция.
++	_buffer.resize(MAX_ON_MAP * 8)
++	for i in MAX_ON_MAP:
++		_buffer[i * 8] = 1.0
++		_buffer[i * 8 + 5] = 1.0
++	var view := MultiMeshInstance2D.new()
++	view.multimesh = _multimesh
++	view.texture = sprite.texture
++	add_child(view)
++	_bank_sprite = Sprite2D.new()
++	_bank_sprite.texture = gem.overflow_texture if gem.overflow_texture != null else sprite.texture
++	_bank_sprite.scale = sprite.scale * gem.overflow_scale
++	_bank_sprite.visible = false
++	add_child(_bank_sprite)
++	gem.free()
++	return true
+diff --git a/scripts/gems.gd.uid b/scripts/gems.gd.uid
+new file mode 100644
+index 0000000..fd46cd1
+--- /dev/null
++++ b/scripts/gems.gd.uid
+@@ -0,0 +1 @@
++uid://d15w1txv7brx2
+diff --git a/scripts/horde.gd b/scripts/horde.gd
+index 6aa3ed7..e5f23d0 100644
+--- a/scripts/horde.gd
++++ b/scripts/horde.gd
+@@ -23,8 +23,13 @@ const MAX_CELLS: int = 64
+ ## Скорость берётся из EnemyData.speed, а не текущая: рывок громилы (700) по-прежнему
+ ## проламывает толпу. Читается при появлении врага.
+ @export_range(1.0, 3.0, 0.05) var push_to_speed: float = 1.1
++## Сколько узлов убранных врагов удалять за шаг физики (срез С7). Удаление узла
++## врага стоит движку 15–30 мкс: в песочнице 500 удалений разом удлиняли кадр
++## смерти на 8–10 мс, а по 32 за шаг это 1–2 мс в каждом из 16 следующих кадров.
++## Остальные ждут своей очереди спрятанными и вне реестра.
++@export_range(1, 1000) var free_per_frame: int = 32
+ 
+-## Живые и ещё не удалённые враги. Номер в списке — Enemy.horde_index.
++## Живые и убранные в этом кадре враги. Номер в списке — Enemy.horde_index.
+ var enemies: Array[Enemy] = []
+ ## Скорость расталкивания каждого врага в этом шаге.
+ var sep_vel := PackedVector2Array()
+@@ -65,6 +70,11 @@ var _player: Player
+ # Позиция игрока в начале шага: по ней удары врагов попадают в игрока.
+ var _player_pos := Vector2.ZERO
+ 
++# Убраны в этом кадре, по порядку уборки: из реестра уйдут в конце кадра.
++var _leaving: Array[Enemy] = []
++# Ушли из реестра и ждут удаления узла.
++var _to_free: Array[Enemy] = []
++
+ 
+ func _enter_tree() -> void:
+ 	add_to_group(&"horde")
+@@ -104,7 +114,34 @@ func register(enemy: Enemy) -> void:
+ 	_sorted.append(0)
+ 
+ 
+-## Убирает врага, ставя на его место последнего: номера остальных не сдвигаются.
++## Убирает врага из игры: убит или отстал. До конца кадра он остаётся в реестре, как
++## раньше узел до queue_free: удары этого кадра мёртвого пропускают, а сетка кадра
++## не ломается. В конце кадра уходит из реестра в том же порядке, что и раньше.
++func remove(enemy: Enemy) -> void:
++	if enemy.is_removed:
++		return
++	enemy.is_removed = true
++	if _leaving.is_empty():
++		_retire.call_deferred()
++	_leaving.append(enemy)
++
++
++## Конец кадра: убранные уходят из реестра и прячутся, узел ждёт удаления.
++func _retire() -> void:
++	for enemy in _leaving:
++		enemy.leave()
++		_to_free.append(enemy)
++	_leaving.clear()
++
++
++## Удаляет не больше free_per_frame узлов убранных врагов. Порядок не важен:
++## в игре их уже нет.
++func _free_removed() -> void:
++	for i in mini(free_per_frame, _to_free.size()):
++		_to_free.pop_back().queue_free()
++
++
++## Убирает врага из реестра, ставя на его место последнего: номера остальных не сдвигаются.
+ func unregister(enemy: Enemy) -> void:
+ 	var i := enemy.horde_index
+ 	var last := enemies.size() - 1
+@@ -140,6 +177,7 @@ func unregister(enemy: Enemy) -> void:
+ 
+ 
+ func _physics_process(delta: float) -> void:
++	_free_removed()
+ 	touching_player = 0
+ 	overlaps = 0
+ 	_grid_ok = false
+diff --git a/scripts/player.gd b/scripts/player.gd
+index a541c26..aeb71da 100644
+--- a/scripts/player.gd
++++ b/scripts/player.gd
+@@ -26,13 +26,12 @@ const MIN_FIRE_PERIOD: float = 0.01
+ ## Тело игрока для снарядов и зон врагов: круг этого радиуса. Раньше — CapsuleShape2D
+ ## радиусом 15 и высотой 30, то есть тот же круг. Попадания считает Horde.
+ @export var hit_radius: float = 15.0
+-##Радиус притяжения гемов
+-@export var magnet_radius: float = 100.0:
+-	set(value):
+-		magnet_radius = value
+-		#При загрузке сцены сеттер срабатывает до появления детей
+-		if is_node_ready():
+-			_apply_magnet_radius()
++## Радиус притяжения гемов: магнит берёт гем, когда его центр ближе этого плюс радиус
++## гема (Gem.radius). Касание считает Gems, раньше — круг MagnetArea.
++@export var magnet_radius: float = 100.0
++## Радиус подбора гемов, так же плюс радиус гема. Раньше — круг PickupArea:
++## радиус 10 при масштабе 4.
++@export var pickup_radius: float = 40.0
+ 
+ var current_xp:int = 0
+ var level:int = 1
+@@ -50,7 +49,6 @@ func _ready():
+ 	xp_changed.emit(level, current_xp, xp_to_next_lv)
+ 	kills_changed.emit(kills)
+ 	survival_time_changed.emit(survival_time)
+-	_apply_magnet_radius()
+ 	_setup_weapons()
+ 
+ func _physics_process(delta):
+@@ -152,16 +150,3 @@ func _setup_weapons():
+ 		add_child(timer)
+ 		weapon_timers.append(timer)
+ 		timer.start()
+-
+-func _apply_magnet_radius() -> void:
+-	($MagnetArea/CollisionShape2D.shape as CircleShape2D).radius = magnet_radius
+-
+-func _on_magnet_area_area_entered(area: Area2D) -> void:
+-	if area is Gem:
+-		area.attract_to(self)
+-
+-func _on_pickup_area_area_entered(area: Area2D) -> void:
+-	
+-	if area is Gem:
+-		area.queue_free()
+-		gain_xp(area.xp_value)
+diff --git a/scripts/resource_classes/enemy/enemy.gd b/scripts/resource_classes/enemy/enemy.gd
+index 9d53eca..a3a7e99 100644
+--- a/scripts/resource_classes/enemy/enemy.gd
++++ b/scripts/resource_classes/enemy/enemy.gd
+@@ -10,7 +10,11 @@ var speed: float
+ var player: Actor
+ ## Номер в реестре Horde: по нему враг берёт свой толчок расталкивания. -1 — не в реестре.
+ var horde_index: int = -1
++## Враг убран из игры: убит или отстал от игрока (Horde.remove). Из реестра Horde
++## уходит в конце кадра, а узел удаляется позже, по несколько за кадр.
++var is_removed: bool = false
+ var _horde: Horde
++var _gems: Gems
+ 
+ ## Враги рисуются над фоном (у него -200), но под игроком, снарядами и гемами (у них 0).
+ ## Внутри — группами по типу, см. EnemyData.draw_order.
+@@ -44,8 +48,16 @@ func _ready():
+ 		queue_free()
+ 		return
+ 	_horde.register(self)
+-	
+-# Узел покидает дерево в конце кадра, когда queue_free() доходит до дела.
++	_gems = get_tree().get_first_node_in_group(&"gems") as Gems
++
++## Конец кадра, в котором врага убрали: уходит из реестра и из таблицы эффектов, как
++## раньше в _exit_tree при queue_free, и прячется до удаления узла. Зовёт Horde.
++func leave() -> void:
++	_horde.unregister(self)
++	_clear_status_effects()
++	sprite.visible = false
++
++# Здесь враг уходит, только когда выгружается вся сцена: убранный ушёл раньше, в leave().
+ func _exit_tree() -> void:
+ 	if horde_index >= 0 and is_instance_valid(_horde):
+ 		_horde.unregister(self)
+@@ -62,9 +74,9 @@ func get_hit_radius() -> float:
+ 	return half_width * HITBOX_SCALE
+ 
+ func _physics_process(delta: float) -> void:
+-	# Убитый ждёт удаления до конца шага физики: ход и атака ему уже не положены.
++	# Убитый или убранный ждёт удаления узла: ход и атака ему уже не положены.
+ 	# Тики эффектов прошли раньше, в EffectTable: убитый тиком сюда уже мёртвым.
+-	if is_dead:
++	if is_dead or is_removed:
+ 		return
+ 	if _tint_pending:
+ 		_update_tint(delta)
+@@ -81,10 +93,10 @@ func _physics_process(delta: float) -> void:
+ func _die() -> void:
+ 	died.emit()
+ 	drop_gem()
+-	queue_free()
++	_horde.remove(self)
+ 	
+ 	
+ func drop_gem():
+-	if enemy_data == null or enemy_data.gem_scene == null:
++	if enemy_data == null or enemy_data.gem_scene == null or _gems == null:
+ 		return
+-	Gem.drop(enemy_data.gem_scene, enemy_data.xp_reward, global_position, get_tree().current_scene)
++	_gems.drop(enemy_data.gem_scene, enemy_data.xp_reward, global_position)
+diff --git a/scripts/spawner.gd b/scripts/spawner.gd
+index 8386ed1..e87221e 100644
+--- a/scripts/spawner.gd
++++ b/scripts/spawner.gd
+@@ -90,11 +90,11 @@ func _spawn_radius() -> float:
+ 		visible_size /= camera.zoom
+ 	return visible_size.length() / 2.0 + spawn_margin
+ 
+-# Живые враги. Убитый или убранный в этом кадре остаётся в группе до конца кадра — его не считаем.
++# Живые враги. Убитый или убранный в этом кадре остаётся в реестре до конца кадра — его не считаем.
+ func _alive_count() -> int:
+ 	var count := 0
+ 	for enemy in _horde.enemies:
+-		if not enemy.is_dead and not enemy.is_queued_for_deletion():
++		if not enemy.is_dead and not enemy.is_removed:
+ 			count += 1
+ 	return count
+ 
+@@ -103,12 +103,12 @@ func _alive_count() -> int:
+ func _despawn_far(limit: float) -> void:
+ 	for enemy in _horde.enemies:
+ 		if enemy.global_position.distance_to(player.global_position) > limit:
+-			enemy.queue_free()
++			_horde.remove(enemy)
+ 
+ func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
+ 	var by_type: Dictionary[EnemyData, float] = {}
+ 	for enemy in _horde.enemies:
+-		if not enemy.is_dead and not enemy.is_queued_for_deletion():
++		if not enemy.is_dead and not enemy.is_removed:
+ 			by_type[enemy.enemy_data] = by_type.get(enemy.enemy_data, 0.0) + enemy.enemy_data.threat_cost
+ 	return by_type
+ 

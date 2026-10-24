@@ -23,8 +23,13 @@ const MAX_CELLS: int = 64
 ## Скорость берётся из EnemyData.speed, а не текущая: рывок громилы (700) по-прежнему
 ## проламывает толпу. Читается при появлении врага.
 @export_range(1.0, 3.0, 0.05) var push_to_speed: float = 1.1
+## Сколько узлов убранных врагов удалять за шаг физики (срез С7). Удаление узла
+## врага стоит движку 15–30 мкс: в песочнице 500 удалений разом удлиняли кадр
+## смерти на 8–10 мс, а по 32 за шаг это 1–2 мс в каждом из 16 следующих кадров.
+## Остальные ждут своей очереди спрятанными и вне реестра.
+@export_range(1, 1000) var free_per_frame: int = 32
 
-## Живые и ещё не удалённые враги. Номер в списке — Enemy.horde_index.
+## Живые и убранные в этом кадре враги. Номер в списке — Enemy.horde_index.
 var enemies: Array[Enemy] = []
 ## Скорость расталкивания каждого врага в этом шаге.
 var sep_vel := PackedVector2Array()
@@ -65,6 +70,11 @@ var _player: Player
 # Позиция игрока в начале шага: по ней удары врагов попадают в игрока.
 var _player_pos := Vector2.ZERO
 
+# Убраны в этом кадре, по порядку уборки: из реестра уйдут в конце кадра.
+var _leaving: Array[Enemy] = []
+# Ушли из реестра и ждут удаления узла.
+var _to_free: Array[Enemy] = []
+
 
 func _enter_tree() -> void:
 	add_to_group(&"horde")
@@ -104,7 +114,34 @@ func register(enemy: Enemy) -> void:
 	_sorted.append(0)
 
 
-## Убирает врага, ставя на его место последнего: номера остальных не сдвигаются.
+## Убирает врага из игры: убит или отстал. До конца кадра он остаётся в реестре, как
+## раньше узел до queue_free: удары этого кадра мёртвого пропускают, а сетка кадра
+## не ломается. В конце кадра уходит из реестра в том же порядке, что и раньше.
+func remove(enemy: Enemy) -> void:
+	if enemy.is_removed:
+		return
+	enemy.is_removed = true
+	if _leaving.is_empty():
+		_retire.call_deferred()
+	_leaving.append(enemy)
+
+
+## Конец кадра: убранные уходят из реестра и прячутся, узел ждёт удаления.
+func _retire() -> void:
+	for enemy in _leaving:
+		enemy.leave()
+		_to_free.append(enemy)
+	_leaving.clear()
+
+
+## Удаляет не больше free_per_frame узлов убранных врагов. Порядок не важен:
+## в игре их уже нет.
+func _free_removed() -> void:
+	for i in mini(free_per_frame, _to_free.size()):
+		_to_free.pop_back().queue_free()
+
+
+## Убирает врага из реестра, ставя на его место последнего: номера остальных не сдвигаются.
 func unregister(enemy: Enemy) -> void:
 	var i := enemy.horde_index
 	var last := enemies.size() - 1
@@ -140,6 +177,7 @@ func unregister(enemy: Enemy) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_free_removed()
 	touching_player = 0
 	overlaps = 0
 	_grid_ok = false

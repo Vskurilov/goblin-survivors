@@ -4,17 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://ce6bpwpsu67ic" path="res://media/gem-red.svg" id="2_bhq7q"]
 [ext_resource type="Texture2D" uid="uid://cgbiipbg5oj0g" path="res://media/gem-svgrepo-com.svg" id="2_mpwtx"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_jq8tk"]
-
-[node name="Gem" type="Area2D" unique_id=1390937570]
-collision_layer = 4
-collision_mask = 0
+[node name="Gem" type="Node2D" unique_id=1390937570]
 script = ExtResource("1_5cxma")
 overflow_texture = ExtResource("2_bhq7q")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1683755550]
 scale = Vector2(0.03, 0.03)
 texture = ExtResource("2_mpwtx")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=337373513]
-shape = SubResource("CircleShape2D_jq8tk")

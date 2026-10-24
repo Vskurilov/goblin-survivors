@@ -90,11 +90,11 @@ func _spawn_radius() -> float:
 		visible_size /= camera.zoom
 	return visible_size.length() / 2.0 + spawn_margin
 
-# Живые враги. Убитый или убранный в этом кадре остаётся в группе до конца кадра — его не считаем.
+# Живые враги. Убитый или убранный в этом кадре остаётся в реестре до конца кадра — его не считаем.
 func _alive_count() -> int:
 	var count := 0
 	for enemy in _horde.enemies:
-		if not enemy.is_dead and not enemy.is_queued_for_deletion():
+		if not enemy.is_dead and not enemy.is_removed:
 			count += 1
 	return count
 
@@ -103,12 +103,12 @@ func _alive_count() -> int:
 func _despawn_far(limit: float) -> void:
 	for enemy in _horde.enemies:
 		if enemy.global_position.distance_to(player.global_position) > limit:
-			enemy.queue_free()
+			_horde.remove(enemy)
 
 func _alive_threat_by_type() -> Dictionary[EnemyData, float]:
 	var by_type: Dictionary[EnemyData, float] = {}
 	for enemy in _horde.enemies:
-		if not enemy.is_dead and not enemy.is_queued_for_deletion():
+		if not enemy.is_dead and not enemy.is_removed:
 			by_type[enemy.enemy_data] = by_type.get(enemy.enemy_data, 0.0) + enemy.enemy_data.threat_cost
 	return by_type
 
