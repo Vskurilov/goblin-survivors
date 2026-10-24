@@ -79,6 +79,9 @@ const PART_COUNT := 7
 @export var camera_zoom: float = 1.0
 @export var stress_seed: int = 7
 @export var quit_when_done: bool = false
+## Толпу считает ядро на C++ (Horde.native_core). Выключи, чтобы сравнить с GDScript.
+## Чем считали на самом деле, пишет заголовок CSV: core=C++ или core=GDScript.
+@export var native_core: bool = true
 
 
 ## Метка конца скриптов: последний узел в физике и в процессе.
@@ -201,6 +204,8 @@ func _ready() -> void:
 	_project_max_steps = ProjectSettings.get_setting("physics/common/max_physics_steps_per_frame", 8)
 	Engine.max_physics_steps_per_frame = _project_max_steps
 	_main = MAIN_SCENE.instantiate()
+	# До add_child: Horde выбирает ядро в своём _ready.
+	(_main.get_node("Horde") as Horde).native_core = native_core
 	add_child(_main)
 	_player = _main.get_node("Scene/Player")
 	_spawner = _main.get_node("Spawner")
@@ -841,8 +846,9 @@ func _write_header() -> void:
 	var view := get_viewport().get_visible_rect().size
 	var build := "editor" if OS.has_feature("editor") else ("debug" if OS.is_debug_build() else "release")
 	var file := FileAccess.open(_csv_path, FileAccess.WRITE)
-	file.store_line("# stress_test | %s | scenario=%s | seed=%d" % [
-		Time.get_datetime_string_from_system(false, true), NAMES[scenario], stress_seed])
+	file.store_line("# stress_test | %s | scenario=%s | seed=%d | core=%s" % [
+		Time.get_datetime_string_from_system(false, true), NAMES[scenario], stress_seed,
+		"C++" if _horde.uses_native_core() else "GDScript"])
 	file.store_line("# godot=%s | build=%s | os=%s %s | cpu=%s | cores=%d" % [
 		version["string"], build, OS.get_name(), OS.get_version(), OS.get_processor_name(), OS.get_processor_count()])
 	file.store_line("# gpu=%s | vendor=%s | api=%s | renderer=%s | driver=%s | window=%dx%d | view=%dx%d | zoom=%.2f" % [
@@ -923,6 +929,7 @@ func _apply_cmdline() -> void:
 			"zoom": camera_zoom = value.to_float()
 			"seed": stress_seed = value.to_int()
 			"quit": quit_when_done = value == "1"
+			"native": native_core = value == "1"
 
 
 func _ints(text: String) -> Array[int]:

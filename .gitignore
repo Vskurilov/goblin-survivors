@@ -21,3 +21,14 @@ mono_crash.*.json
 # System/tool-specific ignores
 .DS_Store
 Thumbs.db
+
+# Ядро толпы на C++ (native/): godot-cpp клонируется отдельно, промежуточные файлы сборки не нужны
+native/godot-cpp/
+native/.sconsign*.dblite
+native/src/*.o
+native/src/*.os
+native/src/*.obj
+bin/*.lib
+bin/*.exp
+bin/*.pdb
+bin/*.ilk

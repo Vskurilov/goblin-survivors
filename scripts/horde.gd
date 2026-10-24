@@ -50,6 +50,10 @@ const STRIDE: int = 12
 ## Скорость берётся из EnemyData.speed, а не текущая: рывок громилы (700) по-прежнему
 ## проламывает толпу. Читается при появлении врага.
 @export_range(1.0, 3.0, 0.05) var push_to_speed: float = 1.1
+## Копию позиций, сетку, расталкивание и касания считает ядро на C++ (native/, библиотека
+## bin/horde_core.gdextension) — те же формулы, что функции ниже, толпа та же до бита.
+## Выключено или библиотека не загружена — считают сами эти функции на GDScript.
+@export var native_core: bool = true
 
 ## Сколько врагов касаются игрока в этом шаге.
 var touching_player: int = 0
@@ -131,6 +135,9 @@ var _grid_h: int = 0
 # Сетка разложена по нынешнему реестру. Уход врага переставляет реестр,
 # и до следующего шага первый запрос раскладывает сетку заново (_ensure_grid).
 var _grid_ok: bool = false
+# Ядро на C++ (класс HordeCore из библиотеки) или null — тогда толпу считает GDScript.
+# Тип Object, а не HordeCore: без библиотеки этого класса нет, и скрипт не собрался бы.
+var _core: Object
 
 var _player: Player
 # Позиция игрока в начале шага: по ней удары врагов попадают в игрока.
@@ -176,6 +183,7 @@ func _ready() -> void:
 	# Материал у всех типов общий, как был у спрайтов врагов.
 	_material = ShaderMaterial.new()
 	_material.shader = TINT_SHADER
+	use_native_core(native_core)
 
 
 ## Новый враг типа data в точке at. Ответ — номер его строки, NOBODY — не появился.
@@ -381,6 +389,26 @@ func despawn_far(center: Vector2, limit: float) -> void:
 			remove(t)
 
 
+## Включает ядро на C++ (on) или отдаёт толпу GDScript. Ядро хранит только итог последнего
+## вызова, поэтому переключать можно между любыми шагами: так стресс-сцена и пробы
+## сравнивают оба пути. Нет библиотеки — предупреждение, и толпу считает GDScript.
+func use_native_core(on: bool) -> void:
+	native_core = on
+	_core = null
+	if not on:
+		return
+	if not ClassDB.class_exists(&"HordeCore"):
+		push_warning("Ядро толпы на C++ не загружено (bin/horde_core.gdextension): толпу считает GDScript.")
+		return
+	_core = ClassDB.instantiate(&"HordeCore")
+	_core.call(&"configure", INV_CELL, MAX_CELLS)
+
+
+## Считает ли толпу ядро на C++.
+func uses_native_core() -> bool:
+	return _core != null
+
+
 func _physics_process(delta: float) -> void:
 	touching_player = 0
 	overlaps = 0
@@ -389,11 +417,14 @@ func _physics_process(delta: float) -> void:
 		_player_pos = _player.global_position
 		var count := _reg.size()
 		if count > 0:
-			_read_positions(count)
-			_build_grid(count)
-			_grid_ok = true
-			_push_apart(count)
-			_touch_player(count, delta)
+			if _core != null:
+				_core_step(delta)
+			else:
+				_read_positions(count)
+				_build_grid(count)
+				_grid_ok = true
+				_push_apart(count)
+				_touch_player(count, delta)
 	# Тики эффектов — до хода врагов, как раньше: убитый тиком в этом шаге не ходит.
 	if _effects != null:
 		_effects.step(delta)
@@ -582,6 +613,11 @@ func _ensure_grid() -> bool:
 	var count := _reg.size()
 	if count == 0:
 		return false
+	if _core != null:
+		_core.call(&"ensure_grid", _reg, _snap)
+		_take_grid()
+		_grid_ok = true
+		return true
 	var snap := _snap
 	var lo := Vector2(INF, INF)
 	var hi := Vector2(-INF, -INF)
@@ -593,6 +629,34 @@ func _ensure_grid() -> bool:
 	_build_grid(count)
 	_grid_ok = true
 	return true
+
+
+## Шаг толпы ядром на C++: то же, что _read_positions, _build_grid, _push_apart и
+## _touch_player ниже, одним вызовом. Ядро считает в свои копии массивов Horde, Horde
+## забирает их себе: get() отдаёт ссылку на буфер ядра, без копирования.
+func _core_step(delta: float) -> void:
+	_core.call(&"step", _reg, pos, _snap, _sep_vel, _radius, _mass, _response, _max_push,
+			_contact_r2, _contact_damage, _dead, _player.global_position, _player.body_radius, _player.mass)
+	_snap = _core.get(&"snap")
+	_sep_vel = _core.get(&"sep_vel")
+	_take_grid()
+	_grid_ok = true
+	overlaps = _core.get(&"overlaps")
+	touching_player = _core.get(&"touching")
+	var total: float = _core.get(&"contact_total")
+	if total > 0.0:
+		_player.take_damage(total * delta)
+
+
+## Сетку разложило ядро: её массивы и размеры — в поля Horde, по ним идут запросы.
+func _take_grid() -> void:
+	_cell_of = _core.get(&"cell_of")
+	_sorted = _core.get(&"sorted")
+	_cell_count = _core.get(&"cell_count")
+	_cell_start = _core.get(&"cell_start")
+	_origin = _core.get(&"origin")
+	_grid_w = _core.get(&"grid_w")
+	_grid_h = _core.get(&"grid_h")
 
 
 ## Позиции начала шага: все толкаются по одному снимку, а не по уже сдвинутым соседям.
