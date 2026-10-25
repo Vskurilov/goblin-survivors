@@ -1,0 +1,119 @@
+diff --git a/media/enemies/goblin_grunt.png b/media/enemies/goblin_grunt.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..29b02b0334b7fe100ef3880d5ebebb94f569477b
+GIT binary patch
+literal 706
+zcmV;z0zLhSP)<h;3K|Lk000e1NJLTq000#L000#T1^@s6sTZY|0007sNkl<Zc-qyK
+zPfrs;7>A$TEwtTkrG+-N3sTV*L?{yC$rF)-e-e${<f<n^G(j)=EsUSQ#5>WD7=(C{
+zgApQ10V5DG1&b|~wUu^DY0G*bHR2Ym-kjS^W}f-I@B5o~;C~sy-yTpE+4yz7p3#MW
+zhL&MHXIyl3c?dKqq_YJcJX|n=g=&FAgRMC0tVn`EG@8NhchVX5k<_x>z4K}x*ix<1
+znYSstzFH!Y6#Z9@GcvkDQj6oR_nG!us!{2wvmqpQdGkRdmeP4T5~J^uABSRRJFA<{
+zh=;*cMK*2?wlj456dPN40`4Ppv^S6`<(ZjF<8J6;eqpP+>Z^)u3|tS;7ILAbcPJJO
+zUQEQP$r<$Yc^Myz5l`d}bbzH2@cz9{w(~^<QDlBDO*E?0++-)Vk^@nqQLz(G<SN>!
+zqEc0njgyTI93Cr?S&d+e3#Y?MPRk=(ER-y}%&uq$0!=wp71`+adbr%tNn}<-b=j#a
+zNu<B(<Vyv#nr&uRv_Cq<6n;X=F&SL~;FwcJ6h!QzL{=yv?d)j?HM?My17DU28VV_#
+zZuQ`A4DvCuNSjYVDOhN*%e>#*E6(z2igRbZT)c3C>4_rwdJp4c&y6xz{Qb6<lL=Or
+z9Msy}6x{V-K%?8njFzVN+ED<yLmtvwMMlThC<#S;w%x;hx}MR6XOmMXwh}i7t}^v`
+zlSi*Vv9y-u%ZASIaF}<?Npjx}rl;3wZt?Q?$;6?B`)T^~;egQ_ZZXP@L{((tMt^YM
+zyi(UP<y2K<!|#-_S*;{fS(4xMeF|0=byHy~DKv%eQEb>GOh5p3q^g>a37X9pP-MxJ
+ol6J3~pep~{S5VGrwd<9}56&tS?CWvMr2qf`07*qoM6N<$g7hRzoB#j-
+
+literal 0
+HcmV?d00001
+
+diff --git a/media/enemies/goblin_grunt.png.import b/media/enemies/goblin_grunt.png.import
+new file mode 100644
+index 0000000..37a570e
+--- /dev/null
++++ b/media/enemies/goblin_grunt.png.import
+@@ -0,0 +1,40 @@
++[remap]
++
++importer="texture"
++type="CompressedTexture2D"
++uid="uid://8cdb4v6a44ww"
++path="res://.godot/imported/goblin_grunt.png-14ade6b1b8b573c1cb425803998af226.ctex"
++metadata={
++"vram_texture": false
++}
++
++[deps]
++
++source_file="res://media/enemies/goblin_grunt.png"
++dest_files=["res://.godot/imported/goblin_grunt.png-14ade6b1b8b573c1cb425803998af226.ctex"]
++
++[params]
++
++compress/mode=0
++compress/high_quality=false
++compress/lossy_quality=0.7
++compress/uastc_level=0
++compress/rdo_quality_loss=0.0
++compress/hdr_compression=1
++compress/normal_map=0
++compress/channel_pack=0
++mipmaps/generate=false
++mipmaps/limit=-1
++roughness/mode=0
++roughness/src_normal=""
++process/channel_remap/red=0
++process/channel_remap/green=1
++process/channel_remap/blue=2
++process/channel_remap/alpha=3
++process/fix_alpha_border=true
++process/premult_alpha=false
++process/normal_map_invert_y=false
++process/hdr_as_srgb=false
++process/hdr_clamp_exposure=false
++process/size_limit=0
++detect_3d/compress_to=1
+diff --git a/resources/enemy/goblin/goblin.tres b/resources/enemy/goblin/goblin.tres
+index 99c6fd8..4e66043 100644
+--- a/resources/enemy/goblin/goblin.tres
++++ b/resources/enemy/goblin/goblin.tres
+@@ -4,7 +4,7 @@
+ [ext_resource type="PackedScene" uid="uid://dleqjl5p5g47s" path="res://scenes/gem.tscn" id="1_tymsc"]
+ [ext_resource type="Shape2D" uid="uid://dua5yqx0yysv1" path="res://resources/enemy/goblin/goblin_hitbox.tres" id="2_45ncr"]
+ [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="3_45ncr"]
+-[ext_resource type="Texture2D" uid="uid://k4mihaqalisk" path="res://media/goblin-head-svgrepo-com.svg" id="3_rd5jj"]
++[ext_resource type="Texture2D" uid="uid://8cdb4v6a44ww" path="res://media/enemies/goblin_grunt.png" id="3_rd5jj"]
+ 
+ [resource]
+ script = ExtResource("3_45ncr")
+@@ -14,7 +14,8 @@ contact_damage = 10.0
+ gem_scene = ExtResource("1_tymsc")
+ texture = ExtResource("3_rd5jj")
+ draw_order = 2
+-visual_scale = 0.1
++visual_scale = 3.0
++pixel_art = true
+ behavior = ExtResource("1_rd5jj")
+ mass = 3.0
+ body_radius = 25.0
+diff --git a/scripts/horde.gd b/scripts/horde.gd
+index 95c67ee..c6645f4 100644
+--- a/scripts/horde.gd
++++ b/scripts/horde.gd
+@@ -966,6 +966,8 @@ func _kind_of(data: EnemyData) -> int:
+ 	view.multimesh = multimesh
+ 	view.texture = texture
+ 	view.material = _material
++	if data.pixel_art:
++		view.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+ 	view.z_index = DRAW_Z + data.draw_order
+ 	add_child(view)
+ 	_views.append(view)
+diff --git a/scripts/resource_classes/enemy/enemy_data.gd b/scripts/resource_classes/enemy/enemy_data.gd
+index 4474e67..1fbf76b 100644
+--- a/scripts/resource_classes/enemy/enemy_data.gd
++++ b/scripts/resource_classes/enemy/enemy_data.gd
+@@ -12,6 +12,9 @@ extends Resource
+ ## значением слой общий, и сверху тот тип, чей первый враг появился в забеге позже.
+ @export_range(0, 99) var draw_order: int = 0
+ @export var visual_scale: float = 1.0
++## Картинка — пиксель-арт: рисуется ближайшим пикселем (Nearest), без сглаживания.
++## Остальные картинки берут фильтр проекта (Linear Mipmap).
++@export var pixel_art: bool = false
+ @export var behavior: EnemyBehaviorData
+ @export var mass: float = 1.0
+ @export var body_radius: float = 20.0

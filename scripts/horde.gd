@@ -966,6 +966,8 @@ func _kind_of(data: EnemyData) -> int:
 	view.multimesh = multimesh
 	view.texture = texture
 	view.material = _material
+	if data.pixel_art:
+		view.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	view.z_index = DRAW_Z + data.draw_order
 	add_child(view)
 	_views.append(view)

@@ -5,15 +5,10 @@
 [ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="2_dp3eg"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
 [ext_resource type="Resource" uid="uid://xh5uae15vyo2" path="res://resources/enemy/goblin/goblin.tres" id="6_dg70y"]
-[ext_resource type="Resource" uid="uid://bfweg5wxad0uy" path="res://resources/enemy/mage/mage.tres" id="6_dp3eg"]
 [ext_resource type="Script" uid="uid://dov45wj6jxyj2" path="res://scripts/resource_classes/weapon/weapon_data.gd" id="7_jbj1t"]
-[ext_resource type="Resource" uid="uid://cxbkfn77tr5b4" path="res://resources/enemy/archer/archer.tres" id="7_pnhog"]
-[ext_resource type="Resource" uid="uid://dbdbks14exkom" path="res://resources/enemy/orc/orc.tres" id="8_2c4at"]
-[ext_resource type="Resource" uid="uid://d3lu1ygq7r0k" path="res://resources/enemy/orc_brute/orc_brute.tres" id="9_g6wdg"]
 [ext_resource type="PackedScene" uid="uid://8fo604okdckr" path="res://scenes/player.tscn" id="9_og1vs"]
 [ext_resource type="Script" uid="uid://gpy44pl4dlu2" path="res://scripts/resource_classes/ups/level_up_ui.gd" id="10_2wyq8"]
 [ext_resource type="Resource" uid="uid://dtie43fw0yrti" path="res://resources/weapon/axe.tres" id="10_ebg2g"]
-[ext_resource type="Resource" uid="uid://b188p0gf78eex" path="res://resources/enemy/trickster/trickster.tres" id="10_hq6as"]
 [ext_resource type="Script" uid="uid://cplx62kkflkr6" path="res://scripts/resource_classes/ups/upgrade_data.gd" id="11_vxglm"]
 [ext_resource type="Resource" uid="uid://qf1g6tsqptfw" path="res://resources/weapon/javelin.tres" id="13_2ofn6"]
 [ext_resource type="Resource" uid="uid://bjfdksqtybgii" path="res://resources/ups/frost_up_one.tres" id="14_1iba3"]
@@ -56,11 +51,12 @@ script = ExtResource("2_8cp6k")
 
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
-enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dp3eg"), ExtResource("10_hq6as"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("6_dg70y")])
+enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("6_dg70y")])
 max_alive = 3000
-threat_start = 100.0
-threat_per_minute = 50.0
-threat_acceleration = 3.0
+spawn_margin = 10.0
+threat_start = 1000.0
+threat_per_minute = 100.0
+threat_acceleration = 10.0
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true

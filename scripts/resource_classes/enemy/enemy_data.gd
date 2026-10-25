@@ -12,6 +12,9 @@ extends Resource
 ## значением слой общий, и сверху тот тип, чей первый враг появился в забеге позже.
 @export_range(0, 99) var draw_order: int = 0
 @export var visual_scale: float = 1.0
+## Картинка — пиксель-арт: рисуется ближайшим пикселем (Nearest), без сглаживания.
+## Остальные картинки берут фильтр проекта (Linear Mipmap).
+@export var pixel_art: bool = false
 @export var behavior: EnemyBehaviorData
 @export var mass: float = 1.0
 @export var body_radius: float = 20.0
