@@ -44,20 +44,20 @@ enum TargetMode{NEAREST, FARTHEST, RANDOM}
 ## Не @export: живёт только в копии оружия у игрока и в .tres не попадает.
 var has_grant: bool = false
 # Параметры намеренно повторяют имена полей: функция static, доступа к полям
-# экземпляра нет, а зовут её носители (Projectile/AoeZone) со своего снапшота.
+# экземпляра нет, а зовут её носители (Shots/AoeZone) со своего снапшота.
 @warning_ignore("shadowed_variable")
 static func roll_crit(base_damage:float, crit_chance:float, crit_mult: float) -> float:
 	if randf() < crit_chance:
 		return base_damage * crit_mult
 	return base_damage
-## ЕДИНАЯ точка снаряжения носителя (Projectile / AoeZone) атакующими
+## ЕДИНАЯ точка снаряжения носителя (заряд снаряда Shots.Charge / AoeZone) атакующими
 ## статами оружия. Закон §4.10 («все спавн-ветки синхронно») соблюдается
 ## конструктивно: новая ветка спавна обязана звать этот метод, а новый
 ## переносимый стат добавляется ТОЛЬКО сюда — ветки не трогаются.
 ## Снапшот при спавне: снаряд в полёте не получает апгрейды задним числом.
 ## foes — сторона владельца: группа его целей (get_target_group(), у врага-строки
 ## Horde.FOES). Носитель бьёт её, а с френдли-фаером ещё и врагов.
-func arm_carrier(carrier:Node, foes: StringName) -> void:
+func arm_carrier(carrier: Object, foes: StringName) -> void:
 	carrier.hits_enemies = foes == &"enemies" or friendly_fire
 	carrier.hits_player = foes == &"player"
 	carrier.crit_chance = crit_chance

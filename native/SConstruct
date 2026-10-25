@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Сборка ядра толпы на C++ (GDExtension). Запуск из этой папки (native):
+# Сборка ядра толпы и снарядов на C++ (GDExtension). Запуск из этой папки (native):
 #   scons                           — библиотека для редактора и запуска игры из него
 #   scons target=template_release   — для экспорта игры в релиз
 # Готовая библиотека ложится в bin/ проекта, рядом с horde_core.gdextension.
@@ -17,7 +17,7 @@ env["build_profile"] = File("build_profile.json").abspath
 env = SConscript("godot-cpp/SConstruct", {"env": env, "api_version": "4.6"})
 
 # Числа с плавающей точкой — строго по шагам, как в движке: без слияния умножения со
-# сложением в одну команду. Иначе толпа на C++ разойдётся с толпой на GDScript в последних битах.
+# сложением в одну команду. Иначе толпа и снаряды на C++ разойдутся с GDScript в последних битах.
 if env.get("is_msvc", False):
     env.Append(CCFLAGS=["/fp:precise"])
 else:

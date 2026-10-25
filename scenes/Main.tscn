@@ -38,6 +38,7 @@
 [ext_resource type="Script" uid="uid://bvcs17y7xapx3" path="res://scripts/horde.gd" id="37_kxyth"]
 [ext_resource type="Script" uid="uid://dypw2bdc5yu2k" path="res://scripts/effect_table.gd" id="38_eftbl"]
 [ext_resource type="Script" uid="uid://d15w1txv7brx2" path="res://scripts/gems.gd" id="39_gems"]
+[ext_resource type="Script" uid="uid://bg6eth0sojks1" path="res://scripts/shots.gd" id="40_shots"]
 
 [node name="Main" type="Node2D" unique_id=1517189486]
 
@@ -195,6 +196,9 @@ script = ExtResource("37_kxyth")
 
 [node name="EffectTable" type="Node" parent="." unique_id=1871205433]
 script = ExtResource("38_eftbl")
+
+[node name="Shots" type="Node2D" parent="." unique_id=1364316506]
+script = ExtResource("40_shots")
 
 [connection signal="timeout" from="Spawner/Timer" to="Spawner" method="_on_timer_timeout"]
 [connection signal="health_changed" from="Scene/Player" to="HUD/HealthBar" method="_on_player_health_changed"]

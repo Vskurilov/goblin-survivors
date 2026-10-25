@@ -2,5 +2,6 @@ class_name StraightTrajectoryData
 
 extends TrajectoryData
 
-func move(projectile: Projectile, delta: float) -> void:
-	projectile.global_position += projectile.direction * projectile.speed * delta
+## Прямо: за шаг direction × speed × delta. Полёт ведёт Shots (ядро или Shots._fly).
+func get_move() -> Move:
+	return Move.STRAIGHT

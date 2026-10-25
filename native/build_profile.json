@@ -3,6 +3,7 @@
 		"Engine",
 		"OS",
 		"RefCounted",
-		"SceneTree"
+		"SceneTree",
+		"Shape2D"
 	]
 }

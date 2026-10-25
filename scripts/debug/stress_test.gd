@@ -79,8 +79,9 @@ const PART_COUNT := 7
 @export var camera_zoom: float = 1.0
 @export var stress_seed: int = 7
 @export var quit_when_done: bool = false
-## Толпу считает ядро на C++ (Horde.native_core). Выключи, чтобы сравнить с GDScript.
-## Чем считали на самом деле, пишет заголовок CSV: core=C++ или core=GDScript.
+## Толпу и снаряды считает ядро на C++ (Horde.native_core, Shots.native_core). Выключи,
+## чтобы сравнить с GDScript. Чем считали на самом деле, пишет заголовок CSV:
+## core=C++, core=GDScript или что чем, если библиотека загрузилась не вся.
 @export var native_core: bool = true
 
 
@@ -137,6 +138,7 @@ var _player: Player
 # У спавнера и окна уровня нет class_name: поля берутся по имени.
 var _spawner
 var _horde: Horde
+var _shots: Shots
 var _effects: EffectTable
 var _gem_field: Gems
 var _level_ui
@@ -162,8 +164,8 @@ var _game_ticks := 0
 var _projectiles_alive := 0
 var _arrows_alive := 0
 var _zones_alive := 0
-var _proj_kind := {}   # id снаряда -> 1 игрок, 2 стрела стрелка, 0 прочие
-var _proj_hits := {}   # id снаряда игрока -> сколько целей задел
+var _proj_kind := {}   # номер снаряда -> 1 игрок, 2 стрела стрелка, 0 прочие
+var _proj_hits := {}   # номер снаряда игрока -> сколько целей задел
 var _xp0 := 0
 var _level0 := 1
 var _spawn_index := 0
@@ -204,12 +206,14 @@ func _ready() -> void:
 	_project_max_steps = ProjectSettings.get_setting("physics/common/max_physics_steps_per_frame", 8)
 	Engine.max_physics_steps_per_frame = _project_max_steps
 	_main = MAIN_SCENE.instantiate()
-	# До add_child: Horde выбирает ядро в своём _ready.
+	# До add_child: Horde и Shots выбирают ядро в своём _ready.
 	(_main.get_node("Horde") as Horde).native_core = native_core
+	(_main.get_node("Shots") as Shots).native_core = native_core
 	add_child(_main)
 	_player = _main.get_node("Scene/Player")
 	_spawner = _main.get_node("Spawner")
 	_horde = _main.get_node("Horde")
+	_shots = _main.get_node("Shots")
 	_effects = _main.get_node("EffectTable")
 	_gem_field = _main.get_node("Gems")
 	_spawn_timer = _spawner.get_node("Timer")
@@ -264,6 +268,9 @@ func _setup_game() -> void:
 func _setup_probes() -> void:
 	var tree := get_tree()
 	tree.node_added.connect(_on_node_added)
+	_shots.fired.connect(_on_shot_fired)
+	_shots.hit.connect(_on_shot_hit)
+	_shots.retired.connect(_on_shot_retired)
 	_horde.died.connect(_on_enemy_died)
 	tree.physics_frame.connect(_on_physics_frame)
 	tree.process_frame.connect(_on_process_frame)
@@ -733,49 +740,50 @@ func _account_frame(frame_ms: float, parts: PackedFloat64Array) -> void:
 # ---------------------------------------------------------------- счётчики корректности
 
 func _on_node_added(node: Node) -> void:
-	if node is Projectile:
-		_on_projectile_added(node)
-	elif node.get_script() == ZONE_SCRIPT:
+	if node.get_script() == ZONE_SCRIPT:
 		_zones_alive += 1
 		if node.owner_actor == _player:
 			_c["shots"] += 1
 		node.tree_exiting.connect(func() -> void: _zones_alive -= 1, CONNECT_ONE_SHOT)
 
 
-func _on_projectile_added(projectile: Projectile) -> void:
-	var id := projectile.get_instance_id()
+## Снаряд выпущен (строка Shots, срез С5): чей он — по стрелку.
+func _on_shot_fired(shot: int) -> void:
 	var kind := 0
-	if projectile.owner_actor == _player:
+	var owner_actor := _shots.owner_of(shot)
+	if owner_actor == _player:
 		kind = 1
 		_c["shots"] += 1
-		_proj_hits[id] = 0
-		# Снаряд сам сообщает о каждом ударе, до урона (шаг 1).
-		projectile.hit.connect(_on_player_projectile_hit.bind(projectile))
-	elif projectile.owner_actor == _shooter:
+		_proj_hits[shot] = 0
+	elif owner_actor == _shooter:
 		kind = 2
 		_arrows_alive += 1
-	elif projectile.owner_row >= 0 and _horde.is_dead(projectile.owner_row):
-		_c["dead_shots"] += 1
-	_proj_kind[id] = kind
+	else:
+		var owner_row := _shots.owner_row_of(shot)
+		if owner_row >= 0 and _horde.is_dead(owner_row):
+			_c["dead_shots"] += 1
+	_proj_kind[shot] = kind
 	_projectiles_alive += 1
-	projectile.tree_exiting.connect(_on_projectile_exiting.bind(id), CONNECT_ONE_SHOT)
 
 
-func _on_player_projectile_hit(target: int, projectile: Projectile) -> void:
-	_proj_hits[projectile.get_instance_id()] += 1
+## Снаряд сообщает о каждом ударе, до урона (шаг 1). Считаются удары снарядов игрока.
+func _on_shot_hit(shot: int, target: int) -> void:
+	if _proj_kind.get(shot, 0) != 1:
+		return
+	_proj_hits[shot] += 1
 	if _horde.is_dead(target):
 		_c["corpse_hits"] += 1
 
 
-func _on_projectile_exiting(id: int) -> void:
+func _on_shot_retired(shot: int) -> void:
 	_projectiles_alive -= 1
-	var kind: int = _proj_kind.get(id, 0)
-	_proj_kind.erase(id)
+	var kind: int = _proj_kind.get(shot, 0)
+	_proj_kind.erase(shot)
 	if kind == 2:
 		_arrows_alive -= 1
 	elif kind == 1:
-		var hits: int = _proj_hits.get(id, 0)
-		_proj_hits.erase(id)
+		var hits: int = _proj_hits.get(shot, 0)
+		_proj_hits.erase(shot)
 		if hits > 0:
 			_c["proj_hit"] += 1
 			_c["proj_targets"] += hits
@@ -847,8 +855,7 @@ func _write_header() -> void:
 	var build := "editor" if OS.has_feature("editor") else ("debug" if OS.is_debug_build() else "release")
 	var file := FileAccess.open(_csv_path, FileAccess.WRITE)
 	file.store_line("# stress_test | %s | scenario=%s | seed=%d | core=%s" % [
-		Time.get_datetime_string_from_system(false, true), NAMES[scenario], stress_seed,
-		"C++" if _horde.uses_native_core() else "GDScript"])
+		Time.get_datetime_string_from_system(false, true), NAMES[scenario], stress_seed, _core_label()])
 	file.store_line("# godot=%s | build=%s | os=%s %s | cpu=%s | cores=%d" % [
 		version["string"], build, OS.get_name(), OS.get_version(), OS.get_processor_name(), OS.get_processor_count()])
 	file.store_line("# gpu=%s | vendor=%s | api=%s | renderer=%s | driver=%s | window=%dx%d | view=%dx%d | zoom=%.2f" % [
@@ -859,6 +866,15 @@ func _write_header() -> void:
 		Engine.physics_ticks_per_second, _project_max_steps, "off" if _draw_signals else "headless"])
 	file.store_line(",".join(COLUMNS))
 	file.close()
+
+
+## Чем считали толпу и снаряды: ядро на C++ или GDScript.
+func _core_label() -> String:
+	var crowd := _horde.uses_native_core()
+	var shots := _shots.uses_native_core()
+	if crowd == shots:
+		return "C++" if crowd else "GDScript"
+	return "толпа %s, снаряды %s" % ["C++" if crowd else "GDScript", "C++" if shots else "GDScript"]
 
 
 func _write_row(row: Dictionary) -> void:

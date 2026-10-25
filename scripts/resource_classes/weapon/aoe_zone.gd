@@ -13,7 +13,7 @@ var weapon_bonuses : Dictionary = {}
 var crit_chance: float = 0.05
 var crit_mult:float = 2.0
 var attack_speed_mult:float = 1.0
-## Кого бьёт зона: врагов, игрока или обоих, как у близнеца projectile.gd.
+## Кого бьёт зона: врагов, игрока или обоих, как у заряда снаряда (Shots.Charge).
 ## Ставит WeaponData.arm_carrier. По умолчанию никого: забытое присваивание даёт зону,
 ## которая никого не бьёт, а не зону, бьющую своих.
 var hits_enemies: bool = false

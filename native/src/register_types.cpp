@@ -6,6 +6,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "horde_core.h"
+#include "shots_core.h"
 
 using namespace godot;
 
@@ -14,6 +15,7 @@ void initialize_horde_core_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 	GDREGISTER_CLASS(HordeCore);
+	GDREGISTER_CLASS(ShotsCore);
 }
 
 void uninitialize_horde_core_module(ModuleInitializationLevel p_level) {

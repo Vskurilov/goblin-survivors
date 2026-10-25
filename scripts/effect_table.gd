@@ -109,8 +109,9 @@ func step(delta: float) -> void:
 
 
 ## Наложение эффекта на цель target (номер в Horde), путь один: Horde.apply_effect.
-## carrier — снаряд или зона: скорость атаки и крит в момент удара. Без носителя — 1.0, 5% и ×2.
-func apply(target: int, effect: StatusEffectData, carrier: Node) -> void:
+## carrier — заряд снаряда (Shots.Charge) или зона: скорость атаки и крит в момент удара.
+## Без носителя — 1.0, 5% и ×2.
+func apply(target: int, effect: StatusEffectData, carrier: Object) -> void:
 	_ensure_target(target)
 	var elements := Tags.element_bits(effect.tags)
 	var element_stacks := _element_stacks[target + 1]
@@ -271,7 +272,7 @@ func _grow() -> void:
 
 ## Снимок в строку: статы эффекта и носителя в момент наложения.
 ## Апгрейд, взятый позже, достаётся только следующим наложениям.
-func _fill(row: int, target: int, effect: StatusEffectData, key: int, elements: int, carrier: Node) -> void:
+func _fill(row: int, target: int, effect: StatusEffectData, key: int, elements: int, carrier: Object) -> void:
 	_target[row] = target
 	_effect[row] = effect
 	_key[row] = key

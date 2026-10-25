@@ -5,8 +5,9 @@ class_name Horde
 ## Каждый шаг физики, раньше игрока, снарядов и зон, Horde ведёт всю толпу: копия позиций,
 ## сетка, толчок от соседей, касание игрока (срезы С1 и С2), тики эффектов (EffectTable,
 ## срез С3) и ход каждой строки в порядке появления, как раньше шли узлы врагов.
-## По той же сетке снаряды и зоны узнают, кого задели (query_hits), а оружие выбирает
-## цели (pick). Цель удара — номер: строка врага (0 и больше) или PLAYER. Урон, эффекты
+## По той же сетке зоны и снаряды узнают, кого задели (query_hits; снаряды Shots — все
+## разом, ядром на C++, по целям из lend_targets), а оружие выбирает цели (pick).
+## Цель удара — номер: строка врага (0 и больше) или PLAYER. Урон, эффекты
 ## и вспышки идут через Horde (hurt, apply_effect, flash) — и врагам, и игроку.
 ## Рисует врагов MultiMesh, по одному на тип (EnemyData).
 ## Номер строки действителен до конца кадра, в котором врага убрали; потом его получает
@@ -61,6 +62,8 @@ var touching_player: int = 0
 var overlaps: int = 0
 ## Сколько здоровья враги потеряли за всё время, без перебора на смерти. Для замеров.
 var damage_dealt: float = 0.0
+## Сколько врагов убито за всё время. По нему Shots видит, что посреди шага кто-то умер.
+var deaths: int = 0
 
 # ---------------------------------------------------------------- строки
 # Колонки: номер строки — индекс во всех сразу. Числа врага копируются при появлении,
@@ -277,6 +280,7 @@ func hurt(target: int, amount: float, effect: StatusEffectData = null) -> void:
 		return
 	# Смерть — событие: флаг поднят до сигнала, подписчик видит уже мёртвого.
 	_dead[target] = 1
+	deaths += 1
 	if not _removed[target]:
 		_alive -= 1
 	died.emit(target)
@@ -288,8 +292,8 @@ func hurt(target: int, amount: float, effect: StatusEffectData = null) -> void:
 
 ## Единственная точка наложения эффекта. Стаки, тики и реакции ведёт EffectTable.
 ## На убитого не ложатся ни стаки, ни реакции: он только ждёт уборки.
-## carrier — снаряд или зона: скорость атаки и крит в момент удара.
-func apply_effect(target: int, effect: StatusEffectData, carrier: Node = null) -> void:
+## carrier — заряд снаряда (Shots.Charge) или зона: скорость атаки и крит в момент удара.
+func apply_effect(target: int, effect: StatusEffectData, carrier: Object = null) -> void:
 	if is_dead(target):
 		return
 	if _effects == null:
@@ -335,6 +339,11 @@ func is_dead(target: int) -> bool:
 	if target == PLAYER:
 		return _player.is_dead
 	return _dead[target] != 0
+
+
+## Жив ли игрок как цель: удары врагов ищут его, только пока он жив.
+func is_player_alive() -> bool:
+	return is_instance_valid(_player) and not _player.is_dead
 
 
 ## Счётчик строки: растёт, когда строка уходит. Номер и счётчик вместе — один и тот же враг.
@@ -539,6 +548,18 @@ func query_hits(shape: HitShape, at: Vector2, hit_enemies: bool, hit_player: boo
 	if limit > 0 and targets.size() > limit:
 		_keep_nearest(targets, dist2, limit)
 	return targets
+
+
+## Цели для ядра снарядов (ShotsCore, срез С5): всё, по чему ищет query_hits, — снимок
+## позиций, радиусы, убитые, generation, сетка, игрок и круг для collide(). Сетку
+## раскладывает только поиск того, кто бьёт врагов (need_grid), как в query_hits.
+## Ядро держит их до конца своего поиска и отпускает.
+func lend_targets(core: Object, need_grid: bool) -> void:
+	var grid := need_grid and _ensure_grid()
+	var alive := is_player_alive()
+	core.call(&"set_targets", _snap, _hit_radius, _dead, _gen, _cell_count, _cell_start, _sorted,
+			_origin, _grid_w, _grid_h, INV_CELL, _max_hit_radius, grid, alive, _player_pos,
+			_player.hit_radius if alive else 0.0, HitShape._unit_circle)
 
 
 ## Цели оружия — позиции count живых врагов: ближайших к origin (NEAREST), самых дальних

@@ -32,3 +32,5 @@ bin/*.lib
 bin/*.exp
 bin/*.pdb
 bin/*.ilk
+# Копия библиотеки, которую редактор Godot на Windows держит открытой вместо самой DLL
+bin/~*
