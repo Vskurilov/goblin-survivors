@@ -45,9 +45,10 @@
 
 [node name="Background" type="Sprite2D" parent="." unique_id=2107729593]
 z_index = -200
+texture_filter = 1
 texture_repeat = 2
 position = Vector2(-82, 65)
-rotation = 0.0025917965
+scale = Vector2(3, 3)
 texture = ExtResource("1_muem4")
 region_enabled = true
 region_rect = Rect2(0, 0, 4000, 4000)
@@ -87,41 +88,41 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -304.0
-offset_top = -192.5
-offset_right = 304.0
-offset_bottom = 192.5
+offset_left = -168.5
+offset_top = -107.0
+offset_right = 168.5
+offset_bottom = 107.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="UpButtonOne" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=430492941]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(111, 28)
 layout_mode = 2
 text = "+40 скр"
 
 [node name="UpButtonTwo" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=804400187]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(111, 28)
 layout_mode = 2
 text = "0.9 плч урн"
 
 [node name="UpButtonThree" type="Button" parent="LevelUpUI/UpdateButtons" unique_id=112784696]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(111, 28)
 layout_mode = 2
 text = "здр +10"
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1583140629]
 
 [node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=601628181]
-custom_minimum_size = Vector2(800, 100)
+custom_minimum_size = Vector2(444, 56)
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -50.0
-offset_top = -100.0
-offset_right = 50.0
+offset_left = -28.0
+offset_top = -56.0
+offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 0
 show_percentage = false
@@ -134,10 +135,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -11.0
+offset_top = -6.5
+offset_right = 11.0
+offset_bottom = 6.5
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
@@ -145,28 +146,28 @@ vertical_alignment = 1
 justification_flags = 171
 
 [node name="TimerLabel" type="Label" parent="HUD" unique_id=159875392]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_right = 22.0
+offset_bottom = 13.0
 script = ExtResource("20_yxlcp")
 
 [node name="LevelLabel" type="Label" parent="HUD" unique_id=885527235]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 23.0
+offset_left = -22.0
+offset_bottom = 13.0
 grow_horizontal = 0
 script = ExtResource("20_1nqs0")
 
 [node name="KillCountLabel" type="Label" parent="HUD" unique_id=285495991]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(28, 28)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -50.0
-offset_top = -50.0
+offset_left = -28.0
+offset_top = -28.0
 grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("21_1iba3")
@@ -181,8 +182,8 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -42.5
-offset_bottom = 42.5
+offset_top = -23.5
+offset_bottom = 23.5
 grow_horizontal = 2
 grow_vertical = 2
 

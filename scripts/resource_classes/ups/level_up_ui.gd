@@ -17,8 +17,8 @@ var _pending_levels: int = 0
 func _ready() -> void:
 	for i in buttons.size():
 		buttons[i].pressed.connect(_on_button_pressed.bind(i))
-		# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 64 px.
-		buttons[i].add_theme_constant_override("icon_max_width", 64)
+		# Иконки апгрейдов бывают любого размера — кнопка сама ужимает до 36 px базы 640×360.
+		buttons[i].add_theme_constant_override("icon_max_width", 36)
 		# Курсор — это фокус кнопки: мышь переносит его на карточку под собой.
 		buttons[i].mouse_entered.connect(buttons[i].grab_focus)
 		buttons[i].add_theme_stylebox_override("focus", _make_cursor_style())
@@ -28,9 +28,9 @@ func _ready() -> void:
 func _make_cursor_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.draw_center = false
-	style.set_border_width_all(10)
+	style.set_border_width_all(6)
 	style.border_color = Color(1.0, 0.741, 1.0, 1.0)
-	style.set_expand_margin_all(2)
+	style.set_expand_margin_all(1)
 	return style
 
 ## Передвигает курсор для выбора апгрейда

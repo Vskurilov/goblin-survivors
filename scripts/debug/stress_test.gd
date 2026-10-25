@@ -76,8 +76,9 @@ const PART_COUNT := 7
 @export var measure_seconds: float = 20.0
 ## Предел реального времени на окно замера; на разгон — половина.
 @export var wall_limit_seconds: float = 60.0
-## Отдаление камеры на весь прогон. 1 — как в замерах до среза К1; в игре — Zoom камеры игрока.
-@export var camera_zoom: float = 1.0
+## Отдаление камеры на весь прогон. По умолчанию — как у камеры игрока: 1/3, в кадре 1920×1080 px
+## мира. До среза К2 замеры шли при 1 на базе 1152×648: в кадре было 1152×648 px мира.
+@export var camera_zoom: float = 1.0 / 3.0
 @export var stress_seed: int = 7
 @export var quit_when_done: bool = false
 ## Толпу и снаряды считает ядро на C++ (Horde.native_core, Shots.native_core). Выключи,
@@ -304,11 +305,11 @@ func _setup_overlay() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 100
 	_label = Label.new()
-	_label.position = Vector2(8, 28)
-	_label.add_theme_font_size_override("font_size", 14)
+	_label.position = Vector2(4, 16)
+	_label.add_theme_font_size_override("font_size", 8)
 	_label.add_theme_color_override("font_color", Color.WHITE)
 	_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	_label.add_theme_constant_override("outline_size", 5)
+	_label.add_theme_constant_override("outline_size", 3)
 	layer.add_child(_label)
 	add_child(layer)
 
