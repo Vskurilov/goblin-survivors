@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bgkounbcg8gj5"]
 
 [ext_resource type="Texture2D" uid="uid://bpsa4iftgpavr" path="res://media/grass_0001.png" id="1_muem4"]
+[ext_resource type="Script" uid="uid://c235ncj8swekr" path="res://scripts/background.gd" id="2_8cp6k"]
 [ext_resource type="Script" uid="uid://7uy64d6q8wct" path="res://scripts/spawner.gd" id="2_dp3eg"]
 [ext_resource type="Script" uid="uid://cdgl5iy1g7ikt" path="res://scripts/resource_classes/enemy/enemy_data.gd" id="4_gqmmt"]
 [ext_resource type="Resource" uid="uid://xh5uae15vyo2" path="res://resources/enemy/goblin/goblin.tres" id="6_dg70y"]
@@ -50,11 +51,15 @@ rotation = 0.0025917965
 texture = ExtResource("1_muem4")
 region_enabled = true
 region_rect = Rect2(0, 0, 4000, 4000)
+script = ExtResource("2_8cp6k")
 
 [node name="Spawner" type="Node2D" parent="." unique_id=1794418041]
 script = ExtResource("2_dp3eg")
 enemy_pool = Array[ExtResource("4_gqmmt")]([ExtResource("7_pnhog"), ExtResource("6_dp3eg"), ExtResource("10_hq6as"), ExtResource("8_2c4at"), ExtResource("9_g6wdg"), ExtResource("6_dg70y")])
-max_alive = 200
+max_alive = 3000
+threat_start = 100.0
+threat_per_minute = 50.0
+threat_acceleration = 3.0
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=284293117]
 autostart = true
@@ -64,7 +69,7 @@ position = Vector2(-34, 83)
 
 [node name="Player" parent="Scene" unique_id=691450919 instance=ExtResource("9_og1vs")]
 position = Vector2(611, 240)
-max_health = 150.0
+max_health = 9999999999999.0
 weapons = Array[ExtResource("7_jbj1t")]([ExtResource("13_2ofn6"), ExtResource("10_ebg2g"), ExtResource("15_e2s0e"), ExtResource("16_gsxep")])
 
 [node name="Gems" type="Node2D" parent="." unique_id=795425564]

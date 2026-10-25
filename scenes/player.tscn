@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bllkfa33u54hu" path="res://scripts/player.gd" id="1_qhqgy"]
 [ext_resource type="Shader" uid="uid://bufafplhc2bwp" path="res://resources/shader/black_shader.gdshader" id="2_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://bmrwr7xscebds" path="res://media/viking .svg" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://dkthrjqhxtntv" path="res://scripts/game_camera.gd" id="4_dqkch"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4ra3w"]
 resource_local_to_scene = true
@@ -18,3 +19,5 @@ scale = Vector2(0.1, 0.1)
 texture = ExtResource("3_qhqgy")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2008049104]
+zoom = Vector2(0.667, 0.667)
+script = ExtResource("4_dqkch")

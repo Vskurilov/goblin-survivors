@@ -76,6 +76,7 @@ const PART_COUNT := 7
 @export var measure_seconds: float = 20.0
 ## Предел реального времени на окно замера; на разгон — половина.
 @export var wall_limit_seconds: float = 60.0
+## Отдаление камеры на весь прогон. 1 — как в замерах до среза К1; в игре — Zoom камеры игрока.
 @export var camera_zoom: float = 1.0
 @export var stress_seed: int = 7
 @export var quit_when_done: bool = false
@@ -254,6 +255,9 @@ func _setup_game() -> void:
 	var camera: Camera2D = _player.get_node_or_null("Camera2D")
 	if camera != null:
 		camera.zoom = Vector2.ONE * camera_zoom
+	if camera is GameCamera:
+		# Колесо здесь выключено: отдаление весь прогон держит camera_zoom, его пишет заголовок CSV.
+		(camera as GameCamera).wheel_zoom = false
 	_xp0 = _player.current_xp
 	_level0 = _player.level
 	_arrow_weapon = ARROW_WEAPON.duplicate()
